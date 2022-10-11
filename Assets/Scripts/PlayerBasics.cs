@@ -20,6 +20,9 @@ public class PlayerBasics : MonoBehaviour
     private bool aiming = false;
 
     [SerializeField]
+    private bool shootInProgress = false;
+
+    [SerializeField]
     GameObject weapon;
 
     [SerializeField]
@@ -28,6 +31,9 @@ public class PlayerBasics : MonoBehaviour
     //private List<Coroutine> moveCoroutineList;
     [SerializeField]
     private Coroutine moveCoroutine;
+
+    [SerializeField]
+    private SkeletalMove skeletanMove;
 
 
     // Start is called before the first frame update
@@ -56,11 +62,14 @@ public class PlayerBasics : MonoBehaviour
 
     public void OnMouseClick(InputAction.CallbackContext context)
     {
+        shootInProgress = playerInput.Basic.MouseLClick.inProgress;
         if (aiming)
         {
-            if(weapon != null)
+            if(weapon != null && !shootInProgress)
             {
-                weapon.GetComponent<_Weapon>().Attack(Camera.main.ScreenToWorldPoint(playerInput.Basic.MouseMovement.ReadValue<Vector2>()));
+                skeletanMove.TrackCursorByHands(Camera.main.ScreenToWorldPoint(playerInput.Basic.MouseMovement.ReadValue<Vector2>()));
+                //weapon.GetComponent<_Weapon>().Attack(Camera.main.ScreenToWorldPoint(playerInput.Basic.MouseMovement.ReadValue<Vector2>()));
+                //weapon.GetComponent<_Weapon>().Attack(playerInput.Basic.MouseMovement.ReadValue<Vector2>());
             }
         }
         else

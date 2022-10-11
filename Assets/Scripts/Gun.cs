@@ -44,13 +44,13 @@ public class Gun : _Weapon
     public override void Attack(Vector2 mousePos)
     {
         Debug.Log("Shooting by " + name);
-        Vector2 normXY = normalizeMousePos(mousePos);
+        //Vector2 normXY = normalizeMousePos(mousePos);
 
         RotateAim(mousePos);
-        GameObject newBullet = Instantiate(bullet, shootingPoint.transform.position, shootingPoint.transform.rotation);
-
-        newBullet.GetComponent<Rigidbody2D>().AddForce(shootingPoint.transform.forward * bulletSpeed, ForceMode2D.Impulse);
-        Destroy(newBullet, 10f);
+        //GameObject newBullet = Instantiate(bullet, shootingPoint.transform.position, shootingPoint.transform.rotation);
+        GameObject newBullet = Instantiate(bullet, transform.position, transform.rotation);
+        newBullet.GetComponent<Rigidbody2D>().AddForce(transform.forward * bulletSpeed, ForceMode2D.Impulse);
+        Destroy(newBullet, 30f);
     }
 
     public Vector2 normalizeMousePos(Vector2 mousePos)
@@ -62,8 +62,12 @@ public class Gun : _Weapon
 
     public void RotateAim(Vector2 mousePos)
     {
-        Vector2 aimDir = mousePos - new Vector2(shootingPoint.transform.position.x, shootingPoint.transform.position.y);
-        float aimAngle = Mathf.Atan2(aimDir.y, aimDir.x) * Mathf.Rad2Deg - 90f;
-        shootingPoint.GetComponent<Rigidbody2D>().rotation = aimAngle;
+        /*Vector2 aimDir = mousePos - new Vector2(shootingPoint.transform.position.x, shootingPoint.transform.position.y);
+        shootingPoint.GetComponent<Rigidbody2D>().rotation = aimAngle;*/
+        Debug.Log(shootingPoint.transform.position);
+        //Vector2 aimDiff = new Vector2(mousePos.x - shootingPoint.transform.position.x, mousePos.y - shootingPoint.transform.position.y);
+        Vector2 aimDiff = new Vector2(mousePos.x - transform.position.x, mousePos.y - transform.position.y);
+        float aimAngle = Mathf.Atan2(aimDiff.y, aimDiff.x) * Mathf.Rad2Deg;
+        transform.rotation = Quaternion.Euler(0, 0, aimAngle);
     }
 }
