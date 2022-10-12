@@ -17,7 +17,7 @@ public class PlayerBasics : MonoBehaviour
     private bool isMoving = false;
 
     [SerializeField]
-    private bool aiming = false;
+    private bool IsAiming = false;
 
     [SerializeField]
     private bool shootInProgress = false;
@@ -34,6 +34,13 @@ public class PlayerBasics : MonoBehaviour
 
     [SerializeField]
     private SkeletalMove skeletanMove;
+
+    [SerializeField]
+    Animator animator;
+
+    [SerializeField]
+    Transform CharacterSprite;
+
 
 
     // Start is called before the first frame update
@@ -63,10 +70,11 @@ public class PlayerBasics : MonoBehaviour
     public void OnMouseClick(InputAction.CallbackContext context)
     {
         shootInProgress = playerInput.Basic.MouseLClick.inProgress;
-        if (aiming)
+        if (IsAiming)
         {
             if(weapon != null && !shootInProgress)
             {
+                Debug.Log("Piu piu");
                 skeletanMove.TrackCursorByHands(Camera.main.ScreenToWorldPoint(playerInput.Basic.MouseMovement.ReadValue<Vector2>()));
                 //weapon.GetComponent<_Weapon>().Attack(Camera.main.ScreenToWorldPoint(playerInput.Basic.MouseMovement.ReadValue<Vector2>()));
                 //weapon.GetComponent<_Weapon>().Attack(playerInput.Basic.MouseMovement.ReadValue<Vector2>());
@@ -102,7 +110,24 @@ public class PlayerBasics : MonoBehaviour
     /// <param name="context"></param>
     public void OnMovementMouse(InputAction.CallbackContext context)
     {
-        //StartCoroutine(CharacterMovementMouse(context));
+        Vector2 realPos = Camera.main.ScreenToWorldPoint(playerInput.Basic.MouseMovement.ReadValue<Vector2>());
+        if (realPos.x < transform.position.x)
+        {
+            CharacterSprite.rotation = Quaternion.Euler(0, 180, 0);
+        }
+        else
+        {
+            CharacterSprite.rotation = Quaternion.Euler(0, 0, 0);
+        }
+
+        if (IsAiming)
+        {
+            Debug.Log("Aim");
+            skeletanMove.TrackCursorByHands(realPos);
+            CorrectPistolToLeftHand();
+            //StartCoroutine(AimWeapon(context));
+        }
+
     } 
 
     /// <summary>
@@ -110,11 +135,9 @@ public class PlayerBasics : MonoBehaviour
     /// </summary>
     /// <param name="context"></param>
     /// <returns></returns>
-    IEnumerator CharacterMovementMouse(InputAction.CallbackContext context)
+    IEnumerator AimWeapon(InputAction.CallbackContext context)
     {
-        Vector2 target = context.ReadValue<Vector2>();
-        //Debug.Log(target));
-        //Vector2 distance = new Vector2(transform.position.x - target.x))
+        skeletanMove.TrackCursorByHands(Camera.main.ScreenToWorldPoint(playerInput.Basic.MouseMovement.ReadValue<Vector2>()));
         yield return null;
     }
 
@@ -193,18 +216,30 @@ public class PlayerBasics : MonoBehaviour
     IEnumerator AimCoroutine()
     {
         speed = speed / 3;
-        aiming = true;
+        ChangeAimStatus(true);
         do
         {
+            Debug.Log(IsAiming);
             yield return null;
 
         } while (playerInput.Basic.Aim.IsInProgress());
-        aiming = false;
+        ChangeAimStatus(false);
         speed = defaultSpeed;
         Debug.Log("stop aiming");
         yield return null;
     }
 
+    void ChangeAimStatus(bool status)
+    {
+        IsAiming = status;
+        animator.SetBool("IsAiming", IsAiming);
+        if(!IsAiming) skeletanMove.SetArmsToIdle();
+    }
+
+    void CorrectPistolToLeftHand()
+    {
+        weapon.transform.position = skeletanMove.leftHand.position;
+    }
 
 }
 

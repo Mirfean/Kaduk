@@ -9,10 +9,7 @@ public class SkeletalMove : MonoBehaviour
     private SpriteSkin skeleton;
 
     [SerializeField]
-    private Transform leftHandTracker;
-
-    [SerializeField]
-    private Transform rightHandTracker;
+    public Transform leftHand;
 
     [SerializeField]
     private PlayerBasics player;
@@ -22,6 +19,12 @@ public class SkeletalMove : MonoBehaviour
 
     [SerializeField]
     bool IsAiming;
+
+    [SerializeField]
+    Transform HoldedItem;
+
+    [SerializeField]
+    float HoldItemRotationIdle = -68f;
 
     // Start is called before the first frame update
     void Start()
@@ -35,7 +38,7 @@ public class SkeletalMove : MonoBehaviour
         
     }
 
-    private void OnAnimatorIK(int layerIndex)
+/*    private void OnAnimatorIK(int layerIndex)
     {
         if (IsAiming)
         {
@@ -49,17 +52,25 @@ public class SkeletalMove : MonoBehaviour
             rightHandTracker.rotation = Quaternion.Euler(0, 0, aimAngle);
             animator.SetIKRotation(AvatarIKGoal.RightHand, rightHandTracker.rotation);
         }
+    }*/
+
+    /// <summary>
+    /// Setting HoldItem to Idle basic status(Z rotation to -68)
+    /// </summary>
+    public void SetArmsToIdle()
+    {
+        HoldedItem.rotation = Quaternion.Euler(0, 0, HoldItemRotationIdle);
     }
 
     public void TrackCursorByHands(Vector2 mousePos)
     {
-        
+        Vector2 aimDiff = new Vector2(mousePos.x - HoldedItem.position.x, mousePos.y - HoldedItem.position.y);
+        float aimAngle = Mathf.Atan2(aimDiff.y, aimDiff.x) * Mathf.Rad2Deg;
+        HoldedItem.rotation = Quaternion.Euler(0, 0, aimAngle);
     }
 
     private void RotateArm(Transform hand, Vector2 mousePos)
     {
-        Vector2 aimDiff = new Vector2(mousePos.x - hand.position.x, mousePos.y - hand.position.y);
-        float aimAngle = Mathf.Atan2(aimDiff.y, aimDiff.x) * Mathf.Rad2Deg;
-        hand.rotation = Quaternion.Euler(0, 0, aimAngle);
+        
     }
 }
