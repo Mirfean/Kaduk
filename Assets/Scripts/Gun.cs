@@ -16,41 +16,52 @@ public class Gun : _Weapon
     [SerializeField][Range(0.1f, 10f)]
     float bulletSpeed;
 
+    [SerializeField][Range(0.05f, 2)]
+    float fireRate;
+
+    [SerializeField]
+    float nextFire;
+    
     Vector2 movement;
     Vector2 mousePos;
+
+    private AudioSource gunAudio;
+
+    private LineRenderer laserLine;
+
+
 
     // Start is called before the first frame update
     void Start()
     {
-        
+        fireRate = 0.5f;
     }
 
     // Update is called once per frame
     void Update()
     {
-        movement.x = Input.GetAxisRaw("Horizontal");
-        movement.y = Input.GetAxisRaw("Vertical");
+        //movement.x = Input.GetAxisRaw("Horizontal");
+        //movement.y = Input.GetAxisRaw("Vertical");
 
-        mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        //mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
     }
 
-    private void FixedUpdate()
-    {
-        Rigidbody2D rb = new Rigidbody2D();
 
-        
-    }
-
-    public override void Attack(Vector2 mousePos)
+    public void Attack(Vector2 mousePos, Quaternion holdItemRot)
     {
         Debug.Log("Shooting by " + name);
         //Vector2 normXY = normalizeMousePos(mousePos);
-
-        RotateAim(mousePos);
+        //RotateAim(mousePos);
         //GameObject newBullet = Instantiate(bullet, shootingPoint.transform.position, shootingPoint.transform.rotation);
-        GameObject newBullet = Instantiate(bullet, transform.position, transform.rotation);
-        newBullet.GetComponent<Rigidbody2D>().AddForce(transform.forward * bulletSpeed, ForceMode2D.Impulse);
-        Destroy(newBullet, 30f);
+        if(Time.time > nextFire)
+        {
+            nextFire = Time.time + fireRate;
+            RotateAim(mousePos, holdItemRot);
+            GameObject newBullet = Instantiate(bullet, shootingPoint.transform.position, shootingPoint.transform.rotation);
+            newBullet.GetComponent<Rigidbody2D>().AddForce(transform.right * bulletSpeed, ForceMode2D.Impulse);
+            Destroy(newBullet, 10f);
+        }
+        
     }
 
     public Vector2 normalizeMousePos(Vector2 mousePos)
@@ -60,14 +71,27 @@ public class Gun : _Weapon
         return result;
     }
 
-    public void RotateAim(Vector2 mousePos)
+    public void RotateAim(Vector2 mousePos, Quaternion holdItemRot)
     {
-        /*Vector2 aimDir = mousePos - new Vector2(shootingPoint.transform.position.x, shootingPoint.transform.position.y);
-        shootingPoint.GetComponent<Rigidbody2D>().rotation = aimAngle;*/
-        Debug.Log(shootingPoint.transform.position);
+        Debug.Log("gun rotation " + transform.rotation.z);
+        
         //Vector2 aimDiff = new Vector2(mousePos.x - shootingPoint.transform.position.x, mousePos.y - shootingPoint.transform.position.y);
-        Vector2 aimDiff = new Vector2(mousePos.x - transform.position.x, mousePos.y - transform.position.y);
-        float aimAngle = Mathf.Atan2(aimDiff.y, aimDiff.x) * Mathf.Rad2Deg;
-        transform.rotation = Quaternion.Euler(0, 0, aimAngle);
+        Vector2 aimDiff = new Vector2(mousePos.x - shootingPoint.transform.position.x - transform.position.x, mousePos.y - shootingPoint.transform.position.y - transform.position.y);
+        //aimDiff.Normalize();
+        float aimAngle = (Mathf.Atan2(aimDiff.y, aimDiff.x) * Mathf.Rad2Deg);
+        //shootingPoint.transform.rotation = Quaternion.Euler(0, 0, aimAngle);
+        Debug.Log($"aimAngle {aimAngle} and gun rotation {transform.rotation.z} and holdItemRot {holdItemRot.z}");
+    }
+
+    public void RotateGun(bool rotated)
+    {
+        if (rotated)
+        {
+            transform.Rotate(180f, 180f, 0f);
+        }
+        else
+        {
+            transform.Rotate(-180f, -180f, 0);
+        }
     }
 }

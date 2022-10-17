@@ -85,7 +85,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2459932883318276261}
-  m_LocalRotation: {x: 0, y: 0, z: -0.35022488, w: 0.9366657}
+  m_LocalRotation: {x: 0, y: 0, z: -0.35022536, w: 0.9366655}
   m_LocalPosition: {x: -0.015273707, y: 0.10276295, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -149,7 +149,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2459932883424258051}
-  m_LocalRotation: {x: 0, y: 0, z: 0.58460623, w: 0.8113172}
+  m_LocalRotation: {x: 0, y: 0, z: 0.5846072, w: 0.8113165}
   m_LocalPosition: {x: 0.24761268, y: 0.00054025464, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -289,6 +289,7 @@ MonoBehaviour:
   description: 
   damage: 0
   attackSpeed: 0.88
+  rotated: 0
 --- !u!1 &2459932883566128176
 GameObject:
   m_ObjectHideFlags: 0
@@ -634,8 +635,8 @@ MonoBehaviour:
   - {fileID: 2459932883659504874}
   - {fileID: 2459932883316647257}
   m_Bounds:
-    m_Center: {x: -0.030183762, y: 0.25416034, z: 0}
-    m_Extent: {x: 0.30133942, y: 0.9325498, z: 0}
+    m_Center: {x: -0.030183762, y: 0.25416046, z: 0}
+    m_Extent: {x: 0.30133936, y: 0.9325499, z: 0}
   m_UseBatching: 1
   m_AlwaysUpdate: 1
   m_AutoRebind: 0
@@ -720,6 +721,7 @@ Transform:
   m_Children:
   - {fileID: 2459932883713367725}
   - {fileID: 2459932885082469117}
+  - {fileID: 8648715561733758071}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -740,10 +742,12 @@ MonoBehaviour:
   isMoving: 0
   IsAiming: 0
   shootInProgress: 0
+  rotated: 0
   weapon: {fileID: 2459932883494991173}
   crosshair: {fileID: 2800000, guid: a1f8a20cd7ae7ee46bb9f98b6d97c128, type: 3}
   skeletanMove: {fileID: 2459932883904877607}
   animator: {fileID: 0}
+  CharacterSprite: {fileID: 0}
 --- !u!114 &2459932883904877605
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -872,12 +876,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   skeleton: {fileID: 2459932883713367727}
-  leftHandTracker: {fileID: 2459932884364706680}
-  rightHandTracker: {fileID: 2459932883318276262}
+  leftHand: {fileID: 0}
   player: {fileID: 2459932883904877604}
   animator: {fileID: 2459932883713367720}
   IsAiming: 0
   HoldedItem: {fileID: 2459932884841419919}
+  HoldItemRotationIdle: -68
 --- !u!1 &2459932884061506944
 GameObject:
   m_ObjectHideFlags: 0
@@ -1034,7 +1038,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2459932884364706687}
-  m_LocalRotation: {x: 0, y: 0, z: -0.04436449, w: 0.9990154}
+  m_LocalRotation: {x: 0, y: 0, z: -0.04436493, w: 0.9990154}
   m_LocalPosition: {x: -0.008159981, y: -0.108180776, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -1098,7 +1102,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2459932884667973880}
-  m_LocalRotation: {x: 0, y: 0, z: 0.48749796, w: 0.8731242}
+  m_LocalRotation: {x: 0, y: 0, z: 0.4874988, w: 0.8731237}
   m_LocalPosition: {x: 0.24722654, y: -0.001646955, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -1496,3 +1500,34 @@ CircleCollider2D:
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
   m_Radius: 0.5
+--- !u!1 &5988504099328978213
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8648715561733758071}
+  m_Layer: 10
+  m_Name: CameraCatcher
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8648715561733758071
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5988504099328978213}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2459932883904877611}
+  m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}

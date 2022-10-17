@@ -21,7 +21,7 @@ public class SkeletalMove : MonoBehaviour
     bool IsAiming;
 
     [SerializeField]
-    Transform HoldedItem;
+    public Transform HoldedItem;
 
     [SerializeField]
     float HoldItemRotationIdle = -68f;
@@ -65,6 +65,7 @@ public class SkeletalMove : MonoBehaviour
     public void TrackCursorByHands(Vector2 mousePos)
     {
         Vector2 aimDiff = new Vector2(mousePos.x - HoldedItem.position.x, mousePos.y - HoldedItem.position.y);
+        //Vector2 aimDiff = new Vector2(mousePos.x, mousePos.y);
         float aimAngle = Mathf.Atan2(aimDiff.y, aimDiff.x) * Mathf.Rad2Deg;
         HoldedItem.rotation = Quaternion.Euler(0, 0, aimAngle);
     }

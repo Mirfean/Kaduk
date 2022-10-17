@@ -7,6 +7,7 @@ public class _Weapon : MonoBehaviour
     public string description;
     public float damage;
     public float attackSpeed;
+    public bool rotated = false;
 
     public virtual void Attack(Vector2 mousePos)
     {
@@ -23,5 +24,11 @@ public class _Weapon : MonoBehaviour
     void Update()
     {
         
+    }
+
+    public virtual float GetRealRotationToMouse()
+    {
+        Debug.Log("Base Weapon rotation");
+        return transform.rotation.z;
     }
 }

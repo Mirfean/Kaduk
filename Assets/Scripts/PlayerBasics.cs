@@ -23,7 +23,10 @@ public class PlayerBasics : MonoBehaviour
     private bool shootInProgress = false;
 
     [SerializeField]
-    GameObject weapon;
+    private bool rotated = false;
+
+    [SerializeField]
+    _Weapon weapon;
 
     [SerializeField]
     private Texture2D crosshair;
@@ -53,7 +56,7 @@ public class PlayerBasics : MonoBehaviour
         
         //playerInput.Basic.WSAD.performed += OnMovement;
 
-        ChangeCursorToCrossHair();
+        HideCursorToAim();
     }
 
     // Update is called once per frame
@@ -70,12 +73,15 @@ public class PlayerBasics : MonoBehaviour
     public void OnMouseClick(InputAction.CallbackContext context)
     {
         shootInProgress = playerInput.Basic.MouseLClick.inProgress;
+        Debug.Log("TWOJA STARA " + shootInProgress);
         if (IsAiming)
         {
             if(weapon != null && !shootInProgress)
             {
                 Debug.Log("Piu piu");
-                skeletanMove.TrackCursorByHands(Camera.main.ScreenToWorldPoint(playerInput.Basic.MouseMovement.ReadValue<Vector2>()));
+                weapon.GetComponent<Gun>().Attack(Camera.main.ScreenToWorldPoint(playerInput.Basic.MouseMovement.ReadValue<Vector2>()), skeletanMove.HoldedItem.rotation);
+
+                //skeletanMove.TrackCursorByHands(Camera.main.ScreenToWorldPoint(playerInput.Basic.MouseMovement.ReadValue<Vector2>()));
                 //weapon.GetComponent<_Weapon>().Attack(Camera.main.ScreenToWorldPoint(playerInput.Basic.MouseMovement.ReadValue<Vector2>()));
                 //weapon.GetComponent<_Weapon>().Attack(playerInput.Basic.MouseMovement.ReadValue<Vector2>());
             }
@@ -92,12 +98,14 @@ public class PlayerBasics : MonoBehaviour
     IEnumerator MovingByClick(InputAction.CallbackContext context)
     {
         Vector2 target = Camera.main.ScreenToWorldPoint(playerInput.Basic.MouseMovement.ReadValue<Vector2>());
+        animator.SetBool("Walk", true);
         do
         {
             transform.position = Vector2.MoveTowards(transform.position, target, speed * Time.deltaTime);
             //Debug.Log((transform.position.x - target.x) + " " + (transform.position.y - target.y));
             yield return null;
         } while ((Mathf.Abs(transform.position.x - target.x) > 0.1f || Mathf.Abs(transform.position.y - target.y) > 0.1f));
+        
         Debug.Log("Ending movement by mouse");
         StopAllCoroutines();
         yield return null;
@@ -105,7 +113,7 @@ public class PlayerBasics : MonoBehaviour
     }
 
     /// <summary>
-    /// INACTIVE
+    /// Actions when mouse is moving
     /// </summary>
     /// <param name="context"></param>
     public void OnMovementMouse(InputAction.CallbackContext context)
@@ -114,10 +122,12 @@ public class PlayerBasics : MonoBehaviour
         if (realPos.x < transform.position.x)
         {
             CharacterSprite.rotation = Quaternion.Euler(0, 180, 0);
+            rotated = true;
         }
-        else
+        else if(rotated)
         {
             CharacterSprite.rotation = Quaternion.Euler(0, 0, 0);
+            rotated=false;
         }
 
         if (IsAiming)
@@ -125,7 +135,6 @@ public class PlayerBasics : MonoBehaviour
             Debug.Log("Aim");
             skeletanMove.TrackCursorByHands(realPos);
             CorrectPistolToLeftHand();
-            //StartCoroutine(AimWeapon(context));
         }
 
     } 
@@ -163,16 +172,19 @@ public class PlayerBasics : MonoBehaviour
     /// <returns></returns>
     IEnumerator CharacterMovementWSAD(InputAction.CallbackContext context)
     {
+        animator.SetBool("Walk", true);
         do
         {
             Vector2 direction = reduceDiagonallyMovement(context.ReadValue<Vector2>());
 
+            
             transform.Translate(direction * Time.deltaTime * speed);
             //yield return new WaitForSeconds(0.05f);
             yield return null;
 
         } while (playerInput.Basic.WSAD.phase.IsInProgress());
-        
+        animator.SetBool("Walk", false);
+        StopMoveCoroutines();
 
     }
 
@@ -193,6 +205,7 @@ public class PlayerBasics : MonoBehaviour
 
     void StopMoveCoroutines()
     {
+        animator.SetBool("Walk", false);
         if (moveCoroutine != null)
         {
             Debug.Log("Killing movement by mouse");
@@ -202,9 +215,19 @@ public class PlayerBasics : MonoBehaviour
         
     }
 
-    void ChangeCursorToCrossHair()
+
+    /// <summary>
+    /// CURSOR
+    /// </summary>
+    void HideCursorToAim()
     {
-        Cursor.SetCursor(crosshair, Vector2.zero, CursorMode.ForceSoftware);
+        //Cursor.SetCursor(crosshair, Vector2.zero, CursorMode.ForceSoftware);
+        Cursor.visible = false;
+    }
+
+    void ShowCursor()
+    {
+        Cursor.visible = true;
     }
 
     public void OnAim(InputAction.CallbackContext context)
@@ -232,13 +255,38 @@ public class PlayerBasics : MonoBehaviour
     void ChangeAimStatus(bool status)
     {
         IsAiming = status;
+        
         animator.SetBool("IsAiming", IsAiming);
-        if(!IsAiming) skeletanMove.SetArmsToIdle();
+        if (!IsAiming) {
+            ShowCursor();
+            weapon.gameObject.SetActive(false);
+            skeletanMove.SetArmsToIdle();
+        }
+        if (IsAiming)
+        {
+            StopMoveCoroutines();
+            HideCursorToAim();
+            weapon.gameObject.SetActive(true);
+        }
     }
 
     void CorrectPistolToLeftHand()
     {
         weapon.transform.position = skeletanMove.leftHand.position;
+        if (rotated && !weapon.GetComponent<_Weapon>().rotated)
+        {
+            //weapon.transform.Rotate(180f, 180f, 0f);
+            weapon.GetComponent<Gun>().RotateGun(true);
+        }
+        else if(!rotated)
+        {
+            if (weapon.GetComponent<_Weapon>().rotated)
+            {
+                weapon.GetComponent<Gun>().RotateGun(false);
+                //weapon.transform.Rotate(-180f, -180f, 0f);
+            }
+            
+        }
     }
 
 }
