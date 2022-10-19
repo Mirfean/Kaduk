@@ -1,3 +1,4 @@
+using Assets.Scripts;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -5,7 +6,9 @@ using UnityEngine;
 public class _Item : MonoBehaviour
 {
     [SerializeField]
-    private Texture2D eyeCursor;
+    private CursorManager cursorManager;
+
+
 
     [SerializeField]
     public string description;
@@ -13,7 +16,7 @@ public class _Item : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+        cursorManager = FindObjectOfType<CursorManager>();
     }
 
     // Update is called once per frame
@@ -22,15 +25,20 @@ public class _Item : MonoBehaviour
         
     }
 
+    void OnUse(Transform player)
+    {
+        Debug.Log("KWA");
+    }
+
     private void OnMouseEnter()
     {
-        Cursor.SetCursor(eyeCursor, Vector2.zero, CursorMode.ForceSoftware);
+        cursorManager.ChangeCursorTo(CursorType.EYE);
     }
 
     private void OnMouseExit()
     {
         //TODO execute method 
-        Cursor.SetCursor(null, Vector2.zero, CursorMode.Auto);
+        cursorManager.ChangeCursorTo(CursorType.STANDARD);
     }
 
     private void OnMouseUpAsButton()
