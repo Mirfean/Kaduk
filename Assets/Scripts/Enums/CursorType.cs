@@ -6,11 +6,10 @@ using System.Threading.Tasks;
 
 namespace Assets.Scripts
 {
-    public enum CursorMode
+    public enum CursorType
     {
-        STANDARD,
-        CROSSHAIR,
-        EYE,
-
+        STANDARD = 0,
+        CROSSHAIR = 1,
+        EYE = 2,
     }
 }
