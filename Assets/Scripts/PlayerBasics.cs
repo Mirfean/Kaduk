@@ -54,6 +54,9 @@ public class PlayerBasics : MonoBehaviour
     [SerializeField]
     Selector selector;
 
+    [SerializeField]
+    InventoryManager inventoryManager;
+
 
 
     // Start is called before the first frame update
@@ -62,12 +65,16 @@ public class PlayerBasics : MonoBehaviour
         playerInput = new Player();
         playerInput.Enable();
         selector = GetComponent<Selector>();
+        inventoryManager = FindObjectOfType<InventoryManager>();
     }
 
     // Update is called once per frame
     void Update()
     {
-
+        if(inventoryManager.itemGRID != null)
+        {
+            inventoryManager.getGridPos(playerInput.Basic.MouseMovement.ReadValue<Vector2>());
+        }
     }
 
     public void TurnOffInput()
@@ -94,6 +101,9 @@ public class PlayerBasics : MonoBehaviour
 
     public void OnMouseClick(InputAction.CallbackContext context)
     {
+        //inventoryManager.getGridPos(Camera.main.ScreenToWorldPoint(playerInput.Basic.MouseMovement.ReadValue<Vector2>()));
+        inventoryManager.getGridPos(playerInput.Basic.MouseMovement.ReadValue<Vector2>());
+
         if (IsDialogue)
         {
             return;
@@ -179,6 +189,7 @@ public class PlayerBasics : MonoBehaviour
     /// <param name="context"></param>
     public void OnMovementWSAD(InputAction.CallbackContext context)
     {
+        if (IsDialogue) return;
         //Debug.Log(context.valueType);
         Debug.Log(context.ReadValue<Vector2>());
         //Debug.Log(context.ReadValue<Vector2>() + " Vector?");

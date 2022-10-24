@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using PixelCrushers;
 
+/// <summary>
+/// Class necessary for Dialogue System with new Input
+/// </summary>
 public class InputRegistration : MonoBehaviour
 {
 #if USE_NEW_INPUT
