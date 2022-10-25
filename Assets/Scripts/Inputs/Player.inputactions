@@ -160,9 +160,27 @@
             "id": "73c6e039-0501-4a7b-9624-1639d5c7825d",
             "actions": [
                 {
-                    "name": "New action",
+                    "name": "MouseLClick",
                     "type": "Button",
                     "id": "a06a9703-e173-46a4-90bd-acb2a6218cca",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "MousePosition",
+                    "type": "PassThrough",
+                    "id": "a64c46f4-7cd3-4b88-a5e4-c2d019c819b0",
+                    "expectedControlType": "Vector2",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "InventoryClose",
+                    "type": "Button",
+                    "id": "7c5a67b0-03da-4e23-bc11-4f89120eebc5",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
@@ -173,11 +191,33 @@
                 {
                     "name": "",
                     "id": "fc905580-c687-4d5f-9f2f-b27ff03d63c9",
-                    "path": "",
+                    "path": "<Mouse>/leftButton",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "New action",
+                    "action": "MouseLClick",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "eee7c5aa-032e-4619-a849-c555d78864a4",
+                    "path": "<Mouse>/position",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "MousePosition",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "ed98ce75-f831-44ff-9dd7-e699992a5581",
+                    "path": "<Keyboard>/i",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "InventoryClose",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

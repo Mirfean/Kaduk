@@ -1505,7 +1505,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a7c94d2d10e90cf4c8269e43251089f8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  itemGrid: {fileID: 0}
+  itemGrid: {fileID: 1127854885}
+  selectedItem: {fileID: 0}
 --- !u!1001 &1743953419
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -5759,7 +5760,7 @@ PrefabInstance:
     - target: {fileID: 2459932883904877604, guid: d8f334ad6ca7d33479e30e5dd9e4073e,
         type: 3}
       propertyPath: IsDialogue
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2459932883904877604, guid: d8f334ad6ca7d33479e30e5dd9e4073e,
         type: 3}
@@ -5856,6 +5857,11 @@ PrefabInstance:
       propertyPath: leftHand
       value: 
       objectReference: {fileID: 1227296716}
+    - target: {fileID: 2459932883904877607, guid: d8f334ad6ca7d33479e30e5dd9e4073e,
+        type: 3}
+      propertyPath: HoldItemRotationIdle
+      value: -69
+      objectReference: {fileID: 0}
     - target: {fileID: 2459932883904877610, guid: d8f334ad6ca7d33479e30e5dd9e4073e,
         type: 3}
       propertyPath: m_Name

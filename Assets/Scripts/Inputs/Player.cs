@@ -182,9 +182,27 @@ public partial class @Player : IInputActionCollection2, IDisposable
             ""id"": ""73c6e039-0501-4a7b-9624-1639d5c7825d"",
             ""actions"": [
                 {
-                    ""name"": ""New action"",
+                    ""name"": ""MouseLClick"",
                     ""type"": ""Button"",
                     ""id"": ""a06a9703-e173-46a4-90bd-acb2a6218cca"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""MousePosition"",
+                    ""type"": ""PassThrough"",
+                    ""id"": ""a64c46f4-7cd3-4b88-a5e4-c2d019c819b0"",
+                    ""expectedControlType"": ""Vector2"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""InventoryClose"",
+                    ""type"": ""Button"",
+                    ""id"": ""7c5a67b0-03da-4e23-bc11-4f89120eebc5"",
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """",
@@ -195,11 +213,33 @@ public partial class @Player : IInputActionCollection2, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""fc905580-c687-4d5f-9f2f-b27ff03d63c9"",
-                    ""path"": """",
+                    ""path"": ""<Mouse>/leftButton"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""New action"",
+                    ""action"": ""MouseLClick"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""eee7c5aa-032e-4619-a849-c555d78864a4"",
+                    ""path"": ""<Mouse>/position"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""MousePosition"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""ed98ce75-f831-44ff-9dd7-e699992a5581"",
+                    ""path"": ""<Keyboard>/i"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""InventoryClose"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -217,7 +257,9 @@ public partial class @Player : IInputActionCollection2, IDisposable
         m_Basic_Inventory = m_Basic.FindAction("Inventory", throwIfNotFound: true);
         // UI
         m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
-        m_UI_Newaction = m_UI.FindAction("New action", throwIfNotFound: true);
+        m_UI_MouseLClick = m_UI.FindAction("MouseLClick", throwIfNotFound: true);
+        m_UI_MousePosition = m_UI.FindAction("MousePosition", throwIfNotFound: true);
+        m_UI_InventoryClose = m_UI.FindAction("InventoryClose", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -342,12 +384,16 @@ public partial class @Player : IInputActionCollection2, IDisposable
     // UI
     private readonly InputActionMap m_UI;
     private IUIActions m_UIActionsCallbackInterface;
-    private readonly InputAction m_UI_Newaction;
+    private readonly InputAction m_UI_MouseLClick;
+    private readonly InputAction m_UI_MousePosition;
+    private readonly InputAction m_UI_InventoryClose;
     public struct UIActions
     {
         private @Player m_Wrapper;
         public UIActions(@Player wrapper) { m_Wrapper = wrapper; }
-        public InputAction @Newaction => m_Wrapper.m_UI_Newaction;
+        public InputAction @MouseLClick => m_Wrapper.m_UI_MouseLClick;
+        public InputAction @MousePosition => m_Wrapper.m_UI_MousePosition;
+        public InputAction @InventoryClose => m_Wrapper.m_UI_InventoryClose;
         public InputActionMap Get() { return m_Wrapper.m_UI; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -357,16 +403,28 @@ public partial class @Player : IInputActionCollection2, IDisposable
         {
             if (m_Wrapper.m_UIActionsCallbackInterface != null)
             {
-                @Newaction.started -= m_Wrapper.m_UIActionsCallbackInterface.OnNewaction;
-                @Newaction.performed -= m_Wrapper.m_UIActionsCallbackInterface.OnNewaction;
-                @Newaction.canceled -= m_Wrapper.m_UIActionsCallbackInterface.OnNewaction;
+                @MouseLClick.started -= m_Wrapper.m_UIActionsCallbackInterface.OnMouseLClick;
+                @MouseLClick.performed -= m_Wrapper.m_UIActionsCallbackInterface.OnMouseLClick;
+                @MouseLClick.canceled -= m_Wrapper.m_UIActionsCallbackInterface.OnMouseLClick;
+                @MousePosition.started -= m_Wrapper.m_UIActionsCallbackInterface.OnMousePosition;
+                @MousePosition.performed -= m_Wrapper.m_UIActionsCallbackInterface.OnMousePosition;
+                @MousePosition.canceled -= m_Wrapper.m_UIActionsCallbackInterface.OnMousePosition;
+                @InventoryClose.started -= m_Wrapper.m_UIActionsCallbackInterface.OnInventoryClose;
+                @InventoryClose.performed -= m_Wrapper.m_UIActionsCallbackInterface.OnInventoryClose;
+                @InventoryClose.canceled -= m_Wrapper.m_UIActionsCallbackInterface.OnInventoryClose;
             }
             m_Wrapper.m_UIActionsCallbackInterface = instance;
             if (instance != null)
             {
-                @Newaction.started += instance.OnNewaction;
-                @Newaction.performed += instance.OnNewaction;
-                @Newaction.canceled += instance.OnNewaction;
+                @MouseLClick.started += instance.OnMouseLClick;
+                @MouseLClick.performed += instance.OnMouseLClick;
+                @MouseLClick.canceled += instance.OnMouseLClick;
+                @MousePosition.started += instance.OnMousePosition;
+                @MousePosition.performed += instance.OnMousePosition;
+                @MousePosition.canceled += instance.OnMousePosition;
+                @InventoryClose.started += instance.OnInventoryClose;
+                @InventoryClose.performed += instance.OnInventoryClose;
+                @InventoryClose.canceled += instance.OnInventoryClose;
             }
         }
     }
@@ -381,6 +439,8 @@ public partial class @Player : IInputActionCollection2, IDisposable
     }
     public interface IUIActions
     {
-        void OnNewaction(InputAction.CallbackContext context);
+        void OnMouseLClick(InputAction.CallbackContext context);
+        void OnMousePosition(InputAction.CallbackContext context);
+        void OnInventoryClose(InputAction.CallbackContext context);
     }
 }

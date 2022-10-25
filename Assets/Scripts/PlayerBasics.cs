@@ -88,7 +88,9 @@ public class PlayerBasics : MonoBehaviour
     {
         if(inventoryManager.itemGRID != null)
         {
-            inventoryManager.getGridPos(playerInput.Basic.MouseMovement.ReadValue<Vector2>());
+            if (playerInput.UI.enabled)  inventoryManager.getGridPos(playerInput.UI.MousePosition.ReadValue<Vector2>());
+            else inventoryManager.getGridPos(playerInput.Basic.MouseMovement.ReadValue<Vector2>());
+
         }
     }
 
@@ -118,9 +120,8 @@ public class PlayerBasics : MonoBehaviour
     {
         if (IsInventory)
         {
-            inventoryManager.getGridPos(playerInput.Basic.MouseMovement.ReadValue<Vector2>());
-
-
+            inventoryManager.ItemMove(playerInput.UI.MousePosition.ReadValue<Vector2>());
+            //inventoryManager.getGridPos(playerInput.Basic.MouseMovement.ReadValue<Vector2>());
             return;
         }
         else if (IsDialogue)
@@ -330,7 +331,30 @@ public class PlayerBasics : MonoBehaviour
 
     public void OnInventoryButton(InputAction.CallbackContext context)
     {
-        //"I" button functionality and show/hide inventory depanding on bool inventoryOn
+        if (context.started) SwitchInventory();
+    }
+
+    void SwitchInventory()
+    {
+        if (playerInput.Basic.enabled)
+        {
+            IsInventory = true;
+        }
+        else
+        {
+            IsInventory = false;
+        }
+
+        if (IsInventory)
+        {
+            playerInput.UI.Enable();
+            playerInput.Basic.Disable();
+        }
+        else
+        {
+            playerInput.Basic.Enable();
+            playerInput.UI.Disable();
+        }
     }
 
 }
