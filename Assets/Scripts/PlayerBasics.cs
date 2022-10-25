@@ -51,6 +51,8 @@ public class PlayerBasics : MonoBehaviour
     
     public bool IsDialogue = false;
 
+    public bool IsInventory = false;
+
     [SerializeField]
     Selector selector;
 
@@ -101,10 +103,15 @@ public class PlayerBasics : MonoBehaviour
 
     public void OnMouseClick(InputAction.CallbackContext context)
     {
-        //inventoryManager.getGridPos(Camera.main.ScreenToWorldPoint(playerInput.Basic.MouseMovement.ReadValue<Vector2>()));
-        inventoryManager.getGridPos(playerInput.Basic.MouseMovement.ReadValue<Vector2>());
 
-        if (IsDialogue)
+        if (IsInventory)
+        {
+            inventoryManager.getGridPos(playerInput.Basic.MouseMovement.ReadValue<Vector2>());
+
+
+            return;
+        }
+        else if (IsDialogue)
         {
             return;
         }
@@ -309,6 +316,11 @@ public class PlayerBasics : MonoBehaviour
             }
             
         }
+    }
+
+    public void OnInventoryButton(InputAction.CallbackContext context)
+    {
+        //"I" button functionality and show/hide inventory depanding on bool inventoryOn
     }
 
 }

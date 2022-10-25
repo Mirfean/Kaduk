@@ -62,6 +62,15 @@ public partial class @Player : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Inventory"",
+                    ""type"": ""Button"",
+                    ""id"": ""a4cca925-4621-4a3f-acf9-eeb8ba30b9a4"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -152,6 +161,17 @@ public partial class @Player : IInputActionCollection2, IDisposable
                     ""action"": ""Aim"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""41c9698d-8002-41e7-9e3a-4f58cc9693ce"",
+                    ""path"": ""<Keyboard>/i"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Inventory"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         },
@@ -192,6 +212,7 @@ public partial class @Player : IInputActionCollection2, IDisposable
         m_Basic_MouseMovement = m_Basic.FindAction("MouseMovement", throwIfNotFound: true);
         m_Basic_MouseLClick = m_Basic.FindAction("MouseLClick", throwIfNotFound: true);
         m_Basic_Aim = m_Basic.FindAction("Aim", throwIfNotFound: true);
+        m_Basic_Inventory = m_Basic.FindAction("Inventory", throwIfNotFound: true);
         // UI
         m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
         m_UI_Newaction = m_UI.FindAction("New action", throwIfNotFound: true);
@@ -258,6 +279,7 @@ public partial class @Player : IInputActionCollection2, IDisposable
     private readonly InputAction m_Basic_MouseMovement;
     private readonly InputAction m_Basic_MouseLClick;
     private readonly InputAction m_Basic_Aim;
+    private readonly InputAction m_Basic_Inventory;
     public struct BasicActions
     {
         private @Player m_Wrapper;
@@ -266,6 +288,7 @@ public partial class @Player : IInputActionCollection2, IDisposable
         public InputAction @MouseMovement => m_Wrapper.m_Basic_MouseMovement;
         public InputAction @MouseLClick => m_Wrapper.m_Basic_MouseLClick;
         public InputAction @Aim => m_Wrapper.m_Basic_Aim;
+        public InputAction @Inventory => m_Wrapper.m_Basic_Inventory;
         public InputActionMap Get() { return m_Wrapper.m_Basic; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -287,6 +310,9 @@ public partial class @Player : IInputActionCollection2, IDisposable
                 @Aim.started -= m_Wrapper.m_BasicActionsCallbackInterface.OnAim;
                 @Aim.performed -= m_Wrapper.m_BasicActionsCallbackInterface.OnAim;
                 @Aim.canceled -= m_Wrapper.m_BasicActionsCallbackInterface.OnAim;
+                @Inventory.started -= m_Wrapper.m_BasicActionsCallbackInterface.OnInventory;
+                @Inventory.performed -= m_Wrapper.m_BasicActionsCallbackInterface.OnInventory;
+                @Inventory.canceled -= m_Wrapper.m_BasicActionsCallbackInterface.OnInventory;
             }
             m_Wrapper.m_BasicActionsCallbackInterface = instance;
             if (instance != null)
@@ -303,6 +329,9 @@ public partial class @Player : IInputActionCollection2, IDisposable
                 @Aim.started += instance.OnAim;
                 @Aim.performed += instance.OnAim;
                 @Aim.canceled += instance.OnAim;
+                @Inventory.started += instance.OnInventory;
+                @Inventory.performed += instance.OnInventory;
+                @Inventory.canceled += instance.OnInventory;
             }
         }
     }
@@ -346,6 +375,7 @@ public partial class @Player : IInputActionCollection2, IDisposable
         void OnMouseMovement(InputAction.CallbackContext context);
         void OnMouseLClick(InputAction.CallbackContext context);
         void OnAim(InputAction.CallbackContext context);
+        void OnInventory(InputAction.CallbackContext context);
     }
     public interface IUIActions
     {
