@@ -54,6 +54,8 @@ public class PlayerBasics : MonoBehaviour
     
     public bool IsDialogue = false;
 
+    public bool IsInventory = false;
+
     [SerializeField]
     Selector selector;
 
@@ -79,10 +81,6 @@ public class PlayerBasics : MonoBehaviour
         playerInput.Enable();
         selector = GetComponent<Selector>();
         inventoryManager = FindObjectOfType<InventoryManager>();
-<<<<<<< HEAD
-
-=======
->>>>>>> c0a352ebab568923d6d7a51aee30701c75b400ed
     }
 
     // Update is called once per frame
@@ -118,10 +116,7 @@ public class PlayerBasics : MonoBehaviour
 
     public void OnMouseClick(InputAction.CallbackContext context)
     {
-        //inventoryManager.getGridPos(Camera.main.ScreenToWorldPoint(playerInput.Basic.MouseMovement.ReadValue<Vector2>()));
-<<<<<<< HEAD
-
-        if (inventoryON)
+        if (IsInventory)
         {
             inventoryManager.getGridPos(playerInput.Basic.MouseMovement.ReadValue<Vector2>());
 
@@ -129,11 +124,6 @@ public class PlayerBasics : MonoBehaviour
             return;
         }
         else if (IsDialogue)
-=======
-        inventoryManager.getGridPos(playerInput.Basic.MouseMovement.ReadValue<Vector2>());
-
-        if (IsDialogue)
->>>>>>> c0a352ebab568923d6d7a51aee30701c75b400ed
         {
             return;
         }
@@ -309,22 +299,12 @@ public class PlayerBasics : MonoBehaviour
         
         animator.SetBool("IsAiming", IsAiming);
         if (!IsAiming) {
-<<<<<<< HEAD
-
-=======
-            cursorManager.ShowCursor();
->>>>>>> c0a352ebab568923d6d7a51aee30701c75b400ed
             weapon.gameObject.SetActive(false);
             skeletanMove.SetArmsToIdle();
         }
         if (IsAiming)
         {
             StopMoveCoroutines();
-<<<<<<< HEAD
-
-=======
-            cursorManager.HideCursorToAim();
->>>>>>> c0a352ebab568923d6d7a51aee30701c75b400ed
             weapon.gameObject.SetActive(true);
         }
     }
@@ -348,7 +328,7 @@ public class PlayerBasics : MonoBehaviour
         }
     }
 
-    void InventoryButton(InputAction.CallbackContext context)
+    public void OnInventoryButton(InputAction.CallbackContext context)
     {
         //"I" button functionality and show/hide inventory depanding on bool inventoryOn
     }

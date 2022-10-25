@@ -74,13 +74,9 @@ public class ItemGrid : MonoBehaviour
         inventoryItemsSlot[posX, posY] = inventoryItem;
 
         Vector2 position = new Vector2();
-<<<<<<< HEAD
-        position.x = (posX * tileSizeWidth);
-        position.y = -(posY * tileSizeHeight);
-=======
-        position.x = posX * gridSize.x + gridSize.x / 2;
-        position.y = -(posY * gridSize.y + gridSize.y / 2);
->>>>>>> c0a352ebab568923d6d7a51aee30701c75b400ed
+        position.x = posX * tileSizeWidth + tileSizeWidth / 2;
+        position.y = -(posY * tileSizeHeight + tileSizeHeight / 2);
+
 
         rectTransform.localPosition = position;
     }

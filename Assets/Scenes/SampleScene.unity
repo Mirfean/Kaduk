@@ -1131,7 +1131,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gridSize: {x: 6, y: 4}
-  inventoryItemPrefab: {fileID: 7169934462524627719, guid: d6813f0b36ca75343a59e5f0e8a320df,
+  inventoryItemPrefab: {fileID: 237450641518212523, guid: 5898212183a3eea4ab62f917808d2aa4,
     type: 3}
 --- !u!114 &1127854886
 MonoBehaviour:
@@ -5781,6 +5781,56 @@ PrefabInstance:
       propertyPath: m_Camera
       value: 
       objectReference: {fileID: 519420031}
+    - target: {fileID: 2459932883904877605, guid: d8f334ad6ca7d33479e30e5dd9e4073e,
+        type: 3}
+      propertyPath: m_ActionEvents.Array.size
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 2459932883904877605, guid: d8f334ad6ca7d33479e30e5dd9e4073e,
+        type: 3}
+      propertyPath: m_ActionEvents.Array.data[5].m_ActionId
+      value: a4cca925-4621-4a3f-acf9-eeb8ba30b9a4
+      objectReference: {fileID: 0}
+    - target: {fileID: 2459932883904877605, guid: d8f334ad6ca7d33479e30e5dd9e4073e,
+        type: 3}
+      propertyPath: m_ActionEvents.Array.data[5].m_ActionName
+      value: Basic/New action
+      objectReference: {fileID: 0}
+    - target: {fileID: 2459932883904877605, guid: d8f334ad6ca7d33479e30e5dd9e4073e,
+        type: 3}
+      propertyPath: m_ActionEvents.Array.data[5].m_PersistentCalls.m_Calls.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2459932883904877605, guid: d8f334ad6ca7d33479e30e5dd9e4073e,
+        type: 3}
+      propertyPath: m_ActionEvents.Array.data[5].m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2459932883904877605, guid: d8f334ad6ca7d33479e30e5dd9e4073e,
+        type: 3}
+      propertyPath: m_ActionEvents.Array.data[5].m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 1688630196}
+    - target: {fileID: 2459932883904877605, guid: d8f334ad6ca7d33479e30e5dd9e4073e,
+        type: 3}
+      propertyPath: m_ActionEvents.Array.data[5].m_PersistentCalls.m_Calls.Array.data[0].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 2459932883904877605, guid: d8f334ad6ca7d33479e30e5dd9e4073e,
+        type: 3}
+      propertyPath: m_ActionEvents.Array.data[5].m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: OnInventoryButton
+      objectReference: {fileID: 0}
+    - target: {fileID: 2459932883904877605, guid: d8f334ad6ca7d33479e30e5dd9e4073e,
+        type: 3}
+      propertyPath: m_ActionEvents.Array.data[5].m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: PlayerBasics, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 2459932883904877605, guid: d8f334ad6ca7d33479e30e5dd9e4073e,
+        type: 3}
+      propertyPath: m_ActionEvents.Array.data[5].m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
     - target: {fileID: 2459932883904877606, guid: d8f334ad6ca7d33479e30e5dd9e4073e,
         type: 3}
       propertyPath: m_Size.x
