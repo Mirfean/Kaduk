@@ -47,7 +47,7 @@ public class Gun : _Weapon
     }
 
 
-    public void Attack(Vector2 mousePos, Quaternion holdItemRot)
+    public override void Attack(Vector2 mousePos, Quaternion holdItemRot)
     {
         Debug.Log("Shooting by " + name);
         //Vector2 normXY = normalizeMousePos(mousePos);
