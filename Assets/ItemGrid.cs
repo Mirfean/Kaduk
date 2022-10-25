@@ -77,7 +77,6 @@ public class ItemGrid : MonoBehaviour
         position.x = posX * tileSizeWidth + tileSizeWidth / 2;
         position.y = -(posY * tileSizeHeight + tileSizeHeight / 2);
 
-
         rectTransform.localPosition = position;
     }
 
