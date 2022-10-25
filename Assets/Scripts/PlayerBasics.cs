@@ -26,6 +26,9 @@ public class PlayerBasics : MonoBehaviour
     private bool rotated = false;
 
     [SerializeField]
+    bool inventoryON = false;
+
+    [SerializeField]
     _Weapon weapon;
 
     [SerializeField]
@@ -45,18 +48,25 @@ public class PlayerBasics : MonoBehaviour
     Transform CharacterSprite;
 
 
+    
+    public bool IsDialogue = false;
+
+    [SerializeField]
+    Selector selector;
+
+    [SerializeField]
+    InventoryManager inventoryManager;
+
+
 
     // Start is called before the first frame update
     void Start()
     {
         playerInput = new Player();
         playerInput.Enable();
+        selector = GetComponent<Selector>();
+        inventoryManager = FindObjectOfType<InventoryManager>();
 
-        //playerInput.Basic.WSAD.started += OnMovement;
-        
-        //playerInput.Basic.WSAD.performed += OnMovement;
-
-        HideCursorToAim();
     }
 
     // Update is called once per frame
@@ -72,6 +82,19 @@ public class PlayerBasics : MonoBehaviour
 
     public void OnMouseClick(InputAction.CallbackContext context)
     {
+        //inventoryManager.getGridPos(Camera.main.ScreenToWorldPoint(playerInput.Basic.MouseMovement.ReadValue<Vector2>()));
+
+        if (inventoryON)
+        {
+            inventoryManager.getGridPos(playerInput.Basic.MouseMovement.ReadValue<Vector2>());
+
+
+            return;
+        }
+        else if (IsDialogue)
+        {
+            return;
+        }
         shootInProgress = playerInput.Basic.MouseLClick.inProgress;
         Debug.Log("TWOJA STARA " + shootInProgress);
         if (IsAiming)
@@ -79,11 +102,7 @@ public class PlayerBasics : MonoBehaviour
             if(weapon != null && !shootInProgress)
             {
                 Debug.Log("Piu piu");
-                weapon.GetComponent<Gun>().Attack(Camera.main.ScreenToWorldPoint(playerInput.Basic.MouseMovement.ReadValue<Vector2>()), skeletanMove.HoldedItem.rotation);
-
-                //skeletanMove.TrackCursorByHands(Camera.main.ScreenToWorldPoint(playerInput.Basic.MouseMovement.ReadValue<Vector2>()));
-                //weapon.GetComponent<_Weapon>().Attack(Camera.main.ScreenToWorldPoint(playerInput.Basic.MouseMovement.ReadValue<Vector2>()));
-                //weapon.GetComponent<_Weapon>().Attack(playerInput.Basic.MouseMovement.ReadValue<Vector2>());
+                weapon.GetComponent<_Weapon>().Attack(Camera.main.ScreenToWorldPoint(playerInput.Basic.MouseMovement.ReadValue<Vector2>()), skeletanMove.HoldedItem.rotation);
             }
         }
         else
@@ -219,17 +238,6 @@ public class PlayerBasics : MonoBehaviour
     /// <summary>
     /// CURSOR
     /// </summary>
-    void HideCursorToAim()
-    {
-        //Cursor.SetCursor(crosshair, Vector2.zero, CursorMode.ForceSoftware);
-        Cursor.visible = false;
-    }
-
-    void ShowCursor()
-    {
-        Cursor.visible = true;
-    }
-
     public void OnAim(InputAction.CallbackContext context)
     {
         Debug.Log("Aiming");
@@ -258,14 +266,14 @@ public class PlayerBasics : MonoBehaviour
         
         animator.SetBool("IsAiming", IsAiming);
         if (!IsAiming) {
-            ShowCursor();
+
             weapon.gameObject.SetActive(false);
             skeletanMove.SetArmsToIdle();
         }
         if (IsAiming)
         {
             StopMoveCoroutines();
-            HideCursorToAim();
+
             weapon.gameObject.SetActive(true);
         }
     }
@@ -287,6 +295,11 @@ public class PlayerBasics : MonoBehaviour
             }
             
         }
+    }
+
+    void InventoryButton(InputAction.CallbackContext context)
+    {
+        //"I" button functionality and show/hide inventory depanding on bool inventoryOn
     }
 
 }
