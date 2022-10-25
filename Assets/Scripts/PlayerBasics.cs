@@ -27,6 +27,9 @@ public class PlayerBasics : MonoBehaviour
     private bool rotated = false;
 
     [SerializeField]
+    bool inventoryON = false;
+
+    [SerializeField]
     _Weapon weapon;
 
     [SerializeField]
@@ -52,6 +55,16 @@ public class PlayerBasics : MonoBehaviour
     public bool IsDialogue = false;
 
     public bool IsInventory = false;
+
+    [SerializeField]
+    Selector selector;
+
+    [SerializeField]
+    InventoryManager inventoryManager;
+
+
+    
+    public bool IsDialogue = false;
 
     [SerializeField]
     Selector selector;
@@ -103,7 +116,6 @@ public class PlayerBasics : MonoBehaviour
 
     public void OnMouseClick(InputAction.CallbackContext context)
     {
-
         if (IsInventory)
         {
             inventoryManager.getGridPos(playerInput.Basic.MouseMovement.ReadValue<Vector2>());
@@ -287,14 +299,12 @@ public class PlayerBasics : MonoBehaviour
         
         animator.SetBool("IsAiming", IsAiming);
         if (!IsAiming) {
-            cursorManager.ShowCursor();
             weapon.gameObject.SetActive(false);
             skeletanMove.SetArmsToIdle();
         }
         if (IsAiming)
         {
             StopMoveCoroutines();
-            cursorManager.HideCursorToAim();
             weapon.gameObject.SetActive(true);
         }
     }
