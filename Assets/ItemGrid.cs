@@ -79,4 +79,11 @@ public class ItemGrid : MonoBehaviour
 
         rectTransform.localPosition = position;
     }
+
+    public InventoryItem PickUpItem(int x, int y)
+    {
+        InventoryItem toReturn = inventoryItemsSlot[x, y];
+        inventoryItemsSlot[x, y] = null;
+        return toReturn;
+    }
 }

@@ -7,6 +7,9 @@ public class InventoryManager : MonoBehaviour
     [SerializeField]
     ItemGrid itemGrid;
 
+    [SerializeField]
+    InventoryItem selectedItem;
+
     public ItemGrid itemGRID {
         get
         {
@@ -36,5 +39,20 @@ public class InventoryManager : MonoBehaviour
         {
             Debug.Log($"Grid {itemGrid.GetInvGridPositon(mousePos)}");
         }
-    } 
+    }
+
+    public void ItemMove(Vector2 mousePos)
+    {
+        Vector2Int tileGridPosition = itemGRID.GetInvGridPositon(mousePos);
+        Debug.Log(tileGridPosition.ToString());
+
+        if (selectedItem == null)
+        {
+            selectedItem = itemGrid.PickUpItem(tileGridPosition.x, Mathf.Abs(tileGridPosition.y));
+        }
+        else
+        {
+            itemGrid.PlaceItem(selectedItem, tileGridPosition.x, Mathf.Abs(tileGridPosition.y));
+        }
+    }
 }
