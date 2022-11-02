@@ -205,6 +205,15 @@ public partial class @Player : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""SpawnItem"",
+                    ""type"": ""Button"",
+                    ""id"": ""845ed7a2-ed85-4eab-b16b-bda9505a636b"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -240,6 +249,17 @@ public partial class @Player : IInputActionCollection2, IDisposable
                     ""action"": ""InventoryClose"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""6e1a6fbd-b4f2-440f-8b22-8a0c42cc5c02"",
+                    ""path"": ""<Keyboard>/enter"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""SpawnItem"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -258,6 +278,7 @@ public partial class @Player : IInputActionCollection2, IDisposable
         m_UI_MouseLClick = m_UI.FindAction("MouseLClick", throwIfNotFound: true);
         m_UI_MousePosition = m_UI.FindAction("MousePosition", throwIfNotFound: true);
         m_UI_InventoryClose = m_UI.FindAction("InventoryClose", throwIfNotFound: true);
+        m_UI_SpawnItem = m_UI.FindAction("SpawnItem", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -385,6 +406,7 @@ public partial class @Player : IInputActionCollection2, IDisposable
     private readonly InputAction m_UI_MouseLClick;
     private readonly InputAction m_UI_MousePosition;
     private readonly InputAction m_UI_InventoryClose;
+    private readonly InputAction m_UI_SpawnItem;
     public struct UIActions
     {
         private @Player m_Wrapper;
@@ -392,6 +414,7 @@ public partial class @Player : IInputActionCollection2, IDisposable
         public InputAction @MouseLClick => m_Wrapper.m_UI_MouseLClick;
         public InputAction @MousePosition => m_Wrapper.m_UI_MousePosition;
         public InputAction @InventoryClose => m_Wrapper.m_UI_InventoryClose;
+        public InputAction @SpawnItem => m_Wrapper.m_UI_SpawnItem;
         public InputActionMap Get() { return m_Wrapper.m_UI; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -410,6 +433,9 @@ public partial class @Player : IInputActionCollection2, IDisposable
                 @InventoryClose.started -= m_Wrapper.m_UIActionsCallbackInterface.OnInventoryClose;
                 @InventoryClose.performed -= m_Wrapper.m_UIActionsCallbackInterface.OnInventoryClose;
                 @InventoryClose.canceled -= m_Wrapper.m_UIActionsCallbackInterface.OnInventoryClose;
+                @SpawnItem.started -= m_Wrapper.m_UIActionsCallbackInterface.OnSpawnItem;
+                @SpawnItem.performed -= m_Wrapper.m_UIActionsCallbackInterface.OnSpawnItem;
+                @SpawnItem.canceled -= m_Wrapper.m_UIActionsCallbackInterface.OnSpawnItem;
             }
             m_Wrapper.m_UIActionsCallbackInterface = instance;
             if (instance != null)
@@ -423,6 +449,9 @@ public partial class @Player : IInputActionCollection2, IDisposable
                 @InventoryClose.started += instance.OnInventoryClose;
                 @InventoryClose.performed += instance.OnInventoryClose;
                 @InventoryClose.canceled += instance.OnInventoryClose;
+                @SpawnItem.started += instance.OnSpawnItem;
+                @SpawnItem.performed += instance.OnSpawnItem;
+                @SpawnItem.canceled += instance.OnSpawnItem;
             }
         }
     }
@@ -440,5 +469,6 @@ public partial class @Player : IInputActionCollection2, IDisposable
         void OnMouseLClick(InputAction.CallbackContext context);
         void OnMousePosition(InputAction.CallbackContext context);
         void OnInventoryClose(InputAction.CallbackContext context);
+        void OnSpawnItem(InputAction.CallbackContext context);
     }
 }

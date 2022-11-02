@@ -16,7 +16,7 @@ public class InvGridInteract : MonoBehaviour, IPointerEnterHandler, IPointerExit
 
     public void OnPointerExit(PointerEventData eventData)
     {
-        inventoryManager.itemGRID = null;
+        //inventoryManager.itemGRID = null;
     }
     
     // Start is called before the first frame update

@@ -73,12 +73,13 @@ public class PlayerBasics : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(inventoryManager.itemGRID != null)
+        //For Testing
+        /*if(inventoryManager.itemGRID != null)
         {
             if (playerInput.UI.enabled)  inventoryManager.getGridPos(playerInput.UI.MousePosition.ReadValue<Vector2>());
             else inventoryManager.getGridPos(playerInput.Basic.MouseMovement.ReadValue<Vector2>());
 
-        }
+        }*/
     }
 
     public void TurnOffInput()
@@ -108,7 +109,7 @@ public class PlayerBasics : MonoBehaviour
 
         if (IsInventory)
         {
-            inventoryManager.ItemMove(playerInput.UI.MousePosition.ReadValue<Vector2>());
+            inventoryManager.GrabAndDropItemIcon(playerInput.UI.MousePosition.ReadValue<Vector2>());
             //inventoryManager.getGridPos(playerInput.Basic.MouseMovement.ReadValue<Vector2>());
             return;
         }
@@ -158,24 +159,33 @@ public class PlayerBasics : MonoBehaviour
     /// <param name="context"></param>
     public void OnMovementMouse(InputAction.CallbackContext context)
     {
-        Vector2 realPos = Camera.main.ScreenToWorldPoint(playerInput.Basic.MouseMovement.ReadValue<Vector2>());
-        if (realPos.x < transform.position.x)
+        if (IsInventory)
         {
-            CharacterSprite.rotation = Quaternion.Euler(0, 180, 0);
-            rotated = true;
+            inventoryManager.MoveItemIcon(playerInput.UI.MousePosition.ReadValue<Vector2>());
+            return;
         }
-        else if(rotated)
+        if (playerInput.Basic.enabled)
         {
-            CharacterSprite.rotation = Quaternion.Euler(0, 0, 0);
-            rotated=false;
-        }
+            Vector2 realPos = Camera.main.ScreenToWorldPoint(playerInput.Basic.MouseMovement.ReadValue<Vector2>());
+            if (realPos.x < transform.position.x)
+            {
+                CharacterSprite.rotation = Quaternion.Euler(0, 180, 0);
+                rotated = true;
+            }
+            else if (rotated)
+            {
+                CharacterSprite.rotation = Quaternion.Euler(0, 0, 0);
+                rotated = false;
+            }
 
-        if (IsAiming)
-        {
-            Debug.Log("Aim");
-            skeletanMove.TrackCursorByHands(realPos);
-            CorrectPistolToLeftHand();
+            if (IsAiming)
+            {
+                Debug.Log("Aim");
+                skeletanMove.TrackCursorByHands(realPos);
+                CorrectPistolToLeftHand();
+            }
         }
+        
 
     } 
 
@@ -339,12 +349,29 @@ public class PlayerBasics : MonoBehaviour
         {
             playerInput.UI.Enable();
             playerInput.Basic.Disable();
+            Debug.Log("Enabling UI");
         }
         else
         {
             playerInput.Basic.Enable();
             playerInput.UI.Disable();
+            Debug.Log("Disabling UI");
         }
+    }
+
+    public void SpawnItem(InputAction.CallbackContext context)
+    {
+        ItemFromInventory item = Instantiate(inventoryManager.itemPrefab).GetComponent<ItemFromInventory>();
+        inventoryManager.selectedItem = item;
+
+        inventoryManager.currentItemRectTransform = item.GetComponent<RectTransform>();
+        inventoryManager.currentItemRectTransform.SetParent(inventoryManager.canvasTransform);
+
+        int selectedItemID = Random.Range(0, inventoryManager.itemsList.Count - 1);
+        //item.itemData = 
+        inventoryManager.selectedItem.itemData = inventoryManager.itemsList[selectedItemID];
+
+        Debug.Log($"Spawn {inventoryManager.selectedItem}");
     }
 
 }
