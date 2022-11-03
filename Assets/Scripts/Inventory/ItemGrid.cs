@@ -91,12 +91,14 @@ public class ItemGrid : MonoBehaviour
         RectTransform rectTransform = inventoryItem.GetComponent<RectTransform>();
         rectTransform.SetParent(this.rectTransform);
 
-        //Looks bad but constant Matrix4x4 in ItemData makes it proper(I think)
-        for(int i = 0; i < 4; i++)
+        Debug.Log($"size {inventoryItem.itemData.fill.Length}");
+
+        for (int i = 0; i < inventoryItem.itemData.width; i++)
         {
-            for (int j = 0; j < 4; j++)
+            for (int j = 0; j < inventoryItem.itemData.height; j++)
             {
-                if (inventoryItem.itemData.fill[i, j] > 0)
+                
+                if (inventoryItem.itemData.fill[i, j])
                 {
                     inventoryItemsSlot[posX + i, posY + j] = inventoryItem;
                     Debug.Log($"Place item in x{posX + i} y{posY + j}");
@@ -170,7 +172,7 @@ public class ItemGrid : MonoBehaviour
         {
             for (int j = 0; j < item.itemData.height; j++)
             {
-                if (item.itemData.fill[i, j] > 0)
+                if (item.itemData.fill[i, j])
                 {
                     inventoryItemsSlot[item.onGridPositionX + i, item.onGridPositionY + j] = null;
                 }
