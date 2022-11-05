@@ -19,25 +19,25 @@ MonoBehaviour:
   serializable:
   - Index0: 0
     Index1: 0
-    Element: 0
+    Element: 1
   - Index0: 0
     Index1: 1
     Element: 1
   - Index0: 0
     Index1: 2
-    Element: 0
+    Element: 1
   - Index0: 1
     Index1: 0
     Element: 1
   - Index0: 1
     Index1: 1
-    Element: 0
+    Element: 1
   - Index0: 1
     Index1: 2
-    Element: 1
+    Element: 0
   - Index0: 2
     Index1: 0
-    Element: 0
+    Element: 1
   - Index0: 2
     Index1: 1
     Element: 0
@@ -46,7 +46,7 @@ MonoBehaviour:
     Element: 0
   - Index0: 3
     Index1: 0
-    Element: 0
+    Element: 1
   - Index0: 3
     Index1: 1
     Element: 0

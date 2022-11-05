@@ -895,7 +895,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 87cf0d493f2a8114a850f03db7aea16c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gridSize: {x: 12, y: 10}
+  gridSize: {x: 4, y: 6}
   inventoryItemPrefab: {fileID: 237450641518212523, guid: 5898212183a3eea4ab62f917808d2aa4,
     type: 3}
 --- !u!114 &1127854886

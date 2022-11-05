@@ -6,7 +6,7 @@ using UnityEngine;
 /// <summary>
 /// Interaction with inventory Grid and creating it
 /// </summary>
-public class ItemGrid : MonoBehaviour
+public class InventoryGrid : MonoBehaviour
 {
     public const float tileSizeWidth = 32;
     public const float tileSizeHeight = 32;
@@ -72,12 +72,12 @@ public class ItemGrid : MonoBehaviour
 
     public bool PlaceItem(ItemFromInventory inventoryItem, int posX, int posY, ref ItemFromInventory overlapItem)
     {
-        if(!BoundryCheck(posX,posY, inventoryItem.itemData.width, inventoryItem.itemData.height))
+        if (!BoundryCheck(posX, posY, inventoryItem.itemData.width, inventoryItem.itemData.height))
         {
             return false;
         }
 
-        if(!OverlapCheck(posX, posY, inventoryItem.itemData.width, inventoryItem.itemData.height, ref overlapItem))
+        if (!OverlapCheck(posX, posY, inventoryItem.itemData.width, inventoryItem.itemData.height, ref overlapItem))
         {
             overlapItem = null;
             return false;
@@ -97,13 +97,13 @@ public class ItemGrid : MonoBehaviour
         {
             for (int j = 0; j < inventoryItem.itemData.height; j++)
             {
-                
+
                 if (inventoryItem.itemData.fill[i, j])
                 {
                     inventoryItemsSlot[posX + i, posY + j] = inventoryItem;
                     Debug.Log($"Place item in x{posX + i} y{posY + j}");
                 }
-                
+
             }
         }
 
@@ -112,17 +112,22 @@ public class ItemGrid : MonoBehaviour
 
         rectTransform.parent = rectTransform;
         inventoryItemsSlot[posX, posY] = inventoryItem;
+        Vector2 position = GetItemPosition(inventoryItem, posX, posY);
 
+        rectTransform.localPosition = position;
+
+        return true;
+    }
+
+    public Vector2 GetItemPosition(ItemFromInventory itemFromInventory, int posX, int posY)
+    {
         Vector2 position = new Vector2();
         //position.x = posX * tileSizeWidth + tileSizeWidth * inventoryItem.itemData.width / 2;
         //position.y = -(posY * tileSizeHeight + tileSizeHeight * inventoryItem.itemData.height / 2);
 
         position.x = posX * tileSizeWidth;
         position.y = -(posY * tileSizeHeight);
-
-        rectTransform.localPosition = position;
-
-        return true;
+        return position;
     }
 
     private bool OverlapCheck(int posX, int posY, int width, int height, ref ItemFromInventory overlapItem)

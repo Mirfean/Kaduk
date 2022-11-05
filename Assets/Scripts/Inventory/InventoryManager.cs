@@ -12,7 +12,7 @@ public class InventoryManager : MonoBehaviour
     Player playerInput;
 
     [SerializeField]
-    ItemGrid itemGrid;
+    InventoryGrid itemGrid;
 
     [SerializeField] public List<ItemData> itemsList;
     [SerializeField] public GameObject itemPrefab;
@@ -23,7 +23,7 @@ public class InventoryManager : MonoBehaviour
     [SerializeField]
     ItemFromInventory overlapItem;
 
-    public ItemGrid itemGRID {
+    public InventoryGrid itemGRID {
         get
         {
             return itemGrid;
@@ -37,6 +37,14 @@ public class InventoryManager : MonoBehaviour
     [SerializeField]
     public RectTransform currentItemRectTransform;
 
+    InventoryHighlight inventoryHighlight;
+
+    private void Awake()
+    {
+        inventoryHighlight = GetComponent<InventoryHighlight>();
+    }
+
+
     // Start is called before the first frame update
     void Start()
     {
@@ -48,7 +56,15 @@ public class InventoryManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        HandleHighlight();
+    }
 
+    private void HandleHighlight()
+    {
+        if (selectedItem == null)
+        {
+            Vector2Int positionOnGrid = itemGrid.GetInvGridPositon(playerInput.UI.MousePosition.ReadValue<Vector2>());
+        }
     }
 
     /// <summary>

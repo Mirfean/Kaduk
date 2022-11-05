@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-[RequireComponent(typeof(ItemGrid))]
+[RequireComponent(typeof(InventoryGrid))]
 public class InvGridInteract : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler 
 {
     InventoryManager inventoryManager;
-    ItemGrid itemGrid;
+    InventoryGrid itemGrid;
 
     public void OnPointerEnter(PointerEventData eventData)
     {
@@ -23,7 +23,7 @@ public class InvGridInteract : MonoBehaviour, IPointerEnterHandler, IPointerExit
     void Awake()
     {
         inventoryManager = FindObjectOfType<InventoryManager>();
-        itemGrid = GetComponent<ItemGrid>();
+        itemGrid = GetComponent<InventoryGrid>();
     }
 
     // Update is called once per frame

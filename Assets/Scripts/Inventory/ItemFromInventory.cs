@@ -23,7 +23,7 @@ public class ItemFromInventory : MonoBehaviour
 
             itemDescription = itemdata.description;
 
-            Vector2 size = new Vector2(itemData.width * ItemGrid.tileSizeWidth, itemData.height * ItemGrid.tileSizeHeight);
+            Vector2 size = new Vector2(itemData.width * InventoryGrid.tileSizeWidth, itemData.height * InventoryGrid.tileSizeHeight);
 
             GetComponent<RectTransform>().sizeDelta = size;
 
