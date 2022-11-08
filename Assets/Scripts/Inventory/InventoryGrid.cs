@@ -23,6 +23,12 @@ public class InventoryGrid : MonoBehaviour
     [SerializeField]
     GameObject inventoryItemPrefab;
 
+    public Vector2 PositionOnTheGrid { get => positionOnTheGrid; set => positionOnTheGrid = value; }
+    public Vector2Int TileGridPosition { get => tileGridPosition; set => tileGridPosition = value; }
+    public Vector2Int GridSize { get => gridSize; set => gridSize = value; }
+    public ItemFromInventory[,] InventoryItemsSlot { get => inventoryItemsSlot; set => inventoryItemsSlot = value; }
+    public RectTransform GridRectTransform { get => rectTransform; set => rectTransform = value; }
+
     // Start is called before the first frame update
     void Start()
     {
@@ -42,6 +48,12 @@ public class InventoryGrid : MonoBehaviour
         //Testing
         //InventoryItem inventoryItem = Instantiate(inventoryItemPrefab.GetComponent<InventoryItem>());
         //PlaceItem(inventoryItem, 3, 2);
+    }
+
+    internal ItemFromInventory GetItem(Vector2Int positionOnGrid)
+    {
+        Debug.Log("GetItem from " + positionOnGrid);
+        return inventoryItemsSlot[positionOnGrid.x, -(positionOnGrid.y)];
     }
 
     private void Init()

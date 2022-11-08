@@ -8,6 +8,7 @@ public class InvGridInteract : MonoBehaviour, IPointerEnterHandler, IPointerExit
 {
     InventoryManager inventoryManager;
     InventoryGrid itemGrid;
+    Player playerInput;
 
     public void OnPointerEnter(PointerEventData eventData)
     {
@@ -16,7 +17,11 @@ public class InvGridInteract : MonoBehaviour, IPointerEnterHandler, IPointerExit
 
     public void OnPointerExit(PointerEventData eventData)
     {
-        //inventoryManager.itemGRID = null;
+        if (!inventoryManager.CheckMouseInInventory())
+        {
+            inventoryManager.itemGRID = null;
+        }
+        
     }
     
     // Start is called before the first frame update
@@ -24,11 +29,9 @@ public class InvGridInteract : MonoBehaviour, IPointerEnterHandler, IPointerExit
     {
         inventoryManager = FindObjectOfType<InventoryManager>();
         itemGrid = GetComponent<InventoryGrid>();
+        playerInput = new Player();
+        playerInput.Enable();
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+
 }

@@ -22,6 +22,8 @@ public class InventoryManager : MonoBehaviour
     public ItemFromInventory selectedItem;
     [SerializeField]
     ItemFromInventory overlapItem;
+    [SerializeField]
+    ItemFromInventory itemToHighlight;
 
     public InventoryGrid itemGRID {
         get
@@ -37,11 +39,12 @@ public class InventoryManager : MonoBehaviour
     [SerializeField]
     public RectTransform currentItemRectTransform;
 
+    [SerializeField]
     InventoryHighlight inventoryHighlight;
 
     private void Awake()
     {
-        inventoryHighlight = GetComponent<InventoryHighlight>();
+        //inventoryHighlight = GetComponent<InventoryHighlight>();
     }
 
 
@@ -50,33 +53,39 @@ public class InventoryManager : MonoBehaviour
     {
         playerInput = new Player();
         playerInput.Enable();
-        playerInput.UI.SpawnItem.performed += ctx => SpawnItem(ctx);
+        playerInput.UI.SpawnItem.performed += ctx => SpawnRandomItem(ctx);
     }
 
     // Update is called once per frame
     void Update()
     {
-        HandleHighlight();
+        //HandleHighlight();
     }
 
-    private void HandleHighlight()
+    public void HandleHighlight(Vector2 mousePos)
     {
+        Vector2Int positionOnGrid = GetInvGridPositon(mousePos);
+        Debug.Log("Handle " + positionOnGrid);
         if (selectedItem == null)
         {
-            Vector2Int positionOnGrid = itemGrid.GetInvGridPositon(playerInput.UI.MousePosition.ReadValue<Vector2>());
+            itemToHighlight = itemGRID.GetItem(positionOnGrid);
+            if(itemToHighlight != null)
+            {
+                Debug.Log("Item to highlight " + itemToHighlight + itemToHighlight.itemDescription);
+
+                inventoryHighlight.SetSize(itemToHighlight);
+                inventoryHighlight.SetPosition(itemGRID, itemToHighlight);
+            }
+
         }
     }
 
-    /// <summary>
-    /// Possibly to remove
-    /// </summary>
-    /// <param name="mousePos"></param>
-    public void getGridPos(Vector2 mousePos)
+    public Vector2Int GetInvGridPositon(Vector2 mousePosition)
     {
-        if (itemGrid != null)
-        {
-            Debug.Log($"Grid {itemGrid.GetInvGridPositon(mousePos)}");
-        }
+        itemGRID.PositionOnTheGrid = new Vector2(mousePosition.x - itemGRID.GridRectTransform.position.x, mousePosition.y - itemGRID.GridRectTransform.position.y);
+        itemGRID.TileGridPosition = new Vector2Int ((int) (itemGRID.PositionOnTheGrid.x / InventoryGrid.tileSizeWidth), (int)(itemGRID.PositionOnTheGrid.y / InventoryGrid.tileSizeHeight));
+        Debug.Log("Grid pos " + itemGRID.TileGridPosition);
+        return itemGRID.TileGridPosition;
     }
 
     /// <summary>
@@ -93,7 +102,7 @@ public class InventoryManager : MonoBehaviour
             if (selectedItem == null)
             {
                 GrabItemIcon(tileGridPosition);
-
+                //Show Highlighter
             }
             else
             {
@@ -139,7 +148,7 @@ public class InventoryManager : MonoBehaviour
         }
     }
 
-    public void SpawnItem(InputAction.CallbackContext context)
+    public void SpawnRandomItem(InputAction.CallbackContext context)
     {
         ItemFromInventory item = Instantiate(itemPrefab).GetComponent<ItemFromInventory>();
         selectedItem = item;
@@ -152,5 +161,13 @@ public class InventoryManager : MonoBehaviour
         selectedItem.itemData = itemsList[selectedItemID];
 
         Debug.Log($"Spawn {selectedItem}");
+    }
+
+    public bool CheckMouseInInventory()
+    {
+        Vector2 mousePos = GetInvGridPositon(playerInput.UI.MousePosition.ReadValue<Vector2>());
+        Vector2 gridsize = itemGrid.GridSize;
+        Debug.Log($"CheckMouseInInventory mousePos {mousePos} vs gridsize {gridsize}");
+        return mousePos.x >= 0 && mousePos.x < gridsize.x && mousePos.y <= 0 && mousePos.y > -gridsize.y ? true : false;
     }
 }

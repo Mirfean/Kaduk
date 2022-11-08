@@ -99,22 +99,20 @@ public class PlayerBasics : MonoBehaviour
     }
 
     /// <summary>
-    /// 
+    /// Used by PlayerInput in Player.Basic.MouseLClick
     /// </summary>
     /// <param name="context"></param>
-    
-
     public void OnMouseClick(InputAction.CallbackContext context)
     {
 
         if (IsInventory)
         {
             inventoryManager.GrabAndDropItemIcon(playerInput.UI.MousePosition.ReadValue<Vector2>());
-            //inventoryManager.getGridPos(playerInput.Basic.MouseMovement.ReadValue<Vector2>());
             return;
         }
         else if (IsDialogue)
         {
+            //TODO
             return;
         }
         shootInProgress = playerInput.Basic.MouseLClick.inProgress;
@@ -161,8 +159,12 @@ public class PlayerBasics : MonoBehaviour
     {
         if (IsInventory)
         {
-            inventoryManager.MoveItemIcon(playerInput.UI.MousePosition.ReadValue<Vector2>());
-            return;
+            if (inventoryManager.itemGRID && inventoryManager.CheckMouseInInventory())
+            {
+                inventoryManager.MoveItemIcon(playerInput.UI.MousePosition.ReadValue<Vector2>());
+                inventoryManager.HandleHighlight(playerInput.UI.MousePosition.ReadValue<Vector2>());
+                return;
+            }
         }
         if (playerInput.Basic.enabled)
         {
