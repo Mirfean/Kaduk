@@ -61,17 +61,10 @@ public class InventoryGrid : MonoBehaviour
         inventoryItemsSlot = new ItemFromInventory[gridSize.x, gridSize.y];
         Vector2 size = new Vector2(gridSize.x * tileSizeWidth, gridSize.y * tileSizeHeight);
         rectTransform.sizeDelta = size;
-
-        //Testing
-        /*InventoryItem inventoryItem = Instantiate(inventoryItemPrefab.GetComponent<InventoryItem>());
-        PlaceItem(inventoryItem, 3, 2);*/
     }
 
     public Vector2Int GetInvGridPositon(Vector2 mousePosition)
     {
-        //Debug.Log($"mous {mousePosition.x} {mousePosition.y}");
-        //Debug.Log($"rect {rectTransform.position.x} {rectTransform.position.y}");
-        //Debug.Log($"local rect {rectTransform.localPosition.x} {rectTransform.localPosition.y}");
 
         positionOnTheGrid.x = mousePosition.x - rectTransform.position.x;
         positionOnTheGrid.y = mousePosition.y - rectTransform.position.y;
@@ -89,7 +82,7 @@ public class InventoryGrid : MonoBehaviour
             return false;
         }
 
-        if (!OverlapCheck(posX, posY, inventoryItem.itemData.width, inventoryItem.itemData.height, ref overlapItem))
+        if (!OverlapCheck(posX, posY, inventoryItem.itemData, ref overlapItem))
         {
             overlapItem = null;
             return false;
@@ -100,6 +93,13 @@ public class InventoryGrid : MonoBehaviour
             CleanGridReference(overlapItem);
         }
 
+        PlaceItemToGrid(inventoryItem, posX, posY);
+
+        return true;
+    }
+
+    public void PlaceItemToGrid(ItemFromInventory inventoryItem, int posX, int posY)
+    {
         RectTransform rectTransform = inventoryItem.GetComponent<RectTransform>();
         rectTransform.SetParent(this.rectTransform);
 
@@ -112,8 +112,9 @@ public class InventoryGrid : MonoBehaviour
 
                 if (inventoryItem.itemData.fill[i, j])
                 {
-                    inventoryItemsSlot[posX + i, posY + j] = inventoryItem;
                     Debug.Log($"Place item in x{posX + i} y{posY + j}");
+                    inventoryItemsSlot[posX + i, posY + j] = inventoryItem;
+                    
                 }
 
             }
@@ -122,13 +123,11 @@ public class InventoryGrid : MonoBehaviour
         inventoryItem.onGridPositionX = posX;
         inventoryItem.onGridPositionY = posY;
 
-        rectTransform.parent = rectTransform;
-        inventoryItemsSlot[posX, posY] = inventoryItem;
+        //rectTransform.parent = rectTransform;
+        //inventoryItemsSlot[posX, posY] = inventoryItem;
         Vector2 position = GetItemPosition(inventoryItem, posX, posY);
 
         rectTransform.localPosition = position;
-
-        return true;
     }
 
     public Vector2 GetItemPosition(ItemFromInventory itemFromInventory, int posX, int posY)
@@ -142,28 +141,70 @@ public class InventoryGrid : MonoBehaviour
         return position;
     }
 
-    private bool OverlapCheck(int posX, int posY, int width, int height, ref ItemFromInventory overlapItem)
+    private bool OverlapCheck(int posX, int posY, ItemData holdedItem, ref ItemFromInventory overlapItem)
     {
-        for(int x = 0; x < width; x++)
+        for(int x = 0; x < holdedItem.width; x++)
         {
-            for(var y = 0; y < height; y++)
+            for(var y = 0; y < holdedItem.height; y++)
             {
-                if(inventoryItemsSlot[posX+x, posY+y] != null)
+                try
                 {
-                    if( overlapItem == null)
+                    if(holdedItem.fill[x,y])
                     {
-                        overlapItem = inventoryItemsSlot[posX + x, posY + y];
-                    }
-                    else
-                    {
-                        if(overlapItem != inventoryItemsSlot[posX+x, posY + y])
+                        if (inventoryItemsSlot[posX + x, posY + y] != null)
                         {
-                            return false;
+                            if (overlapItem == null)
+                            {
+                                overlapItem = inventoryItemsSlot[posX + x, posY + y];
+                            }
+                            else
+                            {
+                                if (overlapItem != inventoryItemsSlot[posX + x, posY + y])
+                                {
+                                    return false;
+                                }
+
+                            }
+
                         }
-                        
                     }
                     
                 }
+                catch (IndexOutOfRangeException indexOUT)
+                {
+                    Debug.Log("Checking outside of grid, item not match " + indexOUT);
+                    return false;
+                }
+                
+            }
+        }
+
+        return true;
+    }
+
+    private bool CheckAvailableSpace(int posX, int posY, ItemData holdedItem)
+    {
+        for (int x = 0; x < holdedItem.width; x++)
+        {
+            for (var y = 0; y < holdedItem.height; y++)
+            {
+                try
+                {
+                    if (holdedItem.fill[x, y])
+                    {
+                        if (inventoryItemsSlot[posX + x, posY + y] != null)
+                        {
+                            return false;
+                        }
+                    }
+
+                }
+                catch (IndexOutOfRangeException indexOUT)
+                {
+                    Debug.Log("Checking outside of grid, item not match " + indexOUT);
+                    return false;
+                }
+
             }
         }
 
@@ -198,14 +239,30 @@ public class InventoryGrid : MonoBehaviour
         }
     }
 
-    bool PositionCheck(int posX, int posY)
+    internal Vector2Int? FindSpaceForObject(ItemFromInventory itemToInsert)
     {
-        if (posX < 0 || posY < 0)
+        for (int j = 0; j < gridSize.y; j++)
+        {
+            for(int i = 0; i < gridSize.x; i++)
+            {
+                if(CheckAvailableSpace(i, j, itemToInsert.itemData))
+                {
+                    return new Vector2Int(i,j);
+                }
+            }
+        }
+
+        return null;
+    }
+
+    internal bool PositionCheck(int posX, int posY)
+    {
+        if (posX < 0 || posY > 0)
         {
             return false;
         }
 
-        if (posX >= gridSize.x || posY > gridSize.y)
+        if (posX >= gridSize.x || posY <= -gridSize.y)
         {
             return false;
         }
@@ -213,12 +270,22 @@ public class InventoryGrid : MonoBehaviour
         return true;
     }
 
-    bool BoundryCheck(int posX, int posY, int width, int height)
+    /// <summary>
+    /// Check if item is fully in an inventory
+    /// </summary>
+    /// <param name="posX">range from 0 to gridSize.x</param>
+    /// <param name="posY"> range from 0 to -gridSize.y</param>
+    /// <param name="width">Item parameter</param>
+    /// <param name="height">Item parameter</param>
+    /// <returns></returns>
+    internal bool BoundryCheck(int posX, int posY, int width, int height)
     {
+        posY = -posY;
         if(!PositionCheck(posX, posY)) return false;
 
         posX += width-1;
-        posY += height-1;
+        posY -= height-1;
+        //posY += height-1;
 
         if (!PositionCheck(posX, posY)) return false;
 

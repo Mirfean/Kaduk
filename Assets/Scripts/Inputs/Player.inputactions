@@ -192,6 +192,15 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "InsertItem",
+                    "type": "Button",
+                    "id": "a977cfc2-0fd7-4b44-9638-35aeda945f81",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -236,6 +245,17 @@
                     "processors": "",
                     "groups": "",
                     "action": "SpawnItem",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "9399468f-e707-45c2-8f61-3bf3fe4cac7c",
+                    "path": "<Keyboard>/q",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "InsertItem",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

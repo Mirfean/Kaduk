@@ -12,14 +12,14 @@ public class InvGridInteract : MonoBehaviour, IPointerEnterHandler, IPointerExit
 
     public void OnPointerEnter(PointerEventData eventData)
     {
-        inventoryManager.itemGRID = itemGrid;
+        inventoryManager.SelectedItemGRID = itemGrid;
     }
 
     public void OnPointerExit(PointerEventData eventData)
     {
         if (!inventoryManager.CheckMouseInInventory())
         {
-            inventoryManager.itemGRID = null;
+            inventoryManager.SelectedItemGRID = null;
         }
         
     }

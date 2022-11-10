@@ -87,11 +87,11 @@ public class Gun : _Weapon
     {
         if (rotated)
         {
-            transform.Rotate(180f, 180f, 0f);
+            transform.Rotate(0f, 180f, 0f);
         }
         else
         {
-            transform.Rotate(-180f, -180f, 0);
+            transform.Rotate(0f, -180f, 0);
         }
     }
 }

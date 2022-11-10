@@ -159,7 +159,7 @@ public class PlayerBasics : MonoBehaviour
     {
         if (IsInventory)
         {
-            if (inventoryManager.itemGRID && inventoryManager.CheckMouseInInventory())
+            if (inventoryManager.SelectedItemGRID && inventoryManager.CheckMouseInInventory())
             {
                 inventoryManager.MoveItemIcon(playerInput.UI.MousePosition.ReadValue<Vector2>());
                 inventoryManager.HandleHighlight(playerInput.UI.MousePosition.ReadValue<Vector2>());
