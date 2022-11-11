@@ -223,6 +223,15 @@ public partial class @Player : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""RotateItem"",
+                    ""type"": ""Button"",
+                    ""id"": ""fd1eeb0e-4e46-406b-96cb-2bdaa46a39e7"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -280,6 +289,17 @@ public partial class @Player : IInputActionCollection2, IDisposable
                     ""action"": ""InsertItem"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""5b0a6c14-c5f6-4305-905c-41fa8a45ce29"",
+                    ""path"": ""<Keyboard>/r"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""RotateItem"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -300,6 +320,7 @@ public partial class @Player : IInputActionCollection2, IDisposable
         m_UI_InventoryClose = m_UI.FindAction("InventoryClose", throwIfNotFound: true);
         m_UI_SpawnItem = m_UI.FindAction("SpawnItem", throwIfNotFound: true);
         m_UI_InsertItem = m_UI.FindAction("InsertItem", throwIfNotFound: true);
+        m_UI_RotateItem = m_UI.FindAction("RotateItem", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -429,6 +450,7 @@ public partial class @Player : IInputActionCollection2, IDisposable
     private readonly InputAction m_UI_InventoryClose;
     private readonly InputAction m_UI_SpawnItem;
     private readonly InputAction m_UI_InsertItem;
+    private readonly InputAction m_UI_RotateItem;
     public struct UIActions
     {
         private @Player m_Wrapper;
@@ -438,6 +460,7 @@ public partial class @Player : IInputActionCollection2, IDisposable
         public InputAction @InventoryClose => m_Wrapper.m_UI_InventoryClose;
         public InputAction @SpawnItem => m_Wrapper.m_UI_SpawnItem;
         public InputAction @InsertItem => m_Wrapper.m_UI_InsertItem;
+        public InputAction @RotateItem => m_Wrapper.m_UI_RotateItem;
         public InputActionMap Get() { return m_Wrapper.m_UI; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -462,6 +485,9 @@ public partial class @Player : IInputActionCollection2, IDisposable
                 @InsertItem.started -= m_Wrapper.m_UIActionsCallbackInterface.OnInsertItem;
                 @InsertItem.performed -= m_Wrapper.m_UIActionsCallbackInterface.OnInsertItem;
                 @InsertItem.canceled -= m_Wrapper.m_UIActionsCallbackInterface.OnInsertItem;
+                @RotateItem.started -= m_Wrapper.m_UIActionsCallbackInterface.OnRotateItem;
+                @RotateItem.performed -= m_Wrapper.m_UIActionsCallbackInterface.OnRotateItem;
+                @RotateItem.canceled -= m_Wrapper.m_UIActionsCallbackInterface.OnRotateItem;
             }
             m_Wrapper.m_UIActionsCallbackInterface = instance;
             if (instance != null)
@@ -481,6 +507,9 @@ public partial class @Player : IInputActionCollection2, IDisposable
                 @InsertItem.started += instance.OnInsertItem;
                 @InsertItem.performed += instance.OnInsertItem;
                 @InsertItem.canceled += instance.OnInsertItem;
+                @RotateItem.started += instance.OnRotateItem;
+                @RotateItem.performed += instance.OnRotateItem;
+                @RotateItem.canceled += instance.OnRotateItem;
             }
         }
     }
@@ -500,5 +529,6 @@ public partial class @Player : IInputActionCollection2, IDisposable
         void OnInventoryClose(InputAction.CallbackContext context);
         void OnSpawnItem(InputAction.CallbackContext context);
         void OnInsertItem(InputAction.CallbackContext context);
+        void OnRotateItem(InputAction.CallbackContext context);
     }
 }

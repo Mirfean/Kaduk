@@ -61,6 +61,7 @@ public class InventoryManager : MonoBehaviour
         playerInput.Enable();
         playerInput.UI.SpawnItem.performed += ctx => SpawnRandomItem(ctx);
         playerInput.UI.InsertItem.performed += ctx => InsertRandomItem(ctx);
+        playerInput.UI.RotateItem.performed += ctx => RotateHoldedItem(ctx);
 
         inventoryHighlight = GetComponent<InventoryHighlight>();
     }
@@ -101,7 +102,7 @@ public class InventoryManager : MonoBehaviour
         }
         else
         {
-            inventoryHighlight.Show(SelectedItemGRID.BoundryCheck(positionOnGrid.x, -positionOnGrid.y, selectedItem.itemData.width, selectedItem.itemData.height));
+            inventoryHighlight.Show(SelectedItemGRID.BoundryCheck(positionOnGrid.x, -positionOnGrid.y, selectedItem.WIDTH, selectedItem.HEIGHT));
             inventoryHighlight.SetSize(selectedItem);
             inventoryHighlight.SetParent(SelectedItemGRID);
             inventoryHighlight.SetPosition(SelectedItemGRID, selectedItem, positionOnGrid.x, -positionOnGrid.y);
@@ -236,5 +237,15 @@ public class InventoryManager : MonoBehaviour
         Vector2 gridsize = selectedItemGrid.GridSize;
         //Debug.Log($"CheckMouseInInventory mousePos {mousePos} vs gridsize {gridsize}");
         return mousePos.x >= 0 && mousePos.x < gridsize.x && mousePos.y <= 0 && mousePos.y > -gridsize.y ? true : false;
+    }
+
+    public void RotateHoldedItem(InputAction.CallbackContext context)
+    {
+        Debug.Log("rotating");
+        if(selectedItem != null)
+        {
+            selectedItem.rotate();
+        }
+        
     }
 }

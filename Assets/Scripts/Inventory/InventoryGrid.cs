@@ -77,12 +77,12 @@ public class InventoryGrid : MonoBehaviour
 
     public bool PlaceItem(ItemFromInventory inventoryItem, int posX, int posY, ref ItemFromInventory overlapItem)
     {
-        if (!BoundryCheck(posX, posY, inventoryItem.itemData.width, inventoryItem.itemData.height))
+        if (!BoundryCheck(posX, posY, inventoryItem.WIDTH, inventoryItem.HEIGHT))
         {
             return false;
         }
 
-        if (!OverlapCheck(posX, posY, inventoryItem.itemData, ref overlapItem))
+        if (!OverlapCheck(posX, posY, inventoryItem, ref overlapItem))
         {
             overlapItem = null;
             return false;
@@ -103,14 +103,12 @@ public class InventoryGrid : MonoBehaviour
         RectTransform rectTransform = inventoryItem.GetComponent<RectTransform>();
         rectTransform.SetParent(this.rectTransform);
 
-        Debug.Log($"size {inventoryItem.itemData.fill.Length}");
-
-        for (int i = 0; i < inventoryItem.itemData.width; i++)
+        for (int i = 0; i < inventoryItem.WIDTH; i++)
         {
-            for (int j = 0; j < inventoryItem.itemData.height; j++)
+            for (int j = 0; j < inventoryItem.HEIGHT; j++)
             {
 
-                if (inventoryItem.itemData.fill[i, j])
+                if (inventoryItem.spaceFill[i, j])
                 {
                     Debug.Log($"Place item in x{posX + i} y{posY + j}");
                     inventoryItemsSlot[posX + i, posY + j] = inventoryItem;
@@ -141,15 +139,15 @@ public class InventoryGrid : MonoBehaviour
         return position;
     }
 
-    private bool OverlapCheck(int posX, int posY, ItemData holdedItem, ref ItemFromInventory overlapItem)
+    private bool OverlapCheck(int posX, int posY, ItemFromInventory holdedItem, ref ItemFromInventory overlapItem)
     {
-        for(int x = 0; x < holdedItem.width; x++)
+        for(int x = 0; x < holdedItem.WIDTH; x++)
         {
-            for(var y = 0; y < holdedItem.height; y++)
+            for(var y = 0; y < holdedItem.HEIGHT; y++)
             {
                 try
                 {
-                    if(holdedItem.fill[x,y])
+                    if(holdedItem.spaceFill[x,y])
                     {
                         if (inventoryItemsSlot[posX + x, posY + y] != null)
                         {
@@ -182,15 +180,15 @@ public class InventoryGrid : MonoBehaviour
         return true;
     }
 
-    private bool CheckAvailableSpace(int posX, int posY, ItemData holdedItem)
+    private bool CheckAvailableSpace(int posX, int posY, ItemFromInventory holdedItem)
     {
-        for (int x = 0; x < holdedItem.width; x++)
+        for (int x = 0; x < holdedItem.WIDTH; x++)
         {
-            for (var y = 0; y < holdedItem.height; y++)
+            for (var y = 0; y < holdedItem.HEIGHT; y++)
             {
                 try
                 {
-                    if (holdedItem.fill[x, y])
+                    if (holdedItem.spaceFill[x, y])
                     {
                         if (inventoryItemsSlot[posX + x, posY + y] != null)
                         {
@@ -226,11 +224,11 @@ public class InventoryGrid : MonoBehaviour
 
     private void CleanGridReference(ItemFromInventory item)
     {
-        for (int i = 0; i < item.itemData.width; i++)
+        for (int i = 0; i < item.WIDTH; i++)
         {
-            for (int j = 0; j < item.itemData.height; j++)
+            for (int j = 0; j < item.HEIGHT; j++)
             {
-                if (item.itemData.fill[i, j])
+                if (item.spaceFill[i, j])
                 {
                     inventoryItemsSlot[item.onGridPositionX + i, item.onGridPositionY + j] = null;
                 }
@@ -245,7 +243,7 @@ public class InventoryGrid : MonoBehaviour
         {
             for(int i = 0; i < gridSize.x; i++)
             {
-                if(CheckAvailableSpace(i, j, itemToInsert.itemData))
+                if(CheckAvailableSpace(i, j, itemToInsert))
                 {
                     return new Vector2Int(i,j);
                 }
@@ -274,7 +272,7 @@ public class InventoryGrid : MonoBehaviour
     /// Check if item is fully in an inventory
     /// </summary>
     /// <param name="posX">range from 0 to gridSize.x</param>
-    /// <param name="posY"> range from 0 to -gridSize.y</param>
+    /// <param name="posY"> range from 0 to gridSize.y and changed to negative value</param>
     /// <param name="width">Item parameter</param>
     /// <param name="height">Item parameter</param>
     /// <returns></returns>
