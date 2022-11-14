@@ -26,6 +26,20 @@ public class PlayerBasics : MonoBehaviour
     [SerializeField]
     private bool rotated = false;
 
+    private bool Rotated
+    {
+        get { return rotated; }
+        set
+        {
+            rotated = value;
+
+            if (weapon.gameObject.activeSelf)
+            {
+                RotateWeapon();
+            }
+        }
+    }
+
     [SerializeField]
     _Weapon weapon;
 
@@ -172,24 +186,30 @@ public class PlayerBasics : MonoBehaviour
             if (realPos.x < transform.position.x)
             {
                 CharacterSprite.rotation = Quaternion.Euler(0, 180, 0);
-                rotated = true;
+                if(!Rotated) Rotated = true;
             }
             else if (rotated)
             {
                 CharacterSprite.rotation = Quaternion.Euler(0, 0, 0);
-                rotated = false;
+                if(Rotated) Rotated = false;
             }
 
             if (IsAiming)
             {
                 Debug.Log("Aim");
-                skeletanMove.TrackCursorByHands(realPos);
-                CorrectPistolToLeftHand();
+                Aiming(realPos);
+                //CorrectPistolToLeftHand();
             }
         }
         
 
-    } 
+    }
+
+    private void Aiming(Vector2 realPos)
+    {
+        skeletanMove.TrackCursorByHands(realPos);
+        weapon.transform.position = skeletanMove.leftHand.position;
+    }
 
     /// <summary>
     /// INACTIVE
@@ -282,6 +302,7 @@ public class PlayerBasics : MonoBehaviour
     {
         speed = speed / 3;
         ChangeAimStatus(true);
+        Aiming(Camera.main.ScreenToWorldPoint(playerInput.Basic.MouseMovement.ReadValue<Vector2>()));
         do
         {
             Debug.Log(IsAiming);
@@ -314,21 +335,27 @@ public class PlayerBasics : MonoBehaviour
 
     void CorrectPistolToLeftHand()
     {
-        weapon.transform.position = skeletanMove.leftHand.position;
+        
         if (rotated && !weapon.GetComponent<_Weapon>().rotated)
         {
             //weapon.transform.Rotate(180f, 180f, 0f);
-            weapon.GetComponent<Gun>().RotateGun(true);
+            Debug.Log("I should rotate weapon");
+            //weapon.GetComponent<Gun>().RotateGun(true);
         }
         else if(!rotated)
         {
             if (weapon.GetComponent<_Weapon>().rotated)
             {
-                weapon.GetComponent<Gun>().RotateGun(false);
+                //weapon.GetComponent<Gun>().RotateGun(false);
                 //weapon.transform.Rotate(-180f, -180f, 0f);
             }
             
         }
+    }
+
+    void RotateWeapon()
+    {
+        weapon.GetComponent<Gun>().RotateGun(Rotated);
     }
 
     public void OnInventoryButton(InputAction.CallbackContext context)

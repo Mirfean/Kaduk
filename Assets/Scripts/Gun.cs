@@ -87,11 +87,22 @@ public class Gun : _Weapon
     {
         if (rotated)
         {
-            transform.Rotate(0f, 180f, 0f);
+            //transform.rotation = Quaternion.AngleAxis(180, Vector3.up);
+            Debug.Log("Go on");
+
+            float diff = 180 - transform.rotation.x;
+
+            transform.Rotate(diff, 0f, 0f);
+
         }
         else
         {
-            transform.Rotate(0f, -180f, 0);
+            float diff = 0 - transform.rotation.x;
+
+            transform.Rotate(diff, 0f, 0f);
+            //transform.rotation = Quaternion.AngleAxis(180, Vector3.up);
+            Debug.Log("Go off");
+            //gameObject.transform.rotation = Quaternion.Euler(0f, 0f, 0f);
         }
     }
 }

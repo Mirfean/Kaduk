@@ -45,9 +45,7 @@ public class InventoryGrid : MonoBehaviour
         Vector2 size = new Vector2(width * tileSizeWidth, height * tileSizeHeight);
         rectTransform.sizeDelta = size;
 
-        //Testing
-        //InventoryItem inventoryItem = Instantiate(inventoryItemPrefab.GetComponent<InventoryItem>());
-        //PlaceItem(inventoryItem, 3, 2);
+
     }
 
     internal ItemFromInventory GetItem(Vector2Int positionOnGrid)
@@ -98,6 +96,8 @@ public class InventoryGrid : MonoBehaviour
         return true;
     }
 
+
+
     public void PlaceItemToGrid(ItemFromInventory inventoryItem, int posX, int posY)
     {
         RectTransform rectTransform = inventoryItem.GetComponent<RectTransform>();
@@ -128,27 +128,41 @@ public class InventoryGrid : MonoBehaviour
         rectTransform.localPosition = position;
     }
 
+    /// <summary>
+    /// Getting position of item on grid
+    /// </summary>
+    /// <param name="itemFromInventory"></param>
+    /// <param name="posX"></param>
+    /// <param name="posY"></param>
+    /// <returns></returns>
     public Vector2 GetItemPosition(ItemFromInventory itemFromInventory, int posX, int posY)
     {
         Vector2 position = new Vector2();
-        //position.x = posX * tileSizeWidth + tileSizeWidth * inventoryItem.itemData.width / 2;
-        //position.y = -(posY * tileSizeHeight + tileSizeHeight * inventoryItem.itemData.height / 2);
 
         position.x = posX * tileSizeWidth;
         position.y = -(posY * tileSizeHeight);
         return position;
     }
 
+    /// <summary>
+    /// Check if selected item is currently above another item
+    /// </summary>
+    /// <param name="posX"></param>
+    /// <param name="posY"></param>
+    /// <param name="holdedItem"></param>
+    /// <param name="overlapItem"></param>
+    /// <returns></returns>
     private bool OverlapCheck(int posX, int posY, ItemFromInventory holdedItem, ref ItemFromInventory overlapItem)
     {
         for(int x = 0; x < holdedItem.WIDTH; x++)
         {
             for(var y = 0; y < holdedItem.HEIGHT; y++)
             {
-                try
+                if (holdedItem.spaceFill[x, y])
                 {
-                    if(holdedItem.spaceFill[x,y])
-                    {
+                    try
+                    {   
+                    
                         if (inventoryItemsSlot[posX + x, posY + y] != null)
                         {
                             if (overlapItem == null)
@@ -166,13 +180,13 @@ public class InventoryGrid : MonoBehaviour
 
                         }
                     }
-                    
+                    catch (IndexOutOfRangeException indexOUT)
+                    {
+                        Debug.Log("Checking outside of grid, item not match " + indexOUT);
+                        return false;
+                    }
                 }
-                catch (IndexOutOfRangeException indexOUT)
-                {
-                    Debug.Log("Checking outside of grid, item not match " + indexOUT);
-                    return false;
-                }
+                
                 
             }
         }
@@ -180,6 +194,13 @@ public class InventoryGrid : MonoBehaviour
         return true;
     }
 
+    /// <summary>
+    /// Check if selected item can be put on certain space(checking all of item's spaces)
+    /// </summary>
+    /// <param name="posX"></param>
+    /// <param name="posY"></param>
+    /// <param name="holdedItem"></param>
+    /// <returns></returns>
     private bool CheckAvailableSpace(int posX, int posY, ItemFromInventory holdedItem)
     {
         for (int x = 0; x < holdedItem.WIDTH; x++)
@@ -209,19 +230,27 @@ public class InventoryGrid : MonoBehaviour
         return true;
     }
 
+    /// <summary>
+    /// Pick item and remove it's fill from inventoryGrid
+    /// </summary>
+    /// <param name="x"></param>
+    /// <param name="y"></param>
+    /// <returns></returns>
     public ItemFromInventory PickUpItem(int x, int y)
     {
         ItemFromInventory toReturn = inventoryItemsSlot[x, y];
 
         if (toReturn == null) { return null; }
 
-        //inventoryItemsSlot[x, y] = null;
-
         CleanGridReference(toReturn);
 
         return toReturn;
     }
 
+    /// <summary>
+    /// Clear grid spaces from certain item
+    /// </summary>
+    /// <param name="item"></param>
     private void CleanGridReference(ItemFromInventory item)
     {
         for (int i = 0; i < item.WIDTH; i++)
@@ -237,6 +266,12 @@ public class InventoryGrid : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Checking all spaces to find available space for item 
+    /// TO OPTIMILIZE
+    /// </summary>
+    /// <param name="itemToInsert"></param>
+    /// <returns></returns>
     internal Vector2Int? FindSpaceForObject(ItemFromInventory itemToInsert)
     {
         for (int j = 0; j < gridSize.y; j++)
@@ -253,6 +288,12 @@ public class InventoryGrid : MonoBehaviour
         return null;
     }
 
+    /// <summary>
+    /// Check if posX, posY is in the InventoryGrid
+    /// </summary>
+    /// <param name="posX"></param>
+    /// <param name="posY"></param>
+    /// <returns></returns>
     internal bool PositionCheck(int posX, int posY)
     {
         if (posX < 0 || posY > 0)

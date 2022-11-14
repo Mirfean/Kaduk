@@ -66,12 +66,6 @@ public class InventoryManager : MonoBehaviour
         inventoryHighlight = GetComponent<InventoryHighlight>();
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        //HandleHighlight();
-    }
-
     public void HandleHighlight(Vector2 mousePos)
     {
         Vector2Int positionOnGrid = GetInvGridPositon(mousePos);
@@ -113,7 +107,6 @@ public class InventoryManager : MonoBehaviour
     {
         SelectedItemGRID.PositionOnTheGrid = new Vector2(mousePosition.x - SelectedItemGRID.GridRectTransform.position.x, mousePosition.y - SelectedItemGRID.GridRectTransform.position.y);
         SelectedItemGRID.TileGridPosition = new Vector2Int ((int) (SelectedItemGRID.PositionOnTheGrid.x / InventoryGrid.tileSizeWidth), (int)(SelectedItemGRID.PositionOnTheGrid.y / InventoryGrid.tileSizeHeight));
-        //Debug.Log("Grid pos " + itemGRID.TileGridPosition);
         return SelectedItemGRID.TileGridPosition;
     }
 
