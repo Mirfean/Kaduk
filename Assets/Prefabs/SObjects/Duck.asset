@@ -12,10 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cd7d82a74ca7e094e821785a8e030f0c, type: 3}
   m_Name: Duck
   m_EditorClassIdentifier: 
-  description: Cute duck <3
-  width: 2
-  height: 2
-  itemIcon: {fileID: 21300000, guid: a19a8b3b70384a846a16e537f1e7c6b0, type: 3}
+  Description: cute duck
+  Width: 2
+  Height: 2
+  ItemIcon: {fileID: 21300000, guid: a19a8b3b70384a846a16e537f1e7c6b0, type: 3}
   serializable:
   - Index0: 0
     Index1: 0

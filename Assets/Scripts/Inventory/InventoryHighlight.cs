@@ -5,7 +5,7 @@ using UnityEngine;
 public class InventoryHighlight : MonoBehaviour
 {
     [SerializeField]
-    public RectTransform HighlighterRectTrans { get; private set; }
+    public RectTransform HighlighterRectTrans;
 
     public void Show(bool v)
     {
