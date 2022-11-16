@@ -6,20 +6,20 @@ using UnityEngine.EventSystems;
 [RequireComponent(typeof(InventoryGrid))]
 public class InvGridInteract : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler 
 {
-    InventoryManager inventoryManager;
-    InventoryGrid itemGrid;
-    Player playerInput;
+    InventoryManager _inventoryManager;
+    InventoryGrid _itemGrid;
+    Player _playerInput;
 
     public void OnPointerEnter(PointerEventData eventData)
     {
-        inventoryManager.SelectedItemGRID = itemGrid;
+        _inventoryManager.SelectedItemGRID = _itemGrid;
     }
 
     public void OnPointerExit(PointerEventData eventData)
     {
-        if (!inventoryManager.CheckMouseInInventory())
+        if (!_inventoryManager.CheckMouseInInventory())
         {
-            inventoryManager.SelectedItemGRID = null;
+            _inventoryManager.SelectedItemGRID = null;
         }
         
     }
@@ -27,10 +27,10 @@ public class InvGridInteract : MonoBehaviour, IPointerEnterHandler, IPointerExit
     // Start is called before the first frame update
     void Awake()
     {
-        inventoryManager = FindObjectOfType<InventoryManager>();
-        itemGrid = GetComponent<InventoryGrid>();
-        playerInput = new Player();
-        playerInput.Enable();
+        _inventoryManager = FindObjectOfType<InventoryManager>();
+        _itemGrid = GetComponent<InventoryGrid>();
+        _playerInput = new Player();
+        _playerInput.Enable();
     }
 
 

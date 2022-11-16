@@ -19,23 +19,24 @@ enum Rotation
 public class ItemFromInventory : MonoBehaviour
 {
     [SerializeField]
-    public string itemDescription;
-    ItemData itemdata;
+    public string ItemDescription;
+    
+    ItemData _itemdata;
 
-    Rotation rotation = Rotation.r0;
+    Rotation _rotation = Rotation.r0;
 
-    public bool[,] spaceFill;
+    public bool[,] SpaceFill;
 
-    public int onGridPositionX;
+    public int OnGridPositionX;
 
-    public int onGridPositionY;
+    public int OnGridPositionY;
 
     public int HEIGHT
     {
         get
         {
-            if (rotation == Rotation.r0 || rotation == Rotation.r180) return itemdata.height;
-            else return itemdata.width;
+            if (_rotation == Rotation.r0 || _rotation == Rotation.r180) return _itemdata.Height;
+            else return _itemdata.Width;
         }
 
     }
@@ -44,29 +45,28 @@ public class ItemFromInventory : MonoBehaviour
     {
         get
         {
-            if (rotation == Rotation.r0 || rotation == Rotation.r180) return itemdata.width;
-            else return itemdata.height;
+            if (_rotation == Rotation.r0 || _rotation == Rotation.r180) return _itemdata.Width;
+            else return _itemdata.Height;
         }
     }
 
     
-
     public ItemData itemData
     {
-        get { return itemdata; }
+        get { return _itemdata; }
         set
         { 
-            itemdata = value;
+            _itemdata = value;
 
-            GetComponent<Image>().sprite = itemdata.itemIcon;
+            GetComponent<Image>().sprite = _itemdata.ItemIcon;
 
-            itemDescription = itemdata.description;
+            ItemDescription = _itemdata.Description;
 
-            Vector2 size = new Vector2(WIDTH * InventoryGrid.tileSizeWidth, HEIGHT * InventoryGrid.tileSizeHeight);
+            Vector2 size = new Vector2(WIDTH * InventoryGrid.TileSizeWidth, HEIGHT * InventoryGrid.TileSizeHeight);
 
             GetComponent<RectTransform>().sizeDelta = size;
 
-            spaceFill = itemdata.fill;
+            SpaceFill = _itemdata.Fill;
         }
     }
 
@@ -77,10 +77,10 @@ public class ItemFromInventory : MonoBehaviour
 
     internal void rotate()
     {
-        spaceFill = rotateFill();
+        SpaceFill = rotateFill();
         
-        if (rotation == Rotation.r270) rotation = Rotation.r0;
-        else rotation += 1;
+        if (_rotation == Rotation.r270) _rotation = Rotation.r0;
+        else _rotation += 1;
 
         //if(this.gameObject.transform.rotation.z == 360f) this.gameObject.transform.Rotate(0f, 0f, -360f);
         //else this.gameObject.transform.Rotate(0f, 0f, 90f);
@@ -99,7 +99,7 @@ public class ItemFromInventory : MonoBehaviour
             for(int j = 0; j < HEIGHT; j++)
             {
                 Debug.Log($"for new[{j},{i}] value of old[{WIDTH - 1 - i},{ HEIGHT - (HEIGHT - j)}]");
-                newFill[j, i] = spaceFill[WIDTH - 1 - i, HEIGHT - (HEIGHT - j)];
+                newFill[j, i] = SpaceFill[WIDTH - 1 - i, HEIGHT - (HEIGHT - j)];
             }
         }
         return newFill;
@@ -109,7 +109,7 @@ public class ItemFromInventory : MonoBehaviour
     {
         Vector2 newValue = new Vector2();
 
-        switch (rotation)
+        switch (_rotation)
         {
             case Rotation.r0:
                 {

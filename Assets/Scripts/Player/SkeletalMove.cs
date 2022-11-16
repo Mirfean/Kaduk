@@ -6,25 +6,25 @@ using UnityEngine.U2D.Animation;
 public class SkeletalMove : MonoBehaviour
 {
     [SerializeField]
-    private SpriteSkin skeleton;
+    private SpriteSkin _skeleton;
 
     [SerializeField]
-    public Transform leftHand;
+    public Transform LeftHand;
 
     [SerializeField]
-    private PlayerBasics player;
+    private PlayerBasics _player;
 
     [SerializeField]
-    Animator animator;
+    Animator _animator;
 
     [SerializeField]
-    bool IsAiming;
+    bool _isAiming;
 
     [SerializeField]
     public Transform HoldedItem;
 
     [SerializeField]
-    float HoldItemRotationIdle = -68f;
+    float _holdItemRotationIdle = -68f;
 
     // Start is called before the first frame update
     void Start()
@@ -59,7 +59,7 @@ public class SkeletalMove : MonoBehaviour
     /// </summary>
     public void SetArmsToIdle()
     {
-        HoldedItem.rotation = Quaternion.Euler(0, 0, HoldItemRotationIdle);
+        HoldedItem.rotation = Quaternion.Euler(0, 0, _holdItemRotationIdle);
     }
 
     public void TrackCursorByHands(Vector2 mousePos)

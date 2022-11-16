@@ -8,42 +8,42 @@ using UnityEngine;
 /// </summary>
 public class InventoryGrid : MonoBehaviour
 {
-    public const float tileSizeWidth = 32;
-    public const float tileSizeHeight = 32;
+    public const float TileSizeWidth = 32;
+    public const float TileSizeHeight = 32;
 
-    RectTransform rectTransform;
-    Vector2 positionOnTheGrid;
-    Vector2Int tileGridPosition;
+    RectTransform _rectTransform;
+    Vector2 _positionOnTheGrid;
+    Vector2Int _tileGridPosition;
 
-    ItemFromInventory[,] inventoryItemsSlot;
-
-    [SerializeField]
-    Vector2Int gridSize;
+    ItemFromInventory[,] _inventoryItemsSlot;
 
     [SerializeField]
-    GameObject inventoryItemPrefab;
+    Vector2Int _gridSize;
 
-    public Vector2 PositionOnTheGrid { get => positionOnTheGrid; set => positionOnTheGrid = value; }
-    public Vector2Int TileGridPosition { get => tileGridPosition; set => tileGridPosition = value; }
-    public Vector2Int GridSize { get => gridSize; set => gridSize = value; }
-    public ItemFromInventory[,] InventoryItemsSlot { get => inventoryItemsSlot; set => inventoryItemsSlot = value; }
-    public RectTransform GridRectTransform { get => rectTransform; set => rectTransform = value; }
+    [SerializeField]
+    GameObject _inventoryItemPrefab;
+
+    public Vector2 PositionOnTheGrid { get => _positionOnTheGrid; set => _positionOnTheGrid = value; }
+    public Vector2Int TileGridPosition { get => _tileGridPosition; set => _tileGridPosition = value; }
+    public Vector2Int GridSize { get => _gridSize; set => _gridSize = value; }
+    public ItemFromInventory[,] InventoryItemsSlot { get => _inventoryItemsSlot; set => _inventoryItemsSlot = value; }
+    public RectTransform GridRectTransform { get => _rectTransform; set => _rectTransform = value; }
 
     // Start is called before the first frame update
     void Start()
     {
-        rectTransform = GetComponent<RectTransform>();
+        _rectTransform = GetComponent<RectTransform>();
         Init();
 
-        positionOnTheGrid = new Vector2();
-        tileGridPosition = new Vector2Int();
+        _positionOnTheGrid = new Vector2();
+        _tileGridPosition = new Vector2Int();
     }
 
     private void Init(int width, int height)
     {
-        inventoryItemsSlot = new ItemFromInventory[width, height];
-        Vector2 size = new Vector2(width * tileSizeWidth, height * tileSizeHeight);
-        rectTransform.sizeDelta = size;
+        _inventoryItemsSlot = new ItemFromInventory[width, height];
+        Vector2 size = new Vector2(width * TileSizeWidth, height * TileSizeHeight);
+        _rectTransform.sizeDelta = size;
 
 
     }
@@ -51,26 +51,26 @@ public class InventoryGrid : MonoBehaviour
     internal ItemFromInventory GetItem(Vector2Int positionOnGrid)
     {
         Debug.Log("GetItem from " + positionOnGrid);
-        return inventoryItemsSlot[positionOnGrid.x, -(positionOnGrid.y)];
+        return _inventoryItemsSlot[positionOnGrid.x, -(positionOnGrid.y)];
     }
 
     private void Init()
     {
-        inventoryItemsSlot = new ItemFromInventory[gridSize.x, gridSize.y];
-        Vector2 size = new Vector2(gridSize.x * tileSizeWidth, gridSize.y * tileSizeHeight);
-        rectTransform.sizeDelta = size;
+        _inventoryItemsSlot = new ItemFromInventory[_gridSize.x, _gridSize.y];
+        Vector2 size = new Vector2(_gridSize.x * TileSizeWidth, _gridSize.y * TileSizeHeight);
+        _rectTransform.sizeDelta = size;
     }
 
     public Vector2Int GetInvGridPositon(Vector2 mousePosition)
     {
 
-        positionOnTheGrid.x = mousePosition.x - rectTransform.position.x;
-        positionOnTheGrid.y = mousePosition.y - rectTransform.position.y;
+        _positionOnTheGrid.x = mousePosition.x - _rectTransform.position.x;
+        _positionOnTheGrid.y = mousePosition.y - _rectTransform.position.y;
 
-        tileGridPosition.x = (int) (positionOnTheGrid.x / tileSizeWidth);
-        tileGridPosition.y = (int) (positionOnTheGrid.y / tileSizeHeight);
+        _tileGridPosition.x = (int) (_positionOnTheGrid.x / TileSizeWidth);
+        _tileGridPosition.y = (int) (_positionOnTheGrid.y / TileSizeHeight);
 
-        return tileGridPosition;
+        return _tileGridPosition;
     }
 
     public bool PlaceItem(ItemFromInventory inventoryItem, int posX, int posY, ref ItemFromInventory overlapItem)
@@ -101,25 +101,25 @@ public class InventoryGrid : MonoBehaviour
     public void PlaceItemToGrid(ItemFromInventory inventoryItem, int posX, int posY)
     {
         RectTransform rectTransform = inventoryItem.GetComponent<RectTransform>();
-        rectTransform.SetParent(this.rectTransform);
+        rectTransform.SetParent(this._rectTransform);
 
         for (int i = 0; i < inventoryItem.WIDTH; i++)
         {
             for (int j = 0; j < inventoryItem.HEIGHT; j++)
             {
 
-                if (inventoryItem.spaceFill[i, j])
+                if (inventoryItem.SpaceFill[i, j])
                 {
                     Debug.Log($"Place item in x{posX + i} y{posY + j}");
-                    inventoryItemsSlot[posX + i, posY + j] = inventoryItem;
+                    _inventoryItemsSlot[posX + i, posY + j] = inventoryItem;
                     
                 }
 
             }
         }
 
-        inventoryItem.onGridPositionX = posX;
-        inventoryItem.onGridPositionY = posY;
+        inventoryItem.OnGridPositionX = posX;
+        inventoryItem.OnGridPositionY = posY;
 
         //rectTransform.parent = rectTransform;
         //inventoryItemsSlot[posX, posY] = inventoryItem;
@@ -139,8 +139,8 @@ public class InventoryGrid : MonoBehaviour
     {
         Vector2 position = new Vector2();
 
-        position.x = posX * tileSizeWidth;
-        position.y = -(posY * tileSizeHeight);
+        position.x = posX * TileSizeWidth;
+        position.y = -(posY * TileSizeHeight);
         return position;
     }
 
@@ -158,20 +158,20 @@ public class InventoryGrid : MonoBehaviour
         {
             for(var y = 0; y < holdedItem.HEIGHT; y++)
             {
-                if (holdedItem.spaceFill[x, y])
+                if (holdedItem.SpaceFill[x, y])
                 {
                     try
                     {   
                     
-                        if (inventoryItemsSlot[posX + x, posY + y] != null)
+                        if (_inventoryItemsSlot[posX + x, posY + y] != null)
                         {
                             if (overlapItem == null)
                             {
-                                overlapItem = inventoryItemsSlot[posX + x, posY + y];
+                                overlapItem = _inventoryItemsSlot[posX + x, posY + y];
                             }
                             else
                             {
-                                if (overlapItem != inventoryItemsSlot[posX + x, posY + y])
+                                if (overlapItem != _inventoryItemsSlot[posX + x, posY + y])
                                 {
                                     return false;
                                 }
@@ -209,9 +209,9 @@ public class InventoryGrid : MonoBehaviour
             {
                 try
                 {
-                    if (holdedItem.spaceFill[x, y])
+                    if (holdedItem.SpaceFill[x, y])
                     {
-                        if (inventoryItemsSlot[posX + x, posY + y] != null)
+                        if (_inventoryItemsSlot[posX + x, posY + y] != null)
                         {
                             return false;
                         }
@@ -238,7 +238,7 @@ public class InventoryGrid : MonoBehaviour
     /// <returns></returns>
     public ItemFromInventory PickUpItem(int x, int y)
     {
-        ItemFromInventory toReturn = inventoryItemsSlot[x, y];
+        ItemFromInventory toReturn = _inventoryItemsSlot[x, y];
 
         if (toReturn == null) { return null; }
 
@@ -257,9 +257,9 @@ public class InventoryGrid : MonoBehaviour
         {
             for (int j = 0; j < item.HEIGHT; j++)
             {
-                if (item.spaceFill[i, j])
+                if (item.SpaceFill[i, j])
                 {
-                    inventoryItemsSlot[item.onGridPositionX + i, item.onGridPositionY + j] = null;
+                    _inventoryItemsSlot[item.OnGridPositionX + i, item.OnGridPositionY + j] = null;
                 }
 
             }
@@ -274,9 +274,9 @@ public class InventoryGrid : MonoBehaviour
     /// <returns></returns>
     internal Vector2Int? FindSpaceForObject(ItemFromInventory itemToInsert)
     {
-        for (int j = 0; j < gridSize.y; j++)
+        for (int j = 0; j < _gridSize.y; j++)
         {
-            for(int i = 0; i < gridSize.x; i++)
+            for(int i = 0; i < _gridSize.x; i++)
             {
                 if(CheckAvailableSpace(i, j, itemToInsert))
                 {
@@ -301,7 +301,7 @@ public class InventoryGrid : MonoBehaviour
             return false;
         }
 
-        if (posX >= gridSize.x || posY <= -gridSize.y)
+        if (posX >= _gridSize.x || posY <= -_gridSize.y)
         {
             return false;
         }

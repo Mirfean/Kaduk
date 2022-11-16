@@ -8,22 +8,22 @@ using UnityEngine;
 public class ItemData : ScriptableObject
 {
     [SerializeField]
-    public string description;
+    public string Description;
 
     [SerializeField]
-    public int width = 1;
+    public int Width = 1;
     [SerializeField]
-    public int height = 1;
+    public int Height = 1;
     [SerializeField]
-    public Sprite itemIcon;
+    public Sprite ItemIcon;
 
     [SerializeField]
-    public bool[,] fill;
+    public bool[,] Fill;
 
 
     public void CreateFill()
     {
-        fill = new bool[width, height];
+        Fill = new bool[Width, Height];
     }
 
     public void OnEnable()
@@ -58,11 +58,11 @@ public class ItemData : ScriptableObject
     {
         // Convert our unserializable array into a serializable list
         serializable = new List<Package<bool>>();
-        for (int i = 0; i < fill.GetLength(0); i++)
+        for (int i = 0; i < Fill.GetLength(0); i++)
         {
-            for (int j = 0; j < fill.GetLength(1); j++)
+            for (int j = 0; j < Fill.GetLength(1); j++)
             {
-                serializable.Add(new Package<bool>(i, j, fill[i, j]));
+                serializable.Add(new Package<bool>(i, j, Fill[i, j]));
                 Debug.Log("ELO");
             }
         }
@@ -70,10 +70,10 @@ public class ItemData : ScriptableObject
     public void OnAfterDeserialize()
     {
         // Convert the serializable list into our unserializable array
-        fill = new bool[width, height];
+        Fill = new bool[Width, Height];
         foreach(var package in serializable)
         {
-            fill[package.Index0, package.Index1] = package.Element;
+            Fill[package.Index0, package.Index1] = package.Element;
         }
     }
 }

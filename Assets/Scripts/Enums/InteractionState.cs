@@ -8,10 +8,11 @@ namespace Assets.Scripts.Enums
 {
     public enum InteractionState
     {
-        Normal,
-        Dialogue,
-        Aiming,
-        Inventory,
-        Menu,
+        DEFAULT,
+        MOVINE,
+        DIALOGUE,
+        AIMING,
+        INVENTORY,
+        MENU,
     }
 }

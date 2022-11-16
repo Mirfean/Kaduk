@@ -6,17 +6,15 @@ using UnityEngine;
 public class _Item : MonoBehaviour
 {
     [SerializeField]
-    private CursorManager cursorManager;
-
-
+    private CursorManager _cursorManager;
 
     [SerializeField]
-    public string description;
+    public string Description;
 
     // Start is called before the first frame update
     void Start()
     {
-        cursorManager = FindObjectOfType<CursorManager>();
+        _cursorManager = FindObjectOfType<CursorManager>();
     }
 
     // Update is called once per frame
@@ -32,17 +30,17 @@ public class _Item : MonoBehaviour
 
     private void OnMouseEnter()
     {
-        cursorManager.ChangeCursorTo(CursorType.EYE);
+        _cursorManager.ChangeCursorTo(CursorType.EYE);
     }
 
     private void OnMouseExit()
     {
         //TODO execute method 
-        cursorManager.ChangeCursorTo(CursorType.STANDARD);
+        _cursorManager.ChangeCursorTo(CursorType.STANDARD);
     }
 
     private void OnMouseUpAsButton()
     {
-        Debug.Log($"{description}");
+        Debug.Log($"{Description}");
     }
 }
