@@ -7,6 +7,9 @@ public class Gun : _Weapon
     [SerializeField]
     GameObject _shootingPoint;
 
+    [SerializeField]
+    Transform _holdedItem;
+    
     [SerializeField, Range(0f, 1f)]
     float _recoil;
 
@@ -17,7 +20,7 @@ public class Gun : _Weapon
     float _bulletSpeed;
 
     [SerializeField][Range(0.05f, 2)]
-    float _fireRate;
+    float _fireRate = 0.5f;
 
     [SerializeField]
     float _nextFire;
@@ -26,39 +29,65 @@ public class Gun : _Weapon
 
     private LineRenderer laserLine;
 
+    [SerializeField]
+    private GameObject _bulletTrail;
 
+    [SerializeField]
+    private Animator _muzzleFlashAnimator;
 
-    // Start is called before the first frame update
-    void Start()
-    {
-        _fireRate = 0.5f;
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        //movement.x = Input.GetAxisRaw("Horizontal");
-        //movement.y = Input.GetAxisRaw("Vertical");
-
-        //mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-    }
-
+    [SerializeField]
+    private float _bulletRange;
 
     public override void Attack(Vector2 mousePos, Quaternion holdItemRot)
     {
         Debug.Log("Shooting by " + name);
-        //Vector2 normXY = normalizeMousePos(mousePos);
-        //RotateAim(mousePos);
-        //GameObject newBullet = Instantiate(bullet, shootingPoint.transform.position, shootingPoint.transform.rotation);
-        if(Time.time > _nextFire)
+        
+        //_muzzleFlashAnimator.SetTrigger("Shoot");
+
+        RotateAim(mousePos, holdItemRot);
+        var hit = Physics2D.Raycast(
+            _shootingPoint.transform.position,
+            transform.right,
+            _bulletRange);
+
+        var trail = Instantiate(_bulletTrail, _shootingPoint.transform.position, _shootingPoint.transform.rotation);
+
+        Debug.DrawRay(_shootingPoint.transform.position, transform.right * _bulletRange, Color.white, _bulletRange, true);
+
+        var trailScript = trail.GetComponent<BulletTrail>();
+
+        if (hit.collider != null)
+        {
+            //Damage enemies etc.
+            trailScript.SetTargetPosition(hit.point);
+            if(hit.collider.tag == "Enemy")
+            {
+                Debug.Log("I hit enemy!");
+            }
+
+        }
+        else
+        {
+            var endPosition = _shootingPoint.transform.position + transform.right * _bulletRange;
+            trailScript.SetTargetPosition(endPosition);
+            Debug.Log("end " + endPosition);
+        }
+
+    }
+
+    //old
+    private void ShootBullet()
+    {
+        //Shooting projectile
+        /*if(Time.time > _nextFire)
         {
             _nextFire = Time.time + _fireRate;
             RotateAim(mousePos, holdItemRot);
             GameObject newBullet = Instantiate(_bullet, _shootingPoint.transform.position, _shootingPoint.transform.rotation);
             newBullet.GetComponent<Rigidbody2D>().AddForce(transform.right * _bulletSpeed, ForceMode2D.Impulse);
             Destroy(newBullet, 10f);
-        }
-        
+        }*/
+
     }
 
     public Vector2 normalizeMousePos(Vector2 mousePos)
@@ -70,13 +99,8 @@ public class Gun : _Weapon
 
     public void RotateAim(Vector2 mousePos, Quaternion holdItemRot)
     {
-        Debug.Log("gun rotation " + transform.rotation.z);
-        
-        //Vector2 aimDiff = new Vector2(mousePos.x - shootingPoint.transform.position.x, mousePos.y - shootingPoint.transform.position.y);
         Vector2 aimDiff = new Vector2(mousePos.x - _shootingPoint.transform.position.x - transform.position.x, mousePos.y - _shootingPoint.transform.position.y - transform.position.y);
-        //aimDiff.Normalize();
         float aimAngle = (Mathf.Atan2(aimDiff.y, aimDiff.x) * Mathf.Rad2Deg);
-        //shootingPoint.transform.rotation = Quaternion.Euler(0, 0, aimAngle);
         Debug.Log($"aimAngle {aimAngle} and gun rotation {transform.rotation.z} and holdItemRot {holdItemRot.z}");
     }
 
@@ -84,22 +108,27 @@ public class Gun : _Weapon
     {
         if (rotated)
         {
-            //transform.rotation = Quaternion.AngleAxis(180, Vector3.up);
-            Debug.Log("Go on");
-
-            float diff = 180 - transform.rotation.x;
-
-            transform.Rotate(diff, 0f, 0f);
-
+            Debug.Log("rotation on");
+            SetGunRotation(true);
         }
         else
         {
-            float diff = 0 - transform.rotation.x;
+            Debug.Log("rotation off");
+            SetGunRotation(false);
+        }
+    }
 
-            transform.Rotate(diff, 0f, 0f);
-            //transform.rotation = Quaternion.AngleAxis(180, Vector3.up);
-            Debug.Log("Go off");
-            //gameObject.transform.rotation = Quaternion.Euler(0f, 0f, 0f);
+    public void SetGunRotation(bool rotated)
+    {
+        if (rotated)
+        {
+            transform.Rotate(180f - transform.rotation.x, 0f, 0f);
+            //transform.rotation = Quaternion.Euler(180f, 0f, 0f);
+        }
+        else
+        {
+            transform.Rotate(-transform.rotation.x, 0f, 0f);
+            //transform.rotation = Quaternion.Euler(0f, 0f, 0f);
         }
     }
 }

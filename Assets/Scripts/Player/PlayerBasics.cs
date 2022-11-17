@@ -42,12 +42,12 @@ public class PlayerBasics : MonoBehaviour
         get { return _rotated; }
         set
         {
-            _rotated = value;
-
-            if (_weapon.gameObject.activeSelf)
+            if (_weapon.gameObject.activeSelf && _rotated != value)
             {
                 RotateWeapon();
             }
+            _rotated = value;
+            
         }
     }
 
@@ -194,7 +194,7 @@ public class PlayerBasics : MonoBehaviour
             else if (_rotated)
             {
                 _characterSprite.rotation = Quaternion.Euler(0, 0, 0);
-                if(Rotated) Rotated = false;
+                if (Rotated) Rotated = false;
             }
 
             if (_isAiming)
@@ -212,6 +212,7 @@ public class PlayerBasics : MonoBehaviour
     {
         _skeletanMove.TrackCursorByHands(realPos);
         _weapon.transform.position = _skeletanMove.LeftHand.position;
+
     }
 
     /// <summary>
@@ -293,7 +294,8 @@ public class PlayerBasics : MonoBehaviour
 
 
     /// <summary>
-    /// CURSOR
+    /// RIGHT MOUSE CLICK METHOD
+    /// Aiming weapon to cursor position
     /// </summary>
     public void OnAim(InputAction.CallbackContext context)
     {
@@ -305,12 +307,12 @@ public class PlayerBasics : MonoBehaviour
     {
         _speed = _speed / 3;
         ChangeAimStatus(true);
+        //Aiming(Camera.main.ScreenToWorldPoint(_playerInput.Basic.MouseMovement.ReadValue<Vector2>()));
         Aiming(Camera.main.ScreenToWorldPoint(_playerInput.Basic.MouseMovement.ReadValue<Vector2>()));
         do
         {
             Debug.Log(_isAiming);
             yield return null;
-
         } while (_playerInput.Basic.Aim.IsInProgress());
         ChangeAimStatus(false);
         _speed = _defaultSpeed;
