@@ -52,16 +52,31 @@ public class Gun : _Weapon
 
         var trail = Instantiate(_bulletTrail, _shootingPoint.transform.position, _shootingPoint.transform.rotation);
 
-        Debug.DrawRay(_shootingPoint.transform.position, transform.right * _bulletRange, Color.white, _bulletRange, true);
+        Debug.Log("Transoform right " + transform.right);
+
+
+        //Debug.DrawRay(_shootingPoint.transform.position, transform.right - new Vector3(0.25f, 0f, 0f), Color.black, _bulletRange, true);
+        //Debug.DrawRay(_shootingPoint.transform.position, transform.right - new Vector3(0.5f, 0f, 0f), Color.red, _bulletRange, true);
+        //Debug.DrawRay(_shootingPoint.transform.position, transform.right , Color.white, _bulletRange, true);
+        //Debug.DrawRay(_shootingPoint.transform.position, transform.right + new Vector3(0.25f, 0f, 0f), Color.green, _bulletRange, true);
+        //Debug.DrawRay(_shootingPoint.transform.position, transform.right + new Vector3(0.5f, 0f, 0f), Color.blue, _bulletRange, true);
+
+        Vector3 direction = transform.right;
+        Vector3 spread = Vector3.zero + (transform.up * Random.Range(-1f, 1f)) + (transform.right * Random.Range(-1f, 1f));
+        spread.Normalize();
+        direction += spread * Random.Range(0f, 0.2f);
+
+        Debug.DrawRay(_shootingPoint.transform.position, direction, Color.blue, _bulletRange*10, true);
 
         var trailScript = trail.GetComponent<BulletTrail>();
 
         if (hit.collider != null)
         {
             //Damage enemies etc.
-            trailScript.SetTargetPosition(hit.point);
+            //trailScript.SetTargetPosition(hit.point);
             if(hit.collider.tag == "Enemy")
             {
+                hit.collider.GetComponent<Enemy>().TakeDamage(Damage);
                 Debug.Log("I hit enemy!");
             }
 
@@ -69,7 +84,7 @@ public class Gun : _Weapon
         else
         {
             var endPosition = _shootingPoint.transform.position + transform.right * _bulletRange;
-            trailScript.SetTargetPosition(endPosition);
+            //trailScript.SetTargetPosition(endPosition);
             Debug.Log("end " + endPosition);
         }
 

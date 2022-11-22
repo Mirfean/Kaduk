@@ -5,7 +5,7 @@ using UnityEngine;
 public class _Weapon : MonoBehaviour
 {
     public string Description;
-    public float Damage;
+    public int Damage;
     public float AttackSpeed;
     //public WeaponType
 

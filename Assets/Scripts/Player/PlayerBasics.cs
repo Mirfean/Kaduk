@@ -132,16 +132,18 @@ public class PlayerBasics : MonoBehaviour
             //TODO
             return;
         }
+
         _shootInProgress = _playerInput.Basic.MouseLClick.inProgress;
         Debug.Log("TWOJA STARA " + _shootInProgress);
         if (_isAiming)
         {
-            if(_weapon != null && !_shootInProgress)
+            if(_weapon != null && !_shootInProgress && context.phase == InputActionPhase.Started)
             {
                 Debug.Log("Piu piu");
                 _weapon.GetComponent<_Weapon>().Attack(Camera.main.ScreenToWorldPoint(_playerInput.Basic.MouseMovement.ReadValue<Vector2>()), _skeletanMove.HoldedItem.rotation);
             }
         }
+
         else
         {
             StopMoveCoroutines();

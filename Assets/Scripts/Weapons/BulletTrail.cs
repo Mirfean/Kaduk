@@ -22,11 +22,12 @@ public class BulletTrail : MonoBehaviour
     void Update()
     {
         _progress += Time.deltaTime * _speed;
-        transform.position = Vector3.Lerp(_startPosition, _targetPosition, _progress);
+        transform.position = Vector3.Lerp(_targetPosition, _startPosition, _progress);
     }
 
     public void SetTargetPosition(Vector3 targetPosition)
     {
+        Debug.Log("Target position " + targetPosition);
         targetPosition = new Vector3(targetPosition.x, targetPosition.y, -1);
     }
 }

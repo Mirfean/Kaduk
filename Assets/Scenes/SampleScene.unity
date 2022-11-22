@@ -3357,6 +3357,12 @@ MonoBehaviour:
   m_CameraActivatedEvent:
     m_PersistentCalls:
       m_Calls: []
+--- !u!4 &614983152 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 4656468749731263188, guid: b4882d2f71c74cd4aad5ef34932a43d8,
+    type: 3}
+  m_PrefabInstance: {fileID: 4656468749159547063}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &646170105 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 4656468751204872817, guid: b4882d2f71c74cd4aad5ef34932a43d8,
@@ -3689,6 +3695,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8963682ea1707574dbd854d7041ab154, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _maxHp: 0
+  _currentHp: 0
+  EnemyData: {fileID: 11400000, guid: 5f40058affdedde4699f9402cd3beca5, type: 2}
 --- !u!1 &1127854881
 GameObject:
   m_ObjectHideFlags: 0
@@ -8610,7 +8619,7 @@ PrefabInstance:
     - target: {fileID: 4656468749800971343, guid: b4882d2f71c74cd4aad5ef34932a43d8,
         type: 3}
       propertyPath: Damage
-      value: 1.4
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 4656468749800971343, guid: b4882d2f71c74cd4aad5ef34932a43d8,
         type: 3}
@@ -8630,13 +8639,23 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4656468749800971343, guid: b4882d2f71c74cd4aad5ef34932a43d8,
         type: 3}
+      propertyPath: HoldedItem
+      value: 
+      objectReference: {fileID: 614983152}
+    - target: {fileID: 4656468749800971343, guid: b4882d2f71c74cd4aad5ef34932a43d8,
+        type: 3}
       propertyPath: AttackSpeed
       value: 1.05
       objectReference: {fileID: 0}
     - target: {fileID: 4656468749800971343, guid: b4882d2f71c74cd4aad5ef34932a43d8,
         type: 3}
+      propertyPath: _holdedItem
+      value: 
+      objectReference: {fileID: 614983152}
+    - target: {fileID: 4656468749800971343, guid: b4882d2f71c74cd4aad5ef34932a43d8,
+        type: 3}
       propertyPath: _bulletRange
-      value: 15
+      value: 3.02
       objectReference: {fileID: 0}
     - target: {fileID: 4656468749800971343, guid: b4882d2f71c74cd4aad5ef34932a43d8,
         type: 3}
@@ -8688,6 +8707,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4656468750532563742, guid: b4882d2f71c74cd4aad5ef34932a43d8,
+        type: 3}
+      propertyPath: m_Name
+      value: Item
       objectReference: {fileID: 0}
     - target: {fileID: 4656468750532563742, guid: b4882d2f71c74cd4aad5ef34932a43d8,
         type: 3}
