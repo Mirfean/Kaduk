@@ -41,18 +41,22 @@ public class Gun : _Weapon
     public override void Attack(Vector2 mousePos, Quaternion holdItemRot)
     {
         Debug.Log("Shooting by " + name);
-        
+
         //_muzzleFlashAnimator.SetTrigger("Shoot");
+
+        Vector3 direction = MakeSpreadDirection();
+
+        Debug.DrawRay(_shootingPoint.transform.position, direction, Color.blue, _bulletRange, true);
 
         RotateAim(mousePos, holdItemRot);
         var hit = Physics2D.Raycast(
             _shootingPoint.transform.position,
-            transform.right,
+            direction,
             _bulletRange);
 
         var trail = Instantiate(_bulletTrail, _shootingPoint.transform.position, _shootingPoint.transform.rotation);
 
-        Debug.Log("Transoform right " + transform.right);
+        Debug.Log("Transform right " + transform.right);
 
 
         //Debug.DrawRay(_shootingPoint.transform.position, transform.right - new Vector3(0.25f, 0f, 0f), Color.black, _bulletRange, true);
@@ -61,25 +65,22 @@ public class Gun : _Weapon
         //Debug.DrawRay(_shootingPoint.transform.position, transform.right + new Vector3(0.25f, 0f, 0f), Color.green, _bulletRange, true);
         //Debug.DrawRay(_shootingPoint.transform.position, transform.right + new Vector3(0.5f, 0f, 0f), Color.blue, _bulletRange, true);
 
-        Vector3 direction = transform.right;
-        Vector3 spread = Vector3.zero + (transform.up * Random.Range(-1f, 1f)) + (transform.right * Random.Range(-1f, 1f));
-        spread.Normalize();
-        direction += spread * Random.Range(0f, 0.2f);
-
-        Debug.DrawRay(_shootingPoint.transform.position, direction, Color.blue, _bulletRange*10, true);
-
         var trailScript = trail.GetComponent<BulletTrail>();
 
         if (hit.collider != null)
         {
             //Damage enemies etc.
             //trailScript.SetTargetPosition(hit.point);
-            if(hit.collider.tag == "Enemy")
+            if (hit.collider.tag == "Enemy")
             {
                 hit.collider.GetComponent<Enemy>().TakeDamage(Damage);
                 Debug.Log("I hit enemy!");
             }
-
+            if(hit.collider.GetComponent<HitTarget>())
+            {
+                hit.collider.GetComponent<HitTarget>().TakeHit(Damage);
+            
+            }
         }
         else
         {
@@ -88,6 +89,15 @@ public class Gun : _Weapon
             Debug.Log("end " + endPosition);
         }
 
+    }
+
+    private Vector3 MakeSpreadDirection()
+    {
+        Vector3 direction = transform.right;
+        Vector3 spread = Vector3.zero + (transform.up * Random.Range(-1f, 1f)) + (transform.right * Random.Range(-1f, 1f));
+        spread.Normalize();
+        direction += spread * Random.Range(0f, 0.4f);
+        return direction;
     }
 
     //old

@@ -10,6 +10,9 @@ TagManager:
   - World
   - NoMask
   - InventoryItem
+  - CritLimb
+  - LessLimb
+  - NormalLimb
   layers:
   - Default
   - TransparentFX
