@@ -71,6 +71,24 @@ public partial class @Player : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Flashlight"",
+                    ""type"": ""Button"",
+                    ""id"": ""ce2bb281-1c6f-4a3d-a0c7-65dc463fefa9"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Interact"",
+                    ""type"": ""Button"",
+                    ""id"": ""0d6d2a9b-fb55-4cfa-bd8d-69aecc6a32d6"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -170,6 +188,28 @@ public partial class @Player : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": """",
                     ""action"": ""Inventory"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""a09c6936-6140-499a-b12a-2a6a74cc031f"",
+                    ""path"": ""<Keyboard>/f"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Flashlight"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""1233437d-b52b-46db-955c-d0eb846c651e"",
+                    ""path"": ""<Keyboard>/e"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Interact"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -313,6 +353,8 @@ public partial class @Player : IInputActionCollection2, IDisposable
         m_Basic_MouseLClick = m_Basic.FindAction("MouseLClick", throwIfNotFound: true);
         m_Basic_Aim = m_Basic.FindAction("Aim", throwIfNotFound: true);
         m_Basic_Inventory = m_Basic.FindAction("Inventory", throwIfNotFound: true);
+        m_Basic_Flashlight = m_Basic.FindAction("Flashlight", throwIfNotFound: true);
+        m_Basic_Interact = m_Basic.FindAction("Interact", throwIfNotFound: true);
         // UI
         m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
         m_UI_MouseLClick = m_UI.FindAction("MouseLClick", throwIfNotFound: true);
@@ -385,6 +427,8 @@ public partial class @Player : IInputActionCollection2, IDisposable
     private readonly InputAction m_Basic_MouseLClick;
     private readonly InputAction m_Basic_Aim;
     private readonly InputAction m_Basic_Inventory;
+    private readonly InputAction m_Basic_Flashlight;
+    private readonly InputAction m_Basic_Interact;
     public struct BasicActions
     {
         private @Player m_Wrapper;
@@ -394,6 +438,8 @@ public partial class @Player : IInputActionCollection2, IDisposable
         public InputAction @MouseLClick => m_Wrapper.m_Basic_MouseLClick;
         public InputAction @Aim => m_Wrapper.m_Basic_Aim;
         public InputAction @Inventory => m_Wrapper.m_Basic_Inventory;
+        public InputAction @Flashlight => m_Wrapper.m_Basic_Flashlight;
+        public InputAction @Interact => m_Wrapper.m_Basic_Interact;
         public InputActionMap Get() { return m_Wrapper.m_Basic; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -418,6 +464,12 @@ public partial class @Player : IInputActionCollection2, IDisposable
                 @Inventory.started -= m_Wrapper.m_BasicActionsCallbackInterface.OnInventory;
                 @Inventory.performed -= m_Wrapper.m_BasicActionsCallbackInterface.OnInventory;
                 @Inventory.canceled -= m_Wrapper.m_BasicActionsCallbackInterface.OnInventory;
+                @Flashlight.started -= m_Wrapper.m_BasicActionsCallbackInterface.OnFlashlight;
+                @Flashlight.performed -= m_Wrapper.m_BasicActionsCallbackInterface.OnFlashlight;
+                @Flashlight.canceled -= m_Wrapper.m_BasicActionsCallbackInterface.OnFlashlight;
+                @Interact.started -= m_Wrapper.m_BasicActionsCallbackInterface.OnInteract;
+                @Interact.performed -= m_Wrapper.m_BasicActionsCallbackInterface.OnInteract;
+                @Interact.canceled -= m_Wrapper.m_BasicActionsCallbackInterface.OnInteract;
             }
             m_Wrapper.m_BasicActionsCallbackInterface = instance;
             if (instance != null)
@@ -437,6 +489,12 @@ public partial class @Player : IInputActionCollection2, IDisposable
                 @Inventory.started += instance.OnInventory;
                 @Inventory.performed += instance.OnInventory;
                 @Inventory.canceled += instance.OnInventory;
+                @Flashlight.started += instance.OnFlashlight;
+                @Flashlight.performed += instance.OnFlashlight;
+                @Flashlight.canceled += instance.OnFlashlight;
+                @Interact.started += instance.OnInteract;
+                @Interact.performed += instance.OnInteract;
+                @Interact.canceled += instance.OnInteract;
             }
         }
     }
@@ -521,6 +579,8 @@ public partial class @Player : IInputActionCollection2, IDisposable
         void OnMouseLClick(InputAction.CallbackContext context);
         void OnAim(InputAction.CallbackContext context);
         void OnInventory(InputAction.CallbackContext context);
+        void OnFlashlight(InputAction.CallbackContext context);
+        void OnInteract(InputAction.CallbackContext context);
     }
     public interface IUIActions
     {

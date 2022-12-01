@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -25,6 +26,9 @@ public class SkeletalMove : MonoBehaviour
 
     [SerializeField]
     float _holdItemRotationIdle = -68f;
+
+    [SerializeField]
+    GameObject _flashlight;
 
     // Start is called before the first frame update
     void Start()
@@ -64,13 +68,30 @@ public class SkeletalMove : MonoBehaviour
 
     public void TrackCursorByHands(Vector2 mousePos)
     {
-        Vector2 aimDiff = new Vector2(mousePos.x - HoldedItem.position.x, mousePos.y - HoldedItem.position.y);
-        float aimAngle = Mathf.Atan2(aimDiff.y, aimDiff.x) * Mathf.Rad2Deg;
+        float aimAngle = GetMouseAngle(mousePos, HoldedItem);
         HoldedItem.rotation = Quaternion.Euler(0, 0, aimAngle);
+    }
+
+    private float GetMouseAngle(Vector2 mousePos, Transform refGameObject)
+    {
+        Vector2 aimDiff = new Vector2(mousePos.x - refGameObject.position.x, mousePos.y - refGameObject.position.y);
+        float aimAngle = Mathf.Atan2(aimDiff.y, aimDiff.x) * Mathf.Rad2Deg;
+        return aimAngle;
     }
 
     private void RotateArm(Transform hand, Vector2 mousePos)
     {
         
+    }
+
+    public void RotateFlashlight(Vector2 mousePos)
+    {
+        float aimAngle = GetMouseAngle(mousePos, _flashlight.transform);
+        _flashlight.transform.rotation = Quaternion.Euler(0, 0, aimAngle - 90f);
+    }
+
+    internal void ChangeFlashlightMode()
+    {
+        _flashlight.SetActive(!_flashlight.activeSelf);
     }
 }

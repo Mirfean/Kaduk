@@ -71,11 +71,12 @@ public class Gun : _Weapon
         {
             //Damage enemies etc.
             //trailScript.SetTargetPosition(hit.point);
-            if (hit.collider.tag == "Enemy")
+/*            if (hit.collider.tag == "Enemy")
             {
                 hit.collider.GetComponent<Enemy>().TakeDamage(Damage);
                 Debug.Log("I hit enemy!");
-            }
+            }*/
+
             if(hit.collider.GetComponent<HitTarget>())
             {
                 hit.collider.GetComponent<HitTarget>().TakeHit(Damage);
@@ -122,6 +123,7 @@ public class Gun : _Weapon
         return result;
     }
 
+    //To remove?
     public void RotateAim(Vector2 mousePos, Quaternion holdItemRot)
     {
         Vector2 aimDiff = new Vector2(mousePos.x - _shootingPoint.transform.position.x - transform.position.x, mousePos.y - _shootingPoint.transform.position.y - transform.position.y);

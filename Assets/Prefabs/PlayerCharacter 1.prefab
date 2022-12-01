@@ -410,7 +410,7 @@ Transform:
   m_GameObject: {fileID: 4656468750017697598}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 1, y: -0, z: 0}
-  m_LocalScale: {x: 0.75, y: 0.75, z: 1}
+  m_LocalScale: {x: 0.4, y: 0.4, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 4656468751030893863}
@@ -671,12 +671,12 @@ GameObject:
   - component: {fileID: 4656468749800971341}
   - component: {fileID: 4656468749800971343}
   m_Layer: 0
-  m_Name: gun1
+  m_Name: Item
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &4656468750532563741
 Transform:
   m_ObjectHideFlags: 0
@@ -684,7 +684,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4656468750532563742}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0.4694, y: -0.109, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -692,7 +692,7 @@ Transform:
   - {fileID: 4656468751030893863}
   m_Father: {fileID: 4656468749731263188}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: -5.92, z: 0}
 --- !u!212 &4656468750532563739
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -753,10 +753,10 @@ RotationConstraint:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4656468750532563742}
   m_Enabled: 1
-  m_Weight: 1
+  m_Weight: 0.5
   m_RotationAtRest: {x: 0, y: 0, z: 0}
   m_RotationOffset: {x: 0, y: 0, z: 0}
-  m_AffectRotationX: 1
+  m_AffectRotationX: 0
   m_AffectRotationY: 1
   m_AffectRotationZ: 1
   m_IsContraintActive: 1
@@ -776,16 +776,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5daf3c0d7e7ee194789f63603e375d38, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  description: 
-  damage: 0
-  attackSpeed: 0
-  rotated: 0
-  shootingPoint: {fileID: 4656468751030893880}
-  recoil: 0
-  bullet: {fileID: 2978477778937637742, guid: 38f38f3512cc3a14b8073f6043de9ecd, type: 3}
-  bulletSpeed: 0.1
-  fireRate: 0
-  nextFire: 0
+  Description: 
+  Damage: 4
+  AttackSpeed: 1.05
+  Rotated: 0
+  _shootingPoint: {fileID: 4656468751030893880}
+  _holdedItem: {fileID: 4656468749731263188}
+  _recoil: 0.122
+  _bullet: {fileID: 2978477778937637742, guid: 38f38f3512cc3a14b8073f6043de9ecd, type: 3}
+  _bulletSpeed: 2.17
+  _fireRate: 0.665
+  _nextFire: 0
+  _bulletTrail: {fileID: 8330340890964394386, guid: e7bd0963f0b077243bf57784db5727d9,
+    type: 3}
+  _muzzleFlashAnimator: {fileID: 0}
+  _bulletRange: 20
 --- !u!1 &4656468750584456958
 GameObject:
   m_ObjectHideFlags: 0
@@ -1393,6 +1398,7 @@ GameObject:
   - component: {fileID: 4656468750713402136}
   - component: {fileID: 4656468750713402119}
   - component: {fileID: 4656468750713402114}
+  - component: {fileID: 2048471759}
   m_Layer: 10
   m_Name: PlayerCharacter 1
   m_TagString: Player
@@ -1429,22 +1435,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7c9cf92ac17278a46991acb836f403c9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  defaultSpeed: 3
-  speed: 3
-  IsAiming: 0
-  state: 0
-  shootInProgress: 0
-  rotated: 0
-  weapon: {fileID: 4656468749800971343}
-  crosshair: {fileID: 2800000, guid: a1f8a20cd7ae7ee46bb9f98b6d97c128, type: 3}
-  skeletanMove: {fileID: 4656468751204872828}
-  animator: {fileID: 4656468750717925619}
-  CharacterSprite: {fileID: 4656468750717925622}
-  cursorManager: {fileID: 0}
+  _defaultSpeed: 3
+  _speed: 3
+  _isAiming: 0
   IsDialogue: 0
   IsInventory: 0
-  selector: {fileID: 0}
-  inventoryManager: {fileID: 0}
+  _state: 0
+  _shootInProgress: 0
+  _rotated: 0
+  _weapon: {fileID: 4656468749800971343}
+  _crosshair: {fileID: 2800000, guid: a1f8a20cd7ae7ee46bb9f98b6d97c128, type: 3}
+  _skeletanMove: {fileID: 4656468751204872828}
+  _animator: {fileID: 4656468750717925619}
+  _characterSprite: {fileID: 4656468750717925622}
+  _cursorManager: {fileID: 0}
+  _inventoryManager: {fileID: 0}
 --- !u!114 &4656468751204872830
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1579,6 +1584,22 @@ MonoBehaviour:
         m_CallState: 2
     m_ActionId: 845ed7a2-ed85-4eab-b16b-bda9505a636b
     m_ActionName: UI/SpawnItem[/Keyboard/q]
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 0}
+        m_TargetAssemblyTypeName: InventoryManager, Assembly-CSharp
+        m_MethodName: InsertRandomItem
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: a977cfc2-0fd7-4b44-9638-35aeda945f81
+    m_ActionName: UI/InsertItem
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 
   m_DefaultActionMap: Basic
@@ -1597,9 +1618,9 @@ CapsuleCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0.006528616, y: 0.9286773}
-  m_Size: {x: 0.21432066, y: 1.1748848}
-  m_Direction: 0
+  m_Offset: {x: 0.0015010242, y: 0.0024135895}
+  m_Size: {x: 0.47118932, y: 0.103720866}
+  m_Direction: 1
 --- !u!114 &4656468751204872828
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1612,13 +1633,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5b2a6599fce843e4590e4b22e51031f2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  skeleton: {fileID: 4656468750717925620}
-  leftHand: {fileID: 4656468750352764795}
-  player: {fileID: 4656468751204872831}
-  animator: {fileID: 4656468750717925619}
-  IsAiming: 0
+  _skeleton: {fileID: 4656468750717925620}
+  LeftHand: {fileID: 4656468750352764795}
+  _player: {fileID: 4656468751204872831}
+  _animator: {fileID: 4656468750717925619}
+  _isAiming: 0
   HoldedItem: {fileID: 4656468749731263188}
-  HoldItemRotationIdle: -69
+  _holdItemRotationIdle: -68
 --- !u!114 &4656468750713402136
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1808,3 +1829,24 @@ MonoBehaviour:
     onDialogueSystemUnpause:
       m_PersistentCalls:
         m_Calls: []
+--- !u!50 &2048471759
+Rigidbody2D:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4656468751204872817}
+  m_BodyType: 1
+  m_Simulated: 1
+  m_UseFullKinematicContacts: 0
+  m_UseAutoMass: 0
+  m_Mass: 0.0001
+  m_LinearDrag: 0
+  m_AngularDrag: 0.05
+  m_GravityScale: 0
+  m_Material: {fileID: 0}
+  m_Interpolate: 0
+  m_SleepingMode: 1
+  m_CollisionDetection: 0
+  m_Constraints: 0

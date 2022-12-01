@@ -45,7 +45,6 @@ public class InventoryGrid : MonoBehaviour
         Vector2 size = new Vector2(width * TileSizeWidth, height * TileSizeHeight);
         _rectTransform.sizeDelta = size;
 
-
     }
 
     internal ItemFromInventory GetItem(Vector2Int positionOnGrid)

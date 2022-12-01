@@ -188,6 +188,7 @@ public class PlayerBasics : MonoBehaviour
         if (_playerInput.Basic.enabled)
         {
             Vector2 realPos = Camera.main.ScreenToWorldPoint(_playerInput.Basic.MouseMovement.ReadValue<Vector2>());
+            _skeletanMove.RotateFlashlight(realPos);
             if (realPos.x < transform.position.x)
             {
                 _characterSprite.rotation = Quaternion.Euler(0, 180, 0);
@@ -412,5 +413,9 @@ public class PlayerBasics : MonoBehaviour
         Debug.Log($"Spawn {_inventoryManager.SelectedItem}");
     }
 
+    public void FlashlightONOFF(InputAction.CallbackContext context)
+    {
+        _skeletanMove.ChangeFlashlightMode();
+    } 
 }
 
