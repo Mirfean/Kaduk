@@ -26,9 +26,13 @@ public class _Item : MonoBehaviour
     [SerializeField]
     TextMeshProUGUI _textMesh;
 
+    [SerializeField]
+    GameManager _gameManager;
+
     // Start is called before the first frame update
     void Start()
     {
+        if (_gameManager == null) _gameManager = FindObjectOfType<GameManager>();
         _cursorManager = FindObjectOfType<CursorManager>();
         _baseMaterial = gameObject.GetComponent<SpriteRenderer>().material;
         _textMesh = transform.GetChild(0).transform.GetChild(0).GetComponent<TextMeshProUGUI>();
@@ -74,5 +78,6 @@ public class _Item : MonoBehaviour
     private void OnMouseUpAsButton()
     {
         Debug.Log($"{Description}");
+        _gameManager.ShowPlayerStash();
     }
 }

@@ -63,7 +63,7 @@ public class InventoryManager : MonoBehaviour
     public void HandleHighlight(Vector2 mousePos)
     {
         Vector2Int positionOnGrid = GetInvGridPositon(mousePos);
-        if (_oldPositon == positionOnGrid) return;
+        if (_oldPositon == positionOnGrid || positionOnGrid == new Vector2Int(-1, -1)) return;
         
         _oldPositon = positionOnGrid;
         if (SelectedItem == null)
@@ -99,6 +99,7 @@ public class InventoryManager : MonoBehaviour
 
     public Vector2Int GetInvGridPositon(Vector2 mousePosition)
     {
+        if (SelectedItem == null) {  return new Vector2Int(-1, -1); }
         SelectedItemGRID.PositionOnTheGrid = new Vector2(mousePosition.x - SelectedItemGRID.GridRectTransform.position.x, mousePosition.y - SelectedItemGRID.GridRectTransform.position.y);
         SelectedItemGRID.TileGridPosition = new Vector2Int ((int) (SelectedItemGRID.PositionOnTheGrid.x / InventoryGrid.TileSizeWidth), (int)(SelectedItemGRID.PositionOnTheGrid.y / InventoryGrid.TileSizeHeight));
         return SelectedItemGRID.TileGridPosition;
@@ -221,6 +222,7 @@ public class InventoryManager : MonoBehaviour
     public bool CheckMouseInInventory()
     {
         Vector2 mousePos = GetInvGridPositon(_playerInput.UI.MousePosition.ReadValue<Vector2>());
+        if (mousePos == new Vector2(-1, -1)) return false;
         Vector2 gridsize = _selectedItemGrid.GridSize;
         //Debug.Log($"CheckMouseInInventory mousePos {mousePos} vs gridsize {gridsize}");
         return mousePos.x >= 0 && mousePos.x < gridsize.x && mousePos.y <= 0 && mousePos.y > -gridsize.y ? true : false;

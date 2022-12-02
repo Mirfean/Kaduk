@@ -371,8 +371,9 @@ public class PlayerBasics : MonoBehaviour
         if (context.started) SwitchInventory();
     }
 
-    void SwitchInventory()
+    public void SwitchInventory()
     {
+        Debug.Log("Switch inventory");
         if (_playerInput.Basic.enabled)
         {
             IsInventory = true;
