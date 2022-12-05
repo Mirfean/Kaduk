@@ -3,6 +3,7 @@ using PixelCrushers.DialogueSystem;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 using UnityEngine.InputSystem;
 
 public class PlayerBasics : MonoBehaviour
@@ -76,7 +77,11 @@ public class PlayerBasics : MonoBehaviour
     [SerializeField]
     InventoryManager _inventoryManager;
 
+    [SerializeField]
+    Rigidbody2D _rigidbody;
 
+    [SerializeField]
+    NavMeshAgent _navMeshAgent;
 
     // Start is called before the first frame update
     void Start()
@@ -85,6 +90,9 @@ public class PlayerBasics : MonoBehaviour
         _playerInput.Enable();
         //selector = GetComponent<Selector>();
         _inventoryManager = FindObjectOfType<InventoryManager>();
+
+        _rigidbody = GetComponent<Rigidbody2D>();
+        _navMeshAgent = GetComponent<NavMeshAgent>();
     }
 
     // Update is called once per frame
@@ -133,11 +141,9 @@ public class PlayerBasics : MonoBehaviour
             return;
         }
 
-        _shootInProgress = _playerInput.Basic.MouseLClick.inProgress;
-        Debug.Log("TWOJA STARA " + _shootInProgress);
         if (_isAiming)
         {
-            if(_weapon != null && !_shootInProgress && context.phase == InputActionPhase.Started)
+            if(_weapon != null && !_playerInput.Basic.MouseLClick.inProgress && context.phase == InputActionPhase.Started)
             {
                 Debug.Log("Piu piu");
                 _weapon.GetComponent<_Weapon>().Attack(Camera.main.ScreenToWorldPoint(_playerInput.Basic.MouseMovement.ReadValue<Vector2>()), _skeletanMove.HoldedItem.rotation);
@@ -147,8 +153,10 @@ public class PlayerBasics : MonoBehaviour
         else
         {
             StopMoveCoroutines();
-            Coroutine co = StartCoroutine(MovingByClick(context));
-            _moveCoroutine = co;
+            //Coroutine co = StartCoroutine(MovingByClick(context));
+            //_moveCoroutine = co;
+            Vector2 target = Camera.main.ScreenToWorldPoint(_playerInput.Basic.MouseMovement.ReadValue<Vector2>());
+            _navMeshAgent.destination = target;
         }
         
     }
@@ -156,10 +164,13 @@ public class PlayerBasics : MonoBehaviour
     IEnumerator MovingByClick(InputAction.CallbackContext context)
     {
         Vector2 target = Camera.main.ScreenToWorldPoint(_playerInput.Basic.MouseMovement.ReadValue<Vector2>());
+        
         _animator.SetBool("Walk", true);
         do
         {
-            transform.position = Vector2.MoveTowards(transform.position, target, _speed * Time.deltaTime);
+            //transform.position = Vector2.MoveTowards(transform.position, target, _speed * Time.deltaTime);
+            //_rigidbody.MovePosition(Vector2.MoveTowards(transform.position, target, _speed * Time.deltaTime));
+
             //Debug.Log((transform.position.x - target.x) + " " + (transform.position.y - target.y));
             yield return null;
         } while ((Mathf.Abs(transform.position.x - target.x) > 0.1f || Mathf.Abs(transform.position.y - target.y) > 0.1f));
@@ -259,6 +270,7 @@ public class PlayerBasics : MonoBehaviour
 
             
             transform.Translate(direction * Time.deltaTime * _speed);
+
             //yield return new WaitForSeconds(0.05f);
             yield return null;
 
