@@ -249,13 +249,13 @@ public class PlayerBasics : MonoBehaviour
     /// <param name="context"></param>
     public void OnMovementWSAD(InputAction.CallbackContext context)
     {
-        if (IsDialogue) return;
+        /*if (IsDialogue) return;
         //Debug.Log(context.valueType);
         Debug.Log(context.ReadValue<Vector2>());
         //Debug.Log(context.ReadValue<Vector2>() + " Vector?");
         StopMoveCoroutines();
         Coroutine co = StartCoroutine(CharacterMovementWSAD(context));
-        _moveCoroutine = co;
+        _moveCoroutine = co;*/
     }
 
     /// <summary>
