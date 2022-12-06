@@ -93,6 +93,8 @@ public class PlayerBasics : MonoBehaviour
 
         _rigidbody = GetComponent<Rigidbody2D>();
         _navMeshAgent = GetComponent<NavMeshAgent>();
+        _navMeshAgent.updateRotation = false;
+        _navMeshAgent.updateUpAxis = false;
     }
 
     // Update is called once per frame
@@ -150,12 +152,13 @@ public class PlayerBasics : MonoBehaviour
             }
         }
 
-        else
+        else if (!_playerInput.Basic.MouseLClick.inProgress && context.phase == InputActionPhase.Started)
         {
-            StopMoveCoroutines();
+            //StopMoveCoroutines();
             //Coroutine co = StartCoroutine(MovingByClick(context));
             //_moveCoroutine = co;
             Vector2 target = Camera.main.ScreenToWorldPoint(_playerInput.Basic.MouseMovement.ReadValue<Vector2>());
+            Debug.Log(target);
             _navMeshAgent.destination = target;
         }
         
@@ -165,12 +168,11 @@ public class PlayerBasics : MonoBehaviour
     {
         Vector2 target = Camera.main.ScreenToWorldPoint(_playerInput.Basic.MouseMovement.ReadValue<Vector2>());
         
-        _animator.SetBool("Walk", true);
         do
         {
             //transform.position = Vector2.MoveTowards(transform.position, target, _speed * Time.deltaTime);
             //_rigidbody.MovePosition(Vector2.MoveTowards(transform.position, target, _speed * Time.deltaTime));
-
+            
             //Debug.Log((transform.position.x - target.x) + " " + (transform.position.y - target.y));
             yield return null;
         } while ((Mathf.Abs(transform.position.x - target.x) > 0.1f || Mathf.Abs(transform.position.y - target.y) > 0.1f));
@@ -268,8 +270,9 @@ public class PlayerBasics : MonoBehaviour
         {
             Vector2 direction = reduceDiagonallyMovement(context.ReadValue<Vector2>());
 
-            
-            transform.Translate(direction * Time.deltaTime * _speed);
+
+            _rigidbody.MovePosition(Vector2.MoveTowards(transform.position, new Vector3(transform.position.x + direction.x, transform.position.y + direction.y, 0), _speed * Time.deltaTime));
+            //transform.Translate(direction * Time.deltaTime * _speed);
 
             //yield return new WaitForSeconds(0.05f);
             yield return null;

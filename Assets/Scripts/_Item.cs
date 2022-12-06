@@ -61,7 +61,7 @@ public class _Item : MonoBehaviour
     {
         gameObject.GetComponent<SpriteRenderer>().material = _outlineMaterial;
         _cursorManager.ChangeCursorTo(CursorType.EYE);
-        _textMesh.gameObject.SetActive(true);
+        if (_textMesh != null ) _textMesh.gameObject.SetActive(true);
     }
 
     private void OnMouseOver()
@@ -75,7 +75,7 @@ public class _Item : MonoBehaviour
         //TODO execute method 
         _cursorManager.ChangeCursorTo(CursorType.STANDARD);
         gameObject.GetComponent<SpriteRenderer>().material = _baseMaterial;
-        _textMesh.gameObject.SetActive(false);
+        if (_textMesh != null) _textMesh.gameObject.SetActive(false);
     }
 
     private void OnMouseUpAsButton()
