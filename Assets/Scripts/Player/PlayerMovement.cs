@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.AI;
 #if ENABLE_INPUT_SYSTEM
@@ -15,74 +16,79 @@ public class PlayerMovement : MonoBehaviour
 #endif
     [SerializeField]
     private Camera Camera;
-    private NavMeshAgent Agent;
+    private NavMeshAgent _agent;
     [SerializeField]
-    [Range(0, 0.99f)]
-    private float Smoothing = 0.25f;
-    [SerializeField]
-    private float TargetLerpSpeed = 1;
+    private float _targetLerpSpeed = 1;
 
-    private Vector3 TargetDirection;
-    private float LerpTime = 0;
-    private Vector3 LastDirection;
-    private Vector3 MovementVector;
+    private Vector3 _targetDirection;
+    private float _lerpTime = 0;
+    private Vector3 _lastDirection;
+    private Vector3 _movementVector;
+
+    private bool _isMoving;
 
     private void Awake()
     {
-        Agent = GetComponent<NavMeshAgent>();
+        _agent = GetComponent<NavMeshAgent>();
         _playerActionMap = _inputActions.FindActionMap("Basic");
         _movement = _playerActionMap.FindAction("WSAD");
-        _movement.started += HandleMovementAction;
-        _movement.canceled += HandleMovementAction;
-        _movement.performed += HandleMovementAction;
+        //_movement.started += HandleMovementAction;
+        //_movement.canceled += HandleMovementAction;
+        //_movement.performed += HandleMovementAction;
         _movement.Enable();
         _playerActionMap.Enable();
         _inputActions.Enable();
 
+        _agent.updatePosition = true;
+        _agent.updateRotation = false;
+        _agent.updateUpAxis = false;
     }
 
-    private void HandleMovementAction(InputAction.CallbackContext Context)
+    public void HandleMovementAction(InputAction.CallbackContext Context)
     {
         Vector2 input = Context.ReadValue<Vector2>();
-        MovementVector = new Vector3(input.x, input.y, 0);
+        _movementVector = new Vector3(input.x, input.y, 0);
     }
 
 
     private void Update()
     {
-        DoNewInputSystemMovement();
-    }
-    private void DoNewInputSystemMovement()
-    {
-        MovementVector.Normalize();
-        if (MovementVector != LastDirection)
+        if (_movement.inProgress && _movementVector != Vector3.zero) WsadMovement();
+        else if (_movementVector == Vector3.zero && _isMoving)
         {
-            LerpTime = 0;
+            _agent.ResetPath();
+            _isMoving = false;
+        } 
+    }
+    private void WsadMovement()
+    {
+        if (!_isMoving) _isMoving = true;
+        _movementVector.Normalize();
+        _movementVector.x = _movementVector.x == 0.0f ? 0.001f : _movementVector.x; 
+        if (_movementVector != _lastDirection)
+        {
+            _lerpTime = 0;
         }
-        LastDirection = MovementVector;
-        TargetDirection = Vector3.Lerp(
-            TargetDirection,
-            MovementVector,
-            Mathf.Clamp01(LerpTime * TargetLerpSpeed * (1 - Smoothing))
-        );
+        _lastDirection = _movementVector;
 
-        Agent.Move(TargetDirection * Agent.speed * Time.deltaTime);
+        _targetDirection = Vector3.Lerp(_targetDirection, _movementVector, Mathf.Clamp01(_lerpTime * _targetLerpSpeed));
+        _agent.ResetPath();
 
-        /*Vector3 lookDirection = MovementVector;
-        if (lookDirection != Vector3.zero)
+        if (_agent.SetDestination(transform.position + _targetDirection))
         {
-            transform.rotation = Quaternion.Lerp(
-                transform.rotation,
-                Quaternion.LookRotation(lookDirection),
-                Mathf.Clamp01(LerpTime * TargetLerpSpeed * (1 - Smoothing))
-            );
-        }*/
+            Debug.Log("WsadMovement");
+        }
 
-        LerpTime += Time.deltaTime;
+        _agent.Move(_targetDirection * _agent.speed * Time.deltaTime);
+
+        _lerpTime += Time.deltaTime;
+
+        Debug.Log("WSAD");
     }
 
-    private void LateUpdate()
+    internal void MouseMovement(Vector2 target)
     {
-        //Camera.transform.position = transform.position + Vector3.up * 10;
+        _agent.ResetPath();
+        _agent.SetDestination(target);
     }
 }

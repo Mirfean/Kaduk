@@ -80,8 +80,7 @@ public class PlayerBasics : MonoBehaviour
     [SerializeField]
     Rigidbody2D _rigidbody;
 
-    [SerializeField]
-    NavMeshAgent _navMeshAgent;
+    PlayerMovement _playerMovement;
 
     // Start is called before the first frame update
     void Start()
@@ -92,9 +91,8 @@ public class PlayerBasics : MonoBehaviour
         _inventoryManager = FindObjectOfType<InventoryManager>();
 
         _rigidbody = GetComponent<Rigidbody2D>();
-        _navMeshAgent = GetComponent<NavMeshAgent>();
-        _navMeshAgent.updateRotation = false;
-        _navMeshAgent.updateUpAxis = false;
+
+        _playerMovement = GetComponent<PlayerMovement>();
     }
 
     // Update is called once per frame
@@ -159,7 +157,9 @@ public class PlayerBasics : MonoBehaviour
             //_moveCoroutine = co;
             Vector2 target = Camera.main.ScreenToWorldPoint(_playerInput.Basic.MouseMovement.ReadValue<Vector2>());
             Debug.Log(target);
-            _navMeshAgent.destination = target;
+
+            _playerMovement.MouseMovement(target);
+            //_navMeshAgent.destination = target;
         }
         
     }
