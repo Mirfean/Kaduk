@@ -41,7 +41,6 @@ public class InventoryManager : MonoBehaviour
     [SerializeField]
     Vector2 _oldPositon;
     
-
     [SerializeField]
     public RectTransform CurrentItemRectTransform;
 

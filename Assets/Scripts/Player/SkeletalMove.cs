@@ -30,6 +30,8 @@ public class SkeletalMove : MonoBehaviour
     [SerializeField]
     GameObject _flashlight;
 
+    public GameObject Flashlight { get { return _flashlight; } private set { _flashlight = value; } }
+
     // Start is called before the first frame update
     void Start()
     {

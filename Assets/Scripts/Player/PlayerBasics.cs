@@ -3,6 +3,7 @@ using PixelCrushers.DialogueSystem;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 using UnityEngine.InputSystem;
 
 public class PlayerBasics : MonoBehaviour
@@ -76,7 +77,10 @@ public class PlayerBasics : MonoBehaviour
     [SerializeField]
     InventoryManager _inventoryManager;
 
+    [SerializeField]
+    Rigidbody2D _rigidbody;
 
+    PlayerMovement _playerMovement;
 
     // Start is called before the first frame update
     void Start()
@@ -85,6 +89,10 @@ public class PlayerBasics : MonoBehaviour
         _playerInput.Enable();
         //selector = GetComponent<Selector>();
         _inventoryManager = FindObjectOfType<InventoryManager>();
+
+        _rigidbody = GetComponent<Rigidbody2D>();
+
+        _playerMovement = GetComponent<PlayerMovement>();
     }
 
     // Update is called once per frame
@@ -133,22 +141,25 @@ public class PlayerBasics : MonoBehaviour
             return;
         }
 
-        _shootInProgress = _playerInput.Basic.MouseLClick.inProgress;
-        Debug.Log("TWOJA STARA " + _shootInProgress);
         if (_isAiming)
         {
-            if(_weapon != null && !_shootInProgress && context.phase == InputActionPhase.Started)
+            if(_weapon != null && !_playerInput.Basic.MouseLClick.inProgress && context.phase == InputActionPhase.Started)
             {
                 Debug.Log("Piu piu");
                 _weapon.GetComponent<_Weapon>().Attack(Camera.main.ScreenToWorldPoint(_playerInput.Basic.MouseMovement.ReadValue<Vector2>()), _skeletanMove.HoldedItem.rotation);
             }
         }
 
-        else
+        else if (!_playerInput.Basic.MouseLClick.inProgress && context.phase == InputActionPhase.Started)
         {
-            StopMoveCoroutines();
-            Coroutine co = StartCoroutine(MovingByClick(context));
-            _moveCoroutine = co;
+            //StopMoveCoroutines();
+            //Coroutine co = StartCoroutine(MovingByClick(context));
+            //_moveCoroutine = co;
+            Vector2 target = Camera.main.ScreenToWorldPoint(_playerInput.Basic.MouseMovement.ReadValue<Vector2>());
+            Debug.Log(target);
+
+            _playerMovement.MouseMovement(target);
+            //_navMeshAgent.destination = target;
         }
         
     }
@@ -156,10 +167,12 @@ public class PlayerBasics : MonoBehaviour
     IEnumerator MovingByClick(InputAction.CallbackContext context)
     {
         Vector2 target = Camera.main.ScreenToWorldPoint(_playerInput.Basic.MouseMovement.ReadValue<Vector2>());
-        _animator.SetBool("Walk", true);
+        
         do
         {
-            transform.position = Vector2.MoveTowards(transform.position, target, _speed * Time.deltaTime);
+            //transform.position = Vector2.MoveTowards(transform.position, target, _speed * Time.deltaTime);
+            //_rigidbody.MovePosition(Vector2.MoveTowards(transform.position, target, _speed * Time.deltaTime));
+            
             //Debug.Log((transform.position.x - target.x) + " " + (transform.position.y - target.y));
             yield return null;
         } while ((Mathf.Abs(transform.position.x - target.x) > 0.1f || Mathf.Abs(transform.position.y - target.y) > 0.1f));
@@ -236,13 +249,13 @@ public class PlayerBasics : MonoBehaviour
     /// <param name="context"></param>
     public void OnMovementWSAD(InputAction.CallbackContext context)
     {
-        if (IsDialogue) return;
+        /*if (IsDialogue) return;
         //Debug.Log(context.valueType);
         Debug.Log(context.ReadValue<Vector2>());
         //Debug.Log(context.ReadValue<Vector2>() + " Vector?");
         StopMoveCoroutines();
         Coroutine co = StartCoroutine(CharacterMovementWSAD(context));
-        _moveCoroutine = co;
+        _moveCoroutine = co;*/
     }
 
     /// <summary>
@@ -257,8 +270,10 @@ public class PlayerBasics : MonoBehaviour
         {
             Vector2 direction = reduceDiagonallyMovement(context.ReadValue<Vector2>());
 
-            
-            transform.Translate(direction * Time.deltaTime * _speed);
+
+            _rigidbody.MovePosition(Vector2.MoveTowards(transform.position, new Vector3(transform.position.x + direction.x, transform.position.y + direction.y, 0), _speed * Time.deltaTime));
+            //transform.Translate(direction * Time.deltaTime * _speed);
+
             //yield return new WaitForSeconds(0.05f);
             yield return null;
 

@@ -35,8 +35,11 @@ public class _Item : MonoBehaviour
         if (_gameManager == null) _gameManager = FindObjectOfType<GameManager>();
         _cursorManager = FindObjectOfType<CursorManager>();
         _baseMaterial = gameObject.GetComponent<SpriteRenderer>().material;
-        _textMesh = transform.GetChild(0).transform.GetChild(0).GetComponent<TextMeshProUGUI>();
-        _textMesh.gameObject.SetActive(false);
+        if (_isStash)
+        {
+            _textMesh = transform.GetChild(0).transform.GetChild(0).GetComponent<TextMeshProUGUI>();
+            _textMesh.gameObject.SetActive(false);
+        }
         //Outline materials preparing
         Outlines basicOutline = Outlines.OutlineBasic;
         _outlineMaterial = Resources.Load($"Materials/{basicOutline.ToString()}") as Material;
@@ -58,7 +61,7 @@ public class _Item : MonoBehaviour
     {
         gameObject.GetComponent<SpriteRenderer>().material = _outlineMaterial;
         _cursorManager.ChangeCursorTo(CursorType.EYE);
-        _textMesh.gameObject.SetActive(true);
+        if (_textMesh != null ) _textMesh.gameObject.SetActive(true);
     }
 
     private void OnMouseOver()
@@ -72,12 +75,17 @@ public class _Item : MonoBehaviour
         //TODO execute method 
         _cursorManager.ChangeCursorTo(CursorType.STANDARD);
         gameObject.GetComponent<SpriteRenderer>().material = _baseMaterial;
-        _textMesh.gameObject.SetActive(false);
+        if (_textMesh != null) _textMesh.gameObject.SetActive(false);
     }
 
     private void OnMouseUpAsButton()
     {
+
         Debug.Log($"{Description}");
-        _gameManager.ShowPlayerStash();
+        if (_isStash)
+        {
+            _gameManager.ShowPlayerStash();
+        }
+        
     }
 }
