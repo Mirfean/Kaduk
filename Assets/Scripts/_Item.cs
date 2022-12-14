@@ -24,38 +24,27 @@ public class _Item : OutlineObject
     bool _isStash;
 
     [SerializeField]
+    bool _isPlayerStash;
+
+    [SerializeField]
     TextMeshProUGUI _textMesh;
 
     [SerializeField]
     GameManager _gameManager;
 
-/*    // Start is called before the first frame update
-    new void Start()
-    {
-        if (_gameManager == null) _gameManager = FindObjectOfType<GameManager>();
-        _cursorManager = FindObjectOfType<CursorManager>();
-        _baseMaterial = gameObject.GetComponent<SpriteRenderer>().material;
-        if (_isStash)
-        {
-            _textMesh = transform.GetChild(0).transform.GetChild(0).GetComponent<TextMeshProUGUI>();
-            _textMesh.gameObject.SetActive(false);
-        }
-        //Outline materials preparing
-        Outlines basicOutline = Outlines.OutlineBasic;
-        _outlineMaterial = Resources.Load($"Materials/{basicOutline.ToString()}") as Material;
-        _outlineMaterial.SetColor("Outline Color", Color.white);
-    }*/
+    [SerializeField]
+    List<ItemData> items;
 
     new void Start()
     {
         base.Start();
-        if (_gameManager == null) _gameManager = FindObjectOfType<GameManager>();
         _cursorManager = FindObjectOfType<CursorManager>();
         if (_isStash)
         {
             _textMesh = transform.GetChild(0).transform.GetChild(0).GetComponent<TextMeshProUGUI>();
             _textMesh.gameObject.SetActive(false);
         }
+        if (items == null) items = new List<ItemData>();
     }
 
     // Update is called once per frame
@@ -94,9 +83,13 @@ public class _Item : OutlineObject
 
     private void OnMouseUpAsButton()
     {
-
+        if (_gameManager == null && (_isStash || _isPlayerStash)) _gameManager = FindObjectOfType<GameManager>();
         Debug.Log($"{Description}");
         if (_isStash)
+        {
+            _gameManager.ShowNormalStash(items);
+        }
+        if (_isPlayerStash)
         {
             _gameManager.ShowPlayerStash();
         }

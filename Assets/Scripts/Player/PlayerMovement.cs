@@ -59,7 +59,7 @@ public class PlayerMovement : MonoBehaviour
         {
             _agent.ResetPath();
             _isMoving = false;
-        } 
+        }
     }
     private void WsadMovement()
     {

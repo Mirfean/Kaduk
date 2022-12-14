@@ -15,6 +15,9 @@ public class GameManager : MonoBehaviour
     GameObject _playerStash;
 
     [SerializeField]
+    InventoryGrid _itemsGrid;
+
+    [SerializeField]
     Door[] _doors;
 
     // Start is called before the first frame update
@@ -44,11 +47,29 @@ public class GameManager : MonoBehaviour
         _playerStash.SetActive(true);
     }
 
-    public void HidePlayerStash()
+    public void ShowNormalStash(List<ItemData> items)
     {
         _playerBasics.SwitchInventory();
-        _playerStash.SetActive(false);
+        _itemsGrid.gameObject.SetActive(true);
+        foreach (ItemData item in items)
+        {
+            _inventoryManager.InsertCertainItem(item, _itemsGrid);
+        }
+        
+
     }
+
+    public void HideInventory()
+    {
+        if(_inventoryManager.SelectedItem == null)
+        {
+            _playerBasics.SwitchInventory();
+            _playerStash.SetActive(false);
+            _itemsGrid.gameObject.SetActive(false);
+        }
+        Debug.Log("Can't close Inventory, item is holded");
+    }
+
 
 
     //Transport Player between doors
@@ -66,6 +87,7 @@ public class GameManager : MonoBehaviour
         if (_doors == null) _doors = FindObjectsOfType<Door>();
         return _doors;
     }
+
 
 
 }

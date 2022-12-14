@@ -197,6 +197,7 @@ public class InventoryManager : MonoBehaviour
 
         Debug.Log($"Spawn {SelectedItem}");
     }
+    
 
     public void InsertRandomItem(InputAction.CallbackContext context)
     {
@@ -206,14 +207,51 @@ public class InventoryManager : MonoBehaviour
         SpawnRandomItem();
         ItemFromInventory itemToInsert = SelectedItem;
         SelectedItem = null;
-        InsertItem(itemToInsert);
+        InsertCreatedItemOnSelectedGrid(itemToInsert);
     }
 
-    void InsertItem(ItemFromInventory itemToInsert)
+
+
+    //Creating and placing Item in Grid
+    public void InsertCertainItem(ItemData itemData, InventoryGrid grid)
+    {
+        void SpawnItem(ItemData itemData)
+        {
+            ItemFromInventory item = Instantiate(ItemPrefab).GetComponent<ItemFromInventory>();
+            SelectedItem = item;
+
+            CurrentItemRectTransform = item.GetComponent<RectTransform>();
+            CurrentItemRectTransform.SetParent(CanvasTransform);
+
+            SelectedItem.itemData = itemData;
+
+            Debug.Log($"Spawn {SelectedItem}");
+        }
+
+        if (_selectedItemGrid == null) return;
+        Debug.Log("Insert random");
+        SpawnItem(itemData);
+        ItemFromInventory itemToInsert = SelectedItem;
+        SelectedItem = null;
+        InsertCreatedItem(itemToInsert, grid);
+    }
+
+    void InsertCreatedItem(ItemFromInventory itemToInsert, InventoryGrid grid)
+    {
+        Vector2Int? posOnGrid = grid.FindSpaceForObject(itemToInsert);
+
+        if(posOnGrid == null) { return; }
+
+        grid.PlaceItemToGrid(itemToInsert, posOnGrid.Value.x, posOnGrid.Value.y);
+    }
+    
+
+
+    void InsertCreatedItemOnSelectedGrid(ItemFromInventory itemToInsert)
     {
         Vector2Int? posOnGrid = SelectedItemGRID.FindSpaceForObject(itemToInsert);
 
-        if(posOnGrid == null) { return; }
+        if (posOnGrid == null) { return; }
 
         _selectedItemGrid.PlaceItemToGrid(itemToInsert, posOnGrid.Value.x, posOnGrid.Value.y);
     }
@@ -235,5 +273,10 @@ public class InventoryManager : MonoBehaviour
             SelectedItem.rotate();
         }
         
+    }
+
+    public void ReturnItemToLastPosition()
+    {
+        Debug.Log("Return item to last position - TODO");
     }
 }
