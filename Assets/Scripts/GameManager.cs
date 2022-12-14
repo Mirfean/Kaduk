@@ -14,6 +14,9 @@ public class GameManager : MonoBehaviour
     [SerializeField]
     GameObject _playerStash;
 
+    [SerializeField]
+    Door[] _doors;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -25,6 +28,7 @@ public class GameManager : MonoBehaviour
         {
             _inventoryManager = FindObjectOfType<InventoryManager>();
         }
+        GetAllDoors();
     }
 
     // Update is called once per frame
@@ -33,7 +37,7 @@ public class GameManager : MonoBehaviour
         
     }
 
-
+    //Player's Stash with items moving along all game
     public void ShowPlayerStash()
     {
         _playerBasics.SwitchInventory();
@@ -44,6 +48,23 @@ public class GameManager : MonoBehaviour
     {
         _playerBasics.SwitchInventory();
         _playerStash.SetActive(false);
+    }
+
+
+    //Transport Player between doors
+    internal void TransferPlayer(Door door)
+    {
+        //ANIMATION ACTIONS
+        if (_playerBasics.PlayerMove.Agent.Warp(door.Destination.SpawnPoint.position))
+        {
+            Debug.Log("Player moved to another room");
+        }
+    }
+
+    private Door[] GetAllDoors()
+    {
+        if (_doors == null) _doors = FindObjectsOfType<Door>();
+        return _doors;
     }
 
 

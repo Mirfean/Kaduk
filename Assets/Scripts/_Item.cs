@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
-public class _Item : MonoBehaviour
+public class _Item : OutlineObject
 {
     [SerializeField]
     private CursorManager _cursorManager;
@@ -14,11 +14,11 @@ public class _Item : MonoBehaviour
     [SerializeField]
     public string Description;
 
-    [SerializeField]
+/*    [SerializeField]
     Material _baseMaterial;
 
     [SerializeField]
-    Material _outlineMaterial;
+    Material _outlineMaterial;*/
 
     [SerializeField]
     bool _isStash;
@@ -29,8 +29,8 @@ public class _Item : MonoBehaviour
     [SerializeField]
     GameManager _gameManager;
 
-    // Start is called before the first frame update
-    void Start()
+/*    // Start is called before the first frame update
+    new void Start()
     {
         if (_gameManager == null) _gameManager = FindObjectOfType<GameManager>();
         _cursorManager = FindObjectOfType<CursorManager>();
@@ -44,6 +44,18 @@ public class _Item : MonoBehaviour
         Outlines basicOutline = Outlines.OutlineBasic;
         _outlineMaterial = Resources.Load($"Materials/{basicOutline.ToString()}") as Material;
         _outlineMaterial.SetColor("Outline Color", Color.white);
+    }*/
+
+    new void Start()
+    {
+        base.Start();
+        if (_gameManager == null) _gameManager = FindObjectOfType<GameManager>();
+        _cursorManager = FindObjectOfType<CursorManager>();
+        if (_isStash)
+        {
+            _textMesh = transform.GetChild(0).transform.GetChild(0).GetComponent<TextMeshProUGUI>();
+            _textMesh.gameObject.SetActive(false);
+        }
     }
 
     // Update is called once per frame
@@ -57,11 +69,12 @@ public class _Item : MonoBehaviour
         Debug.Log("KWA");
     }
 
-    private void OnMouseEnter()
+    private new void OnMouseEnter()
     {
+        base.OnMouseEnter();
         gameObject.GetComponent<SpriteRenderer>().material = _outlineMaterial;
-        _cursorManager.ChangeCursorTo(CursorType.EYE);
-        if (_textMesh != null ) _textMesh.gameObject.SetActive(true);
+        HandleCursorAndText(true);
+        
     }
 
     private void OnMouseOver()
@@ -70,12 +83,13 @@ public class _Item : MonoBehaviour
         
     }
 
-    private void OnMouseExit()
+    private new void OnMouseExit()
     {
         //TODO execute method 
-        _cursorManager.ChangeCursorTo(CursorType.STANDARD);
+        base.OnMouseExit();
         gameObject.GetComponent<SpriteRenderer>().material = _baseMaterial;
-        if (_textMesh != null) _textMesh.gameObject.SetActive(false);
+        HandleCursorAndText(false);
+
     }
 
     private void OnMouseUpAsButton()
@@ -88,4 +102,19 @@ public class _Item : MonoBehaviour
         }
         
     }
+
+    void HandleCursorAndText(bool status)
+    {
+        if (status)
+        {
+            _cursorManager.ChangeCursorTo(CursorType.EYE);
+            if (_textMesh != null) _textMesh.gameObject.SetActive(true);
+        }
+        else
+        {
+            _cursorManager.ChangeCursorTo(CursorType.STANDARD);
+            if (_textMesh != null) _textMesh.gameObject.SetActive(false);
+        }
+    }
+
 }

@@ -17,6 +17,7 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField]
     private Camera Camera;
     private NavMeshAgent _agent;
+    public NavMeshAgent Agent { get { return _agent; } }
     [SerializeField]
     private float _targetLerpSpeed = 1;
 

@@ -16,12 +16,12 @@ public class PlayerBasics : MonoBehaviour
     [SerializeField]
     private float _speed = 3f;
 
-    [SerializeField]
+/*    [SerializeField]
     private bool _isAiming = false;
 
     public bool IsDialogue = false;
 
-    public bool IsInventory = false;
+    public bool IsInventory = false;*/
 
     [SerializeField]
     InteractionState _state;
@@ -82,6 +82,11 @@ public class PlayerBasics : MonoBehaviour
 
     PlayerMovement _playerMovement;
 
+    public PlayerMovement PlayerMove { get { return _playerMovement; } }
+
+    [SerializeField]
+    private GameManager _gameManager;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -93,6 +98,8 @@ public class PlayerBasics : MonoBehaviour
         _rigidbody = GetComponent<Rigidbody2D>();
 
         _playerMovement = GetComponent<PlayerMovement>();
+
+        _gameManager = FindObjectOfType<GameManager>();
     }
 
     // Update is called once per frame
@@ -118,11 +125,6 @@ public class PlayerBasics : MonoBehaviour
         _playerInput.Enable();
     }
 
-    public void ChangeIsUsing(bool state)
-    {
-        IsDialogue = state;
-    }
-
     /// <summary>
     /// Used by PlayerInput in Player.Basic.MouseLClick
     /// </summary>
@@ -130,56 +132,57 @@ public class PlayerBasics : MonoBehaviour
     public void OnMouseClick(InputAction.CallbackContext context)
     {
 
-        if (IsInventory)
+        if (STATE == InteractionState.INVENTORY)
         {
+            Debug.Log("Inventory click");
             _inventoryManager.GrabAndDropItemIcon(_playerInput.UI.MousePosition.ReadValue<Vector2>());
             return;
         }
-        else if (IsDialogue)
+        else if (STATE == InteractionState.DIALOGUE)
         {
-            //TODO
+            Debug.Log("Dialogue click");
             return;
         }
 
-        if (_isAiming)
+        else if (STATE == InteractionState.AIMING)
         {
-            if(_weapon != null && !_playerInput.Basic.MouseLClick.inProgress && context.phase == InputActionPhase.Started)
+            Debug.Log("Shooting click");
+            if (_weapon != null && !_playerInput.Basic.MouseLClick.inProgress && context.phase == InputActionPhase.Started)
             {
                 Debug.Log("Piu piu");
                 _weapon.GetComponent<_Weapon>().Attack(Camera.main.ScreenToWorldPoint(_playerInput.Basic.MouseMovement.ReadValue<Vector2>()), _skeletanMove.HoldedItem.rotation);
             }
         }
 
-        else if (!_playerInput.Basic.MouseLClick.inProgress && context.phase == InputActionPhase.Started)
+        RaycastHit hit;
+        Ray ray = Camera.main.ScreenPointToRay(_playerInput.Basic.MouseMovement.ReadValue<Vector2>());
+        if (Physics.Raycast(ray, out hit) && STATE == InteractionState.DEFAULT)
         {
-            //StopMoveCoroutines();
-            //Coroutine co = StartCoroutine(MovingByClick(context));
-            //_moveCoroutine = co;
+            Debug.Log("clicked something");
+            
+            //Debug.DrawLine(Camera.main.transform.position, Camera.main.ScreenToWorldPoint(_playerInput.Basic.MouseMovement.ReadValue<Vector2>()), Color.cyan, 10.0f);
+            if (Physics.Raycast(ray, out hit))
+            {
+                Transform objectHit = hit.transform;
+                Debug.Log("I clicked " + objectHit.gameObject.name);
+                if (objectHit != null && objectHit.gameObject.GetComponent<Door>() != null)
+                {
+                    Debug.Log("Door clicked");
+                    _gameManager.TransferPlayer(objectHit.gameObject.GetComponent<Door>());
+                }
+
+            }
+        }
+
+        if (!_playerInput.Basic.MouseLClick.inProgress && context.phase == InputActionPhase.Started && STATE == InteractionState.DEFAULT)
+        {
             Vector2 target = Camera.main.ScreenToWorldPoint(_playerInput.Basic.MouseMovement.ReadValue<Vector2>());
             Debug.Log(target);
 
             _playerMovement.MouseMovement(target);
-            //_navMeshAgent.destination = target;
         }
-        
-    }
 
-    IEnumerator MovingByClick(InputAction.CallbackContext context)
-    {
-        Vector2 target = Camera.main.ScreenToWorldPoint(_playerInput.Basic.MouseMovement.ReadValue<Vector2>());
         
-        do
-        {
-            //transform.position = Vector2.MoveTowards(transform.position, target, _speed * Time.deltaTime);
-            //_rigidbody.MovePosition(Vector2.MoveTowards(transform.position, target, _speed * Time.deltaTime));
-            
-            //Debug.Log((transform.position.x - target.x) + " " + (transform.position.y - target.y));
-            yield return null;
-        } while ((Mathf.Abs(transform.position.x - target.x) > 0.1f || Mathf.Abs(transform.position.y - target.y) > 0.1f));
-        
-        Debug.Log("Ending movement by mouse");
-        StopAllCoroutines();
-        yield return null;
         
     }
 
@@ -189,7 +192,7 @@ public class PlayerBasics : MonoBehaviour
     /// <param name="context"></param>
     public void OnMovementMouse(InputAction.CallbackContext context)
     {
-        if (IsInventory)
+        if (STATE == InteractionState.INVENTORY)
         {
             if (_inventoryManager.SelectedItemGRID && _inventoryManager.CheckMouseInInventory())
             {
@@ -213,7 +216,7 @@ public class PlayerBasics : MonoBehaviour
                 if (Rotated) Rotated = false;
             }
 
-            if (_isAiming)
+            if (STATE == InteractionState.AIMING)
             {
                 Debug.Log("Aim");
                 Aiming(realPos);
@@ -240,22 +243,6 @@ public class PlayerBasics : MonoBehaviour
     {
         _skeletanMove.TrackCursorByHands(Camera.main.ScreenToWorldPoint(_playerInput.Basic.MouseMovement.ReadValue<Vector2>()));
         yield return null;
-    }
-
-    /// <summary>
-    /// Character movement by WSAD
-    /// Run Coroutine CharacterMovementWSAD
-    /// </summary>
-    /// <param name="context"></param>
-    public void OnMovementWSAD(InputAction.CallbackContext context)
-    {
-        /*if (IsDialogue) return;
-        //Debug.Log(context.valueType);
-        Debug.Log(context.ReadValue<Vector2>());
-        //Debug.Log(context.ReadValue<Vector2>() + " Vector?");
-        StopMoveCoroutines();
-        Coroutine co = StartCoroutine(CharacterMovementWSAD(context));
-        _moveCoroutine = co;*/
     }
 
     /// <summary>
@@ -329,7 +316,7 @@ public class PlayerBasics : MonoBehaviour
         Aiming(Camera.main.ScreenToWorldPoint(_playerInput.Basic.MouseMovement.ReadValue<Vector2>()));
         do
         {
-            Debug.Log(_isAiming);
+            Debug.Log(InteractionState.INVENTORY);
             yield return null;
         } while (_playerInput.Basic.Aim.IsInProgress());
         ChangeAimStatus(false);
@@ -340,15 +327,16 @@ public class PlayerBasics : MonoBehaviour
 
     void ChangeAimStatus(bool status)
     {
-        _isAiming = status;
-        
-        _animator.SetBool("IsAiming", _isAiming);
-        if (!_isAiming) {
+        if (status) STATE = InteractionState.AIMING;
+        else STATE = InteractionState.DEFAULT;
+
+        _animator.SetBool("IsAiming", status);
+        if (STATE != InteractionState.AIMING) {
             _cursorManager.ShowCursor();
             _weapon.gameObject.SetActive(false);
             _skeletanMove.SetArmsToIdle();
         }
-        if (_isAiming)
+        if (STATE == InteractionState.AIMING)
         {
             StopMoveCoroutines();
             _cursorManager.HideCursorToAim();
@@ -391,16 +379,16 @@ public class PlayerBasics : MonoBehaviour
         Debug.Log("Switch inventory");
         if (_playerInput.Basic.enabled)
         {
-            IsInventory = true;
+            STATE = InteractionState.INVENTORY;
             _inventoryManager.SelectedItemGRID.gameObject.SetActive(true);
         }
         else
         {
-            IsInventory = false;
+            STATE = InteractionState.DEFAULT;
             _inventoryManager.SelectedItemGRID.gameObject.SetActive(false);
         }
 
-        if (IsInventory)
+        if (STATE == InteractionState.INVENTORY)
         {
             _playerInput.UI.Enable();
             _playerInput.Basic.Disable();
