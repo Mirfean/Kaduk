@@ -26,7 +26,7 @@ public class PlayerBasics : MonoBehaviour
     [SerializeField]
     InteractionState _state;
 
-    InteractionState STATE
+    public InteractionState STATE
     {
         get { return _state; }
         set { _state = value; }

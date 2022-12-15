@@ -49,14 +49,15 @@ public class GameManager : MonoBehaviour
 
     public void ShowNormalStash(List<ItemData> items)
     {
+        if (_playerBasics.STATE == Assets.Scripts.Enums.InteractionState.DEFAULT)
         _playerBasics.SwitchInventory();
         _itemsGrid.gameObject.SetActive(true);
+        _itemsGrid.InventoryItemsSlot = new ItemFromInventory[_itemsGrid.GridSize.x, _itemsGrid.GridSize.y];
+        foreach (ItemFromInventory IFI in _itemsGrid.ItemsOnGrid) Destroy(IFI.gameObject);
         foreach (ItemData item in items)
         {
-            _inventoryManager.InsertCertainItem(item, _itemsGrid);
+            _inventoryManager.CreateAndInsertCertainItem(item, _itemsGrid);
         }
-        
-
     }
 
     public void HideInventory()

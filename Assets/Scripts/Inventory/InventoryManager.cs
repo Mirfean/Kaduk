@@ -105,11 +105,36 @@ public class InventoryManager : MonoBehaviour
     }
 
     /// <summary>
-    /// Method executed by PlayerInput MouseLClick (in reality not)
+    /// Method executed by PlayerInput MouseLClick
     /// </summary>
     /// <param name="mousePos"></param>
     public void GrabAndDropItemIcon(Vector2 mousePos)
     {
+        void GrabItemIcon(Vector2Int tileGridPosition)
+        {
+            SelectedItem = _selectedItemGrid.PickUpItem(tileGridPosition.x, Mathf.Abs(tileGridPosition.y));
+            if (SelectedItem != null)
+            {
+                CurrentItemRectTransform = SelectedItem.GetComponent<RectTransform>();
+            }
+        }
+
+        void DropItemIcon(Vector2Int tileGridPosition)
+        {
+            bool dropComplete = _selectedItemGrid.PlaceItem(SelectedItem, tileGridPosition.x, Mathf.Abs(tileGridPosition.y), ref _overlapItem);
+            if (dropComplete)
+            {
+                SelectedItem = null;
+                if (_overlapItem != null)
+                {
+                    SelectedItem = _overlapItem;
+                    _overlapItem = null;
+                    CurrentItemRectTransform = SelectedItem.GetComponent<RectTransform>();
+                }
+            }
+
+        }
+
         if (_selectedItemGrid != null)
         {
             Vector2Int tileGridPosition = SelectedItemGRID.GetInvGridPositon(mousePos);
@@ -131,31 +156,6 @@ public class InventoryManager : MonoBehaviour
         }
     }
 
-    private void GrabItemIcon(Vector2Int tileGridPosition)
-    {
-        SelectedItem = _selectedItemGrid.PickUpItem(tileGridPosition.x, Mathf.Abs(tileGridPosition.y));
-        if (SelectedItem != null)
-        {
-            CurrentItemRectTransform = SelectedItem.GetComponent<RectTransform>();
-        }
-    }
-
-    private void DropItemIcon(Vector2Int tileGridPosition)
-    {
-        bool dropComplete= _selectedItemGrid.PlaceItem(SelectedItem, tileGridPosition.x, Mathf.Abs(tileGridPosition.y), ref _overlapItem);
-        if (dropComplete)
-        {
-            SelectedItem = null;
-            if (_overlapItem != null)
-            {
-                SelectedItem = _overlapItem;
-                _overlapItem = null;
-                CurrentItemRectTransform = SelectedItem.GetComponent<RectTransform>();
-            }
-        }
-        
-    }
-
     /// <summary>
     /// Move clicked item icon across inventory following cursor
     /// </summary>
@@ -168,6 +168,8 @@ public class InventoryManager : MonoBehaviour
         }
     }
 
+
+    #region Random Item Spawner
     public void SpawnRandomItem(InputAction.CallbackContext context)
     {
         ItemFromInventory item = Instantiate(ItemPrefab).GetComponent<ItemFromInventory>();
@@ -209,11 +211,18 @@ public class InventoryManager : MonoBehaviour
         SelectedItem = null;
         InsertCreatedItemOnSelectedGrid(itemToInsert);
     }
+    void InsertCreatedItemOnSelectedGrid(ItemFromInventory itemToInsert)
+    {
+        Vector2Int? posOnGrid = SelectedItemGRID.FindSpaceForObject(itemToInsert);
 
+        if (posOnGrid == null) { return; }
 
+        _selectedItemGrid.PlaceItemToGrid(itemToInsert, posOnGrid.Value.x, posOnGrid.Value.y);
+    }
+    #endregion
 
-    //Creating and placing Item in Grid
-    public void InsertCertainItem(ItemData itemData, InventoryGrid grid)
+    #region Item Spawner
+    public void CreateAndInsertCertainItem(ItemData itemData, InventoryGrid grid)
     {
         void SpawnItem(ItemData itemData)
         {
@@ -229,7 +238,7 @@ public class InventoryManager : MonoBehaviour
         }
 
         if (_selectedItemGrid == null) return;
-        Debug.Log("Insert random");
+        Debug.Log("Insert " + itemData.name);
         SpawnItem(itemData);
         ItemFromInventory itemToInsert = SelectedItem;
         SelectedItem = null;
@@ -238,23 +247,15 @@ public class InventoryManager : MonoBehaviour
 
     void InsertCreatedItem(ItemFromInventory itemToInsert, InventoryGrid grid)
     {
+        Debug.Log(grid.gameObject.name);
+
         Vector2Int? posOnGrid = grid.FindSpaceForObject(itemToInsert);
-
-        if(posOnGrid == null) { return; }
-
-        grid.PlaceItemToGrid(itemToInsert, posOnGrid.Value.x, posOnGrid.Value.y);
-    }
-    
-
-
-    void InsertCreatedItemOnSelectedGrid(ItemFromInventory itemToInsert)
-    {
-        Vector2Int? posOnGrid = SelectedItemGRID.FindSpaceForObject(itemToInsert);
 
         if (posOnGrid == null) { return; }
 
-        _selectedItemGrid.PlaceItemToGrid(itemToInsert, posOnGrid.Value.x, posOnGrid.Value.y);
+        grid.PlaceItemToGrid(itemToInsert, posOnGrid.Value.x, posOnGrid.Value.y);
     }
+    #endregion
 
     public bool CheckMouseInInventory()
     {

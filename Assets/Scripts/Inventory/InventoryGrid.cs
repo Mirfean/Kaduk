@@ -28,23 +28,16 @@ public class InventoryGrid : MonoBehaviour
     public Vector2Int GridSize { get => _gridSize; set => _gridSize = value; }
     public ItemFromInventory[,] InventoryItemsSlot { get => _inventoryItemsSlot; set => _inventoryItemsSlot = value; }
     public RectTransform GridRectTransform { get => _rectTransform; set => _rectTransform = value; }
+    public List<ItemFromInventory> ItemsOnGrid;
 
     // Start is called before the first frame update
     void Start()
     {
         _rectTransform = GetComponent<RectTransform>();
         Init();
-
         _positionOnTheGrid = new Vector2();
         _tileGridPosition = new Vector2Int();
-    }
-
-    private void Init(int width, int height)
-    {
-        _inventoryItemsSlot = new ItemFromInventory[width, height];
-        Vector2 size = new Vector2(width * TileSizeWidth, height * TileSizeHeight);
-        _rectTransform.sizeDelta = size;
-
+        //gameObject.SetActive(false);
     }
 
     internal ItemFromInventory GetItem(Vector2Int positionOnGrid)
@@ -111,7 +104,7 @@ public class InventoryGrid : MonoBehaviour
                 {
                     Debug.Log($"Place item in x{posX + i} y{posY + j}");
                     _inventoryItemsSlot[posX + i, posY + j] = inventoryItem;
-                    
+                    ItemsOnGrid.Add(inventoryItem);
                 }
 
             }
@@ -120,8 +113,6 @@ public class InventoryGrid : MonoBehaviour
         inventoryItem.OnGridPositionX = posX;
         inventoryItem.OnGridPositionY = posY;
 
-        //rectTransform.parent = rectTransform;
-        //inventoryItemsSlot[posX, posY] = inventoryItem;
         Vector2 position = GetItemPosition(inventoryItem, posX, posY);
 
         rectTransform.localPosition = position;
@@ -210,6 +201,8 @@ public class InventoryGrid : MonoBehaviour
                 {
                     if (holdedItem.SpaceFill[x, y])
                     {
+
+
                         if (_inventoryItemsSlot[posX + x, posY + y] != null)
                         {
                             return false;
@@ -277,7 +270,10 @@ public class InventoryGrid : MonoBehaviour
         {
             for(int i = 0; i < _gridSize.x; i++)
             {
-                if(CheckAvailableSpace(i, j, itemToInsert))
+                Debug.Log("FindSpaceForObject j " + j);
+                Debug.Log("FindSpaceForObject i " + i );
+                Debug.Log("FindSpaceForObject x " + itemToInsert);
+                if (CheckAvailableSpace(i, j, itemToInsert))
                 {
                     return new Vector2Int(i,j);
                 }
