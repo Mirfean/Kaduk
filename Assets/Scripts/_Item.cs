@@ -35,6 +35,8 @@ public class _Item : OutlineObject
     [SerializeField]
     List<ItemData> items;
 
+    public List<ItemData> Items { get { return items; } set { items = value; } }
+
     new void Start()
     {
         base.Start();
@@ -44,7 +46,7 @@ public class _Item : OutlineObject
             _textMesh = transform.GetChild(0).transform.GetChild(0).GetComponent<TextMeshProUGUI>();
             _textMesh.gameObject.SetActive(false);
         }
-        if (items == null) items = new List<ItemData>();
+        //if (items == null) items = new List<ItemData>();
     }
 
     // Update is called once per frame
@@ -87,7 +89,7 @@ public class _Item : OutlineObject
         Debug.Log($"{Description}");
         if (_isStash)
         {
-            _gameManager.ShowNormalStash(items);
+            _gameManager.ShowNormalStash(this);
         }
         if (_isPlayerStash)
         {

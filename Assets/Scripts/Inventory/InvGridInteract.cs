@@ -17,6 +17,7 @@ public class InvGridInteract : MonoBehaviour, IPointerEnterHandler, IPointerExit
 
     public void OnPointerExit(PointerEventData eventData)
     {
+        Debug.Log("Checking");
         if (!_inventoryManager.CheckMouseInInventory())
         {
             _inventoryManager.SelectedItemGRID = null;

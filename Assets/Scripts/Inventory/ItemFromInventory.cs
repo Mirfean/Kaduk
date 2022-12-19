@@ -50,7 +50,12 @@ public class ItemFromInventory : MonoBehaviour
         }
     }
 
-    
+    public void Awake()
+    {
+        Debug.Log("I'm alive!");
+    }
+
+
     public ItemData itemData
     {
         get { return _itemdata; }
@@ -81,9 +86,6 @@ public class ItemFromInventory : MonoBehaviour
         
         if (_rotation == Rotation.r270) _rotation = Rotation.r0;
         else _rotation += 1;
-
-        //if(this.gameObject.transform.rotation.z == 360f) this.gameObject.transform.Rotate(0f, 0f, -360f);
-        //else this.gameObject.transform.Rotate(0f, 0f, 90f);
 
         this.gameObject.transform.Rotate(0f, 0f, 90f);
 

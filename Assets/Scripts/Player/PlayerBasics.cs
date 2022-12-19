@@ -194,12 +194,16 @@ public class PlayerBasics : MonoBehaviour
     {
         if (STATE == InteractionState.INVENTORY)
         {
-            if (_inventoryManager.SelectedItemGRID && _inventoryManager.CheckMouseInInventory())
+            
+            /*if (_inventoryManager.SelectedItemGRID && _inventoryManager.CheckMouseInInventory())*/
+            if(_inventoryManager.SelectedItem != null)
             {
                 _inventoryManager.MoveItemIcon(_playerInput.UI.MousePosition.ReadValue<Vector2>());
                 _inventoryManager.HandleHighlight(_playerInput.UI.MousePosition.ReadValue<Vector2>());
                 return;
             }
+                
+            
         }
         if (_playerInput.Basic.enabled)
         {
@@ -344,26 +348,6 @@ public class PlayerBasics : MonoBehaviour
         }
     }
 
-    void CorrectPistolToLeftHand()
-    {
-        
-        if (_rotated && !_weapon.GetComponent<_Weapon>().Rotated)
-        {
-            //weapon.transform.Rotate(180f, 180f, 0f);
-            Debug.Log("I should rotate weapon");
-            //weapon.GetComponent<Gun>().RotateGun(true);
-        }
-        else if(!_rotated)
-        {
-            if (_weapon.GetComponent<_Weapon>().Rotated)
-            {
-                //weapon.GetComponent<Gun>().RotateGun(false);
-                //weapon.transform.Rotate(-180f, -180f, 0f);
-            }
-            
-        }
-    }
-
     void RotateWeapon()
     {
         _weapon.GetComponent<Gun>().RotateGun(Rotated);
@@ -371,21 +355,22 @@ public class PlayerBasics : MonoBehaviour
 
     public void OnInventoryButton(InputAction.CallbackContext context)
     {
-        if (context.started) SwitchInventory();
+        if (context.started && STATE == InteractionState.INVENTORY) SwitchInventory(false);
+        else SwitchInventory(true);
     }
 
-    public void SwitchInventory()
+    public void SwitchInventory(bool mode)
     {
         Debug.Log("Switch inventory");
-        if (_playerInput.Basic.enabled)
+        if (mode)
         {
             STATE = InteractionState.INVENTORY;
-            _inventoryManager.SelectedItemGRID.gameObject.SetActive(true);
+            _inventoryManager.ShowInventory();
         }
         else
         {
             STATE = InteractionState.DEFAULT;
-            _inventoryManager.SelectedItemGRID.gameObject.SetActive(false);
+            _inventoryManager.HideInventory();
         }
 
         if (STATE == InteractionState.INVENTORY)
@@ -402,13 +387,14 @@ public class PlayerBasics : MonoBehaviour
         }
     }
 
+    //Only for testing
     public void SpawnItem(InputAction.CallbackContext context)
     {
         ItemFromInventory item = Instantiate(_inventoryManager.ItemPrefab).GetComponent<ItemFromInventory>();
         _inventoryManager.SelectedItem = item;
 
         _inventoryManager.CurrentItemRectTransform = item.GetComponent<RectTransform>();
-        _inventoryManager.CurrentItemRectTransform.SetParent(_inventoryManager.CanvasTransform);
+        _inventoryManager.CurrentItemRectTransform.SetParent(_inventoryManager.InventoryCanvasTransform);
 
         int selectedItemID = Random.Range(0, _inventoryManager.ItemsList.Count - 1);
         //item.itemData = 

@@ -58,25 +58,10 @@ public class Gun : _Weapon
 
         Debug.Log("Transform right " + transform.right);
 
-
-        //Debug.DrawRay(_shootingPoint.transform.position, transform.right - new Vector3(0.25f, 0f, 0f), Color.black, _bulletRange, true);
-        //Debug.DrawRay(_shootingPoint.transform.position, transform.right - new Vector3(0.5f, 0f, 0f), Color.red, _bulletRange, true);
-        //Debug.DrawRay(_shootingPoint.transform.position, transform.right , Color.white, _bulletRange, true);
-        //Debug.DrawRay(_shootingPoint.transform.position, transform.right + new Vector3(0.25f, 0f, 0f), Color.green, _bulletRange, true);
-        //Debug.DrawRay(_shootingPoint.transform.position, transform.right + new Vector3(0.5f, 0f, 0f), Color.blue, _bulletRange, true);
-
         var trailScript = trail.GetComponent<BulletTrail>();
 
         if (hit.collider != null)
         {
-            //Damage enemies etc.
-            //trailScript.SetTargetPosition(hit.point);
-/*            if (hit.collider.tag == "Enemy")
-            {
-                hit.collider.GetComponent<Enemy>().TakeDamage(Damage);
-                Debug.Log("I hit enemy!");
-            }*/
-
             if(hit.collider.GetComponent<HitTarget>())
             {
                 hit.collider.GetComponent<HitTarget>().TakeHit(Damage);
@@ -86,7 +71,6 @@ public class Gun : _Weapon
         else
         {
             var endPosition = _shootingPoint.transform.position + transform.right * _bulletRange;
-            //trailScript.SetTargetPosition(endPosition);
             Debug.Log("end " + endPosition);
         }
 

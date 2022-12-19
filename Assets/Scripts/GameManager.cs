@@ -18,6 +18,9 @@ public class GameManager : MonoBehaviour
     InventoryGrid _itemsGrid;
 
     [SerializeField]
+    _Item currentItemStash_Item;
+
+    [SerializeField]
     Door[] _doors;
 
     // Start is called before the first frame update
@@ -43,34 +46,34 @@ public class GameManager : MonoBehaviour
     //Player's Stash with items moving along all game
     public void ShowPlayerStash()
     {
-        _playerBasics.SwitchInventory();
+        _playerBasics.SwitchInventory(true);
         _playerStash.SetActive(true);
     }
 
-    public void ShowNormalStash(List<ItemData> items)
+    public void ShowNormalStash(_Item currentItemStash)
     {
-        if (_playerBasics.STATE == Assets.Scripts.Enums.InteractionState.DEFAULT)
-        _playerBasics.SwitchInventory();
-        _itemsGrid.gameObject.SetActive(true);
-        _itemsGrid.InventoryItemsSlot = new ItemFromInventory[_itemsGrid.GridSize.x, _itemsGrid.GridSize.y];
-        foreach (ItemFromInventory IFI in _itemsGrid.ItemsOnGrid) Destroy(IFI.gameObject);
-        foreach (ItemData item in items)
-        {
-            _inventoryManager.CreateAndInsertCertainItem(item, _itemsGrid);
-        }
+        if (_playerBasics.STATE != Assets.Scripts.Enums.InteractionState.INVENTORY)
+            _playerBasics.SwitchInventory(true);
+
+        _inventoryManager.ShowItemStash();
+        currentItemStash_Item = currentItemStash;
+        //_inventoryManager.ClearItemsFromStash();
+        _inventoryManager.FillItemsStash(currentItemStash_Item.Items);
     }
 
     public void HideInventory()
     {
         if(_inventoryManager.SelectedItem == null)
         {
-            _playerBasics.SwitchInventory();
-            _playerStash.SetActive(false);
-            _itemsGrid.gameObject.SetActive(false);
-        }
-        Debug.Log("Can't close Inventory, item is holded");
-    }
+            _playerBasics.SwitchInventory(false);
 
+            if (currentItemStash_Item != null) _inventoryManager.HideItemStash(currentItemStash_Item);
+            currentItemStash_Item = null;
+            
+            _inventoryManager.HidePlayerStash();
+        }
+        else Debug.Log("Can't close Inventory, item is holded");
+    }
 
 
     //Transport Player between doors
