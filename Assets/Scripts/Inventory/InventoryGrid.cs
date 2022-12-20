@@ -32,7 +32,7 @@ public class InventoryGrid : MonoBehaviour
     public List<ItemFromInventory> ItemsOnGrid;
 
     // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
         _rectTransform = GetComponent<RectTransform>();
         Init();
@@ -45,12 +45,12 @@ public class InventoryGrid : MonoBehaviour
     internal ItemFromInventory GetItem(Vector2Int positionOnGrid)
     {
         Debug.Log("GetItem from " + positionOnGrid);
-        return _inventoryItemsSlot[positionOnGrid.x, -(positionOnGrid.y)];
+        return InventoryItemsSlot[positionOnGrid.x, -(positionOnGrid.y)];
     }
 
     private void Init()
     {
-        _inventoryItemsSlot = new ItemFromInventory[_gridSize.x, _gridSize.y];
+        InventoryItemsSlot = new ItemFromInventory[_gridSize.x, _gridSize.y];
         Vector2 size = new Vector2(_gridSize.x * TileSizeWidth, _gridSize.y * TileSizeHeight);
         _rectTransform.sizeDelta = size;
     }
@@ -86,33 +86,30 @@ public class InventoryGrid : MonoBehaviour
         }
 
         PlaceItemToGrid(inventoryItem, posX, posY);
-
         return true;
     }
 
-    public void PlaceItemToGrid(ItemFromInventory inventoryItem, int posX, int posY)
+    public void PlaceItemToGrid(ItemFromInventory itemToPlace, int posX, int posY)
     {
 
-        for (int i = 0; i < inventoryItem.WIDTH; i++)
+        for (int i = 0; i < itemToPlace.WIDTH; i++)
         {
-            for (int j = 0; j < inventoryItem.HEIGHT; j++)
+            for (int j = 0; j < itemToPlace.HEIGHT; j++)
             {
-
-                if (inventoryItem.SpaceFill[i, j])
+                if (itemToPlace.SpaceFill[i, j])
                 {
-                    _inventoryItemsSlot[posX + i, posY + j] = inventoryItem;
+                    InventoryItemsSlot[posX + i, posY + j] = itemToPlace;
                 }
 
             }
         }
-        Debug.Log("Adding item "+ inventoryItem.itemData.name +" to list");
-        ItemsOnGrid.Add(inventoryItem);
-        inventoryItem.OnGridPositionX = posX;
-        inventoryItem.OnGridPositionY = posY;
+        Debug.Log("Adding item "+ itemToPlace.itemData.name +" to list");
+        itemToPlace.OnGridPositionX = posX;
+        itemToPlace.OnGridPositionY = posY;
 
-        Vector2 position = GetItemPosition(inventoryItem, posX, posY);
+        Vector2 position = GetItemPosition(itemToPlace, posX, posY);
 
-        inventoryItem.GetComponent<RectTransform>().localPosition = position;
+        itemToPlace.GetComponent<RectTransform>().localPosition = position;
     }
 
     /// <summary>
@@ -150,15 +147,15 @@ public class InventoryGrid : MonoBehaviour
                     try
                     {   
                     
-                        if (_inventoryItemsSlot[posX + x, posY + y] != null)
+                        if (InventoryItemsSlot[posX + x, posY + y] != null)
                         {
                             if (overlapItem == null)
                             {
-                                overlapItem = _inventoryItemsSlot[posX + x, posY + y];
+                                overlapItem = InventoryItemsSlot[posX + x, posY + y];
                             }
                             else
                             {
-                                if (overlapItem != _inventoryItemsSlot[posX + x, posY + y])
+                                if (overlapItem != InventoryItemsSlot[posX + x, posY + y])
                                 {
                                     return false;
                                 }
@@ -200,7 +197,7 @@ public class InventoryGrid : MonoBehaviour
                     {
 
 
-                        if (_inventoryItemsSlot[posX + x, posY + y] != null)
+                        if (InventoryItemsSlot[posX + x, posY + y] != null)
                         {
                             return false;
                         }
@@ -227,7 +224,7 @@ public class InventoryGrid : MonoBehaviour
     /// <returns></returns>
     public ItemFromInventory PickUpItem(int x, int y)
     {
-        ItemFromInventory toReturn = _inventoryItemsSlot[x, y];
+        ItemFromInventory toReturn = InventoryItemsSlot[x, y];
 
         if (toReturn == null) { return null; }
 
@@ -250,22 +247,19 @@ public class InventoryGrid : MonoBehaviour
             {
                 if (item.SpaceFill[i, j])
                 {
-                    _inventoryItemsSlot[item.OnGridPositionX + i, item.OnGridPositionY + j] = null;
+                    InventoryItemsSlot[item.OnGridPositionX + i, item.OnGridPositionY + j] = null;
                 }
 
             }
         }
     }
 
+    /// <summary>
+    /// Cleaning all inventoryItemSlot
+    /// </summary>
     internal void CleanAllGridReferences()
     {
-        for (int i = 0; i < _gridSize.x; i++)
-        {
-            for (int j = 0; j < _gridSize.y; j++)
-            {
-                _inventoryItemsSlot[i, j] = null;
-            }
-        }
+        InventoryItemsSlot = new ItemFromInventory[_gridSize.x, _gridSize.y];
     }
 
     /// <summary>

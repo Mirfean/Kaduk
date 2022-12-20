@@ -35,7 +35,7 @@ public class InventoryHighlight : MonoBehaviour
 
         Vector2 pos = targetGrid.GetItemPosition(targetItem, posX, posY);
 
-        Debug.Log("SetPos " + posX + " " + posY);
+        //Debug.Log("SetPos " + posX + " " + posY);
 
         HighlighterRectTrans.localPosition = pos;
     }

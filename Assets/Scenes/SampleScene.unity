@@ -4756,6 +4756,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 31611f4953d113248aee67fda1d1db47, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _itemGrid: {fileID: 0}
 --- !u!114 &431827241
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6410,6 +6411,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 31611f4953d113248aee67fda1d1db47, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _itemGrid: {fileID: 0}
 --- !u!114 &654761777
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7785,7 +7787,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 1270, y: 440}
+  m_AnchoredPosition: {x: 1125, y: 440}
   m_SizeDelta: {x: 128, y: 192}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &1127854883
@@ -7854,6 +7856,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 31611f4953d113248aee67fda1d1db47, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _itemGrid: {fileID: 0}
 --- !u!1 &1178868300
 GameObject:
   m_ObjectHideFlags: 0
@@ -10931,7 +10934,7 @@ TilemapRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
+  - {fileID: 2100000, guid: a0b0a00e7e92f9c4597dbe8b7512d1fe, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -14577,7 +14580,7 @@ PrefabInstance:
     - target: {fileID: 2853897493889203543, guid: 572bcab5f2342334ebd0f034b5b8ccfb,
         type: 3}
       propertyPath: items.Array.size
-      value: 2
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 2853897493889203543, guid: 572bcab5f2342334ebd0f034b5b8ccfb,
         type: 3}
@@ -14588,6 +14591,18 @@ PrefabInstance:
     - target: {fileID: 2853897493889203543, guid: 572bcab5f2342334ebd0f034b5b8ccfb,
         type: 3}
       propertyPath: items.Array.data[1]
+      value: 
+      objectReference: {fileID: 11400000, guid: 778e0c97dac2fa84fa29ed7866f9213f,
+        type: 2}
+    - target: {fileID: 2853897493889203543, guid: 572bcab5f2342334ebd0f034b5b8ccfb,
+        type: 3}
+      propertyPath: items.Array.data[2]
+      value: 
+      objectReference: {fileID: 11400000, guid: e380b5ecc51b2c2489fd948aa21d1d73,
+        type: 2}
+    - target: {fileID: 2853897493889203543, guid: 572bcab5f2342334ebd0f034b5b8ccfb,
+        type: 3}
+      propertyPath: items.Array.data[3]
       value: 
       objectReference: {fileID: 11400000, guid: 778e0c97dac2fa84fa29ed7866f9213f,
         type: 2}

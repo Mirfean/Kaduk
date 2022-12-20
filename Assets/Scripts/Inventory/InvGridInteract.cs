@@ -7,8 +7,18 @@ using UnityEngine.EventSystems;
 public class InvGridInteract : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler 
 {
     InventoryManager _inventoryManager;
+    [SerializeField]
     InventoryGrid _itemGrid;
     Player _playerInput;
+
+    // Start is called before the first frame update
+    void Awake()
+    {
+        _inventoryManager = FindObjectOfType<InventoryManager>();
+        _itemGrid = GetComponent<InventoryGrid>();
+        _playerInput = new Player();
+        _playerInput.Enable();
+    }
 
     public void OnPointerEnter(PointerEventData eventData)
     {
@@ -25,14 +35,7 @@ public class InvGridInteract : MonoBehaviour, IPointerEnterHandler, IPointerExit
         
     }
     
-    // Start is called before the first frame update
-    void Awake()
-    {
-        _inventoryManager = FindObjectOfType<InventoryManager>();
-        _itemGrid = GetComponent<InventoryGrid>();
-        _playerInput = new Player();
-        _playerInput.Enable();
-    }
+    
 
 
 }

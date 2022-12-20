@@ -107,7 +107,7 @@ public class InventoryManager : MonoBehaviour
 
     public Vector2Int GetInvGridPositon(Vector2 mousePosition)
     {
-        if (SelectedItem == null) {  return new Vector2Int(-1, -1); }
+        if (SelectedItem == null || SelectedItemGRID == null) {  return new Vector2Int(-1, -1); }
         SelectedItemGRID.PositionOnTheGrid = new Vector2(mousePosition.x - SelectedItemGRID.GridRectTransform.position.x, mousePosition.y - SelectedItemGRID.GridRectTransform.position.y);
         SelectedItemGRID.TileGridPosition = new Vector2Int ((int) (SelectedItemGRID.PositionOnTheGrid.x / InventoryGrid.TileSizeWidth), (int)(SelectedItemGRID.PositionOnTheGrid.y / InventoryGrid.TileSizeHeight));
         return SelectedItemGRID.TileGridPosition;
@@ -124,6 +124,7 @@ public class InventoryManager : MonoBehaviour
             SelectedItem = _selectedItemGrid.PickUpItem(tileGridPosition.x, Mathf.Abs(tileGridPosition.y));
             if (SelectedItem != null)
             {
+                _selectedItemGrid.ItemsOnGrid.Remove(SelectedItem);
                 CurrentItemRectTransform = SelectedItem.GetComponent<RectTransform>();
             }
         }
@@ -131,14 +132,19 @@ public class InventoryManager : MonoBehaviour
         void DropItemIcon(Vector2Int tileGridPosition)
         {
             bool dropComplete = _selectedItemGrid.PlaceItem(SelectedItem, tileGridPosition.x, Mathf.Abs(tileGridPosition.y), ref _overlapItem);
+            SelectedItem = null;
             if (dropComplete)
             {
-                SelectedItem = null;
+                //SelectedItem = null;
                 if (_overlapItem != null)
                 {
                     SelectedItem = _overlapItem;
                     _overlapItem = null;
                     CurrentItemRectTransform = SelectedItem.GetComponent<RectTransform>();
+                }
+                else
+                {
+                    CurrentItemRectTransform = null;
                 }
             }
 
@@ -171,11 +177,7 @@ public class InventoryManager : MonoBehaviour
     /// <param name="mousePos"></param>
     public void MoveItemIcon(Vector2 mousePos)
     {
-        /*if (SelectedItem != null)
-          {
-              CurrentItemRectTransform.position = mousePos;
-          }*/
-        CurrentItemRectTransform.position = mousePos;
+        if (CurrentItemRectTransform != null) CurrentItemRectTransform.position = mousePos;
     }
 
     public bool CheckMouseInInventory()
@@ -209,18 +211,32 @@ public class InventoryManager : MonoBehaviour
         {
             CreateAndInsertCertainItem(item, _itemsStash);
         }
+        Debug.Log($"Size {_itemsStash.InventoryItemsSlot.Length}");
+        for (int i = 0; i < _itemsStash.GridSize.x; i++)
+        {
+            for (int j = 0; j < _itemsStash.GridSize.y; j++)
+            {
+                if (_itemsStash.InventoryItemsSlot[i,j])
+                {
+                    Debug.Log($"Cell {i} {j}");
+                }
+
+            }
+        }
     }
 
     public void ClearItemsFromStash()
     {
-        if (_itemsStash.ItemsOnGrid.Count == 0) return;
-        for (int i = 0; i < _itemsStash.ItemsOnGrid.Count; i++)
+        ItemFromInventory[] ItemsInInventory = _itemsStash.GetComponentsInChildren<ItemFromInventory>();
+        if (ItemsInInventory.Length == 0) return;
+        for (int i = 0; i < ItemsInInventory.Length; i++)
         {
-            Destroy(_itemsStash.ItemsOnGrid[i].gameObject);
+            Destroy(ItemsInInventory[i].gameObject);
         }
-        _itemsStash.ItemsOnGrid.Clear();
         _itemsStash.CleanAllGridReferences();
     }
+
+
 
     #region Random Item Spawner
     public void SpawnRandomItem(InputAction.CallbackContext context)
@@ -253,7 +269,6 @@ public class InventoryManager : MonoBehaviour
         Debug.Log($"Spawn {SelectedItem}");
     }
     
-
     public void InsertRandomItem(InputAction.CallbackContext context)
     {
         if (_selectedItemGrid == null) return;
@@ -274,26 +289,36 @@ public class InventoryManager : MonoBehaviour
     }
     #endregion
 
+/*  ??????
+    ??????
+    ??????
+    ?????????
+    ????????*/
+
+
     #region Item Spawner
     public void CreateAndInsertCertainItem(ItemData itemData, InventoryGrid grid)
     {
+        SelectedItemGRID = grid;
         ItemFromInventory itemFrom = SpawnItem(itemData);
-
         InsertCreatedItem(itemFrom, grid);
+
+        //SelectedItem = null;
+        //CurrentItemRectTransform = null;
 
         ItemFromInventory SpawnItem(ItemData itemData)
         {
             GameObject newItem = Instantiate(ItemPrefab);
             ItemFromInventory item = newItem.GetComponent<ItemFromInventory>();
             SelectedItem = item;
-            CurrentItemRectTransform = item.GetComponent<RectTransform>();
+            CurrentItemRectTransform = SelectedItem.GetComponent<RectTransform>();
             CurrentItemRectTransform.SetParent(grid.GetComponent<RectTransform>());
 
-            Debug.Log("Created item " + item.gameObject.transform.position);
+            Debug.Log("Created item " + SelectedItem.gameObject.transform.position);
 
-            item.itemData = itemData;
+            SelectedItem.itemData = itemData;
             Debug.Log($"Spawn {item.name}");
-            return item;
+            return SelectedItem;
         }
 
         void InsertCreatedItem(ItemFromInventory itemToInsert, InventoryGrid grid)
@@ -301,6 +326,7 @@ public class InventoryManager : MonoBehaviour
             Vector2Int? posOnGrid = grid.FindSpaceForObject(itemToInsert);
 
             grid.PlaceItemToGrid(itemToInsert, posOnGrid.Value.x, posOnGrid.Value.y);
+            SelectedItem = null;
         }
     }
 
@@ -346,13 +372,17 @@ public class InventoryManager : MonoBehaviour
 
     private void SaveChangesInItemStash(_Item currentItemStash)
     {
+        ItemFromInventory[] ItemsInInventory = _itemsStash.GetComponentsInChildren<ItemFromInventory>();
+        Debug.Log("ItemsInInventory " + ItemsInInventory.Length);
         List<ItemData> newItems = new List<ItemData>();
-        for (int i = 0; i < _itemsStash.ItemsOnGrid.Count; i++)
+        
+        if (ItemsInInventory.Length == 0) return;
+        
+        for (int i = 0; i < ItemsInInventory.Length; i++)
         {
-            newItems.Add(_itemsStash.ItemsOnGrid[i].itemData);
+            newItems.Add(ItemsInInventory[i].itemData);
         }
-        Debug.Log("ItemsOnGrid " + _itemsStash.ItemsOnGrid.Count);
-        Debug.Log("newItems " + newItems.Count);
+
         currentItemStash.Items = newItems;
     }
 

@@ -24,7 +24,7 @@ public class PlayerBasics : MonoBehaviour
     public bool IsInventory = false;*/
 
     [SerializeField]
-    InteractionState _state;
+    InteractionState _state = InteractionState.DEFAULT;
 
     public InteractionState STATE
     {
@@ -132,7 +132,7 @@ public class PlayerBasics : MonoBehaviour
     public void OnMouseClick(InputAction.CallbackContext context)
     {
 
-        if (STATE == InteractionState.INVENTORY)
+        if (STATE == InteractionState.INVENTORY && context.phase == InputActionPhase.Started)
         {
             Debug.Log("Inventory click");
             _inventoryManager.GrabAndDropItemIcon(_playerInput.UI.MousePosition.ReadValue<Vector2>());
@@ -198,8 +198,11 @@ public class PlayerBasics : MonoBehaviour
             /*if (_inventoryManager.SelectedItemGRID && _inventoryManager.CheckMouseInInventory())*/
             if(_inventoryManager.SelectedItem != null)
             {
-                _inventoryManager.MoveItemIcon(_playerInput.UI.MousePosition.ReadValue<Vector2>());
-                _inventoryManager.HandleHighlight(_playerInput.UI.MousePosition.ReadValue<Vector2>());
+                if (_inventoryManager.CurrentItemRectTransform != null)
+                {
+                    _inventoryManager.MoveItemIcon(_playerInput.UI.MousePosition.ReadValue<Vector2>());
+                    _inventoryManager.HandleHighlight(_playerInput.UI.MousePosition.ReadValue<Vector2>());
+                }
                 return;
             }
                 

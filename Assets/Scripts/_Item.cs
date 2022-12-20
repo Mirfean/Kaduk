@@ -41,6 +41,7 @@ public class _Item : OutlineObject
     {
         base.Start();
         _cursorManager = FindObjectOfType<CursorManager>();
+        _gameManager = FindObjectOfType<GameManager>();
         if (_isStash)
         {
             _textMesh = transform.GetChild(0).transform.GetChild(0).GetComponent<TextMeshProUGUI>();
@@ -62,9 +63,13 @@ public class _Item : OutlineObject
 
     private new void OnMouseEnter()
     {
-        base.OnMouseEnter();
-        gameObject.GetComponent<SpriteRenderer>().material = _outlineMaterial;
-        HandleCursorAndText(true);
+        if (_gameManager.GetPlayerSTATE() == InteractionState.DEFAULT)
+        {
+            base.OnMouseEnter();
+            gameObject.GetComponent<SpriteRenderer>().material = _outlineMaterial;
+            HandleCursorAndText(true);
+        }
+        
         
     }
 
@@ -85,17 +90,19 @@ public class _Item : OutlineObject
 
     private void OnMouseUpAsButton()
     {
-        if (_gameManager == null && (_isStash || _isPlayerStash)) _gameManager = FindObjectOfType<GameManager>();
-        Debug.Log($"{Description}");
-        if (_isStash)
+        if (_gameManager.GetPlayerSTATE() == InteractionState.DEFAULT)
         {
-            _gameManager.ShowNormalStash(this);
+            if (_gameManager == null && (_isStash || _isPlayerStash)) _gameManager = FindObjectOfType<GameManager>();
+            Debug.Log($"{Description}");
+            if (_isStash)
+            {
+                _gameManager.ShowNormalStash(this);
+            }
+            if (_isPlayerStash)
+            {
+                _gameManager.ShowPlayerStash();
+            }
         }
-        if (_isPlayerStash)
-        {
-            _gameManager.ShowPlayerStash();
-        }
-        
     }
 
     void HandleCursorAndText(bool status)
