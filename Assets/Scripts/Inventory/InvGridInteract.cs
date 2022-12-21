@@ -25,6 +25,8 @@ public class InvGridInteract : MonoBehaviour, IPointerEnterHandler, IPointerExit
         _inventoryManager.SelectedItemGRID = _itemGrid;
     }
 
+
+
     public void OnPointerExit(PointerEventData eventData)
     {
         Debug.Log("Checking");

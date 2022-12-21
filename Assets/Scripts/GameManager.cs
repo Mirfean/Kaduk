@@ -24,6 +24,9 @@ public class GameManager : MonoBehaviour
     [SerializeField]
     Door[] _doors;
 
+    [SerializeField]
+    public static Vector2 MousePosition;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -41,7 +44,7 @@ public class GameManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        MousePosition = _playerBasics.GetMousePos();
     }
 
     public InteractionState GetPlayerSTATE()

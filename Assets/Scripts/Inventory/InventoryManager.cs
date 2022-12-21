@@ -212,17 +212,6 @@ public class InventoryManager : MonoBehaviour
             CreateAndInsertCertainItem(item, _itemsStash);
         }
         Debug.Log($"Size {_itemsStash.InventoryItemsSlot.Length}");
-        for (int i = 0; i < _itemsStash.GridSize.x; i++)
-        {
-            for (int j = 0; j < _itemsStash.GridSize.y; j++)
-            {
-                if (_itemsStash.InventoryItemsSlot[i,j])
-                {
-                    Debug.Log($"Cell {i} {j}");
-                }
-
-            }
-        }
     }
 
     public void ClearItemsFromStash()

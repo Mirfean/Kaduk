@@ -23,7 +23,12 @@ public class ItemEditor : EditorWindow
 
     void OnGUI()
     {
-        
+        GUIStyle Description = new GUIStyle()
+        {
+            fixedHeight = 200,
+            richText = true,
+        };
+
         EditorGUI.BeginChangeCheck();
         _itemData = (ItemData)EditorGUILayout.ObjectField(_itemData, typeof(ItemData), true);
         if (EditorGUI.EndChangeCheck())

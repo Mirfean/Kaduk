@@ -105,13 +105,7 @@ public class PlayerBasics : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        //For Testing
-        /*if(inventoryManager.itemGRID != null)
-        {
-            if (playerInput.UI.enabled)  inventoryManager.getGridPos(playerInput.UI.MousePosition.ReadValue<Vector2>());
-            else inventoryManager.getGridPos(playerInput.Basic.MouseMovement.ReadValue<Vector2>());
 
-        }*/
     }
 
     public void TurnOffInput()
@@ -123,6 +117,11 @@ public class PlayerBasics : MonoBehaviour
     public void TurnOnInput()
     {
         _playerInput.Enable();
+    }
+
+    public Vector2 GetMousePos()
+    {
+        return _playerInput.Basic.MouseMovement.ReadValue<Vector2>();
     }
 
     /// <summary>

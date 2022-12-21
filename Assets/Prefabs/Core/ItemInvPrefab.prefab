@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 1916423277202027204}
   - component: {fileID: 3741625504740865173}
   - component: {fileID: 5358844712840300482}
+  - component: {fileID: 7829080771245908201}
   m_Layer: 5
   m_Name: ItemInvPrefab
   m_TagString: Untagged
@@ -89,3 +90,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5b1cdcc8d9407754fbaaaf8d8ae0d365, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ItemDescription: 
+  OnGridPositionX: 0
+  OnGridPositionY: 0
+--- !u!114 &7829080771245908201
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 237450641518212523}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a970f217b571aab4ba30739a9d902d62, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  tipToShow: xD

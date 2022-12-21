@@ -234,7 +234,15 @@ public class InventoryGrid : MonoBehaviour
 
         return toReturn;
     }
-
+/*
+      ,~~.
+     (  9 )-_,
+(\___ )=='-'
+ \ .   ) )
+  \ `-' /
+   `~j-'   
+     "=:
+*/
     /// <summary>
     /// Clear grid spaces from certain item
     /// </summary>
