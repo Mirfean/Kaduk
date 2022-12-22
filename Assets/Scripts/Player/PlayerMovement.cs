@@ -33,9 +33,6 @@ public class PlayerMovement : MonoBehaviour
         _agent = GetComponent<NavMeshAgent>();
         _playerActionMap = _inputActions.FindActionMap("Basic");
         _movement = _playerActionMap.FindAction("WSAD");
-        //_movement.started += HandleMovementAction;
-        //_movement.canceled += HandleMovementAction;
-        //_movement.performed += HandleMovementAction;
         _movement.Enable();
         _playerActionMap.Enable();
         _inputActions.Enable();
@@ -65,7 +62,10 @@ public class PlayerMovement : MonoBehaviour
     {
         if (!_isMoving) _isMoving = true;
         _movementVector.Normalize();
+
+        //Workaround on issue with moving UP/DOWN
         _movementVector.x = _movementVector.x == 0.0f ? 0.001f : _movementVector.x; 
+        
         if (_movementVector != _lastDirection)
         {
             _lerpTime = 0;
@@ -83,8 +83,6 @@ public class PlayerMovement : MonoBehaviour
         _agent.Move(_targetDirection * _agent.speed * Time.deltaTime);
 
         _lerpTime += Time.deltaTime;
-
-        Debug.Log("WSAD");
     }
 
     internal void MouseMovement(Vector2 target)

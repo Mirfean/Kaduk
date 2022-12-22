@@ -1,3 +1,4 @@
+using Assets.Scripts.Enums;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -8,6 +9,8 @@ using UnityEngine;
 /// </summary>
 public class InventoryGrid : MonoBehaviour
 {
+    public StashType stashType;
+
     public const float TileSizeWidth = 32;
     public const float TileSizeHeight = 32;
 

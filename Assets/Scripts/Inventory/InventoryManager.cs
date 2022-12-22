@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -40,12 +41,15 @@ public class InventoryManager : MonoBehaviour
     [SerializeField] public List<ItemData> ItemsList;
     [SerializeField] public GameObject ItemPrefab;
 
-    [SerializeField]
-    public ItemFromInventory SelectedItem;
-    [SerializeField]
-    ItemFromInventory _overlapItem;
-    [SerializeField]
-    ItemFromInventory _itemToHighlight;
+    [SerializeField] public ItemFromInventory HoldedItem;
+
+    [SerializeField] ItemFromInventory _clickedItem;
+    
+    [SerializeField] public ItemFromInventory OnMouseItem;
+    
+    [SerializeField] ItemFromInventory _overlapItem;
+    
+    [SerializeField] ItemFromInventory _itemToHighlight;
 
     [SerializeField]
     Vector2 _oldPositon;
@@ -55,6 +59,18 @@ public class InventoryManager : MonoBehaviour
 
     [SerializeField]
     InventoryHighlight _inventoryHighlight;
+
+    public static Action<ItemFromInventory> OnMouseAboveItem; 
+
+    private void OnEnable()
+    {
+        OnMouseAboveItem += SetOnMouseItem;
+    }
+
+    private void OnDisable()
+    {
+        OnMouseAboveItem -= SetOnMouseItem;
+    }
 
     // Start is called before the first frame update
     void Start()
@@ -68,13 +84,18 @@ public class InventoryManager : MonoBehaviour
         _inventoryHighlight = GetComponent<InventoryHighlight>();
     }
 
+    public void SetOnMouseItem(ItemFromInventory item)
+    {
+         OnMouseItem = item;
+    }
+
     public void HandleHighlight(Vector2 mousePos)
     {
         Vector2Int positionOnGrid = GetInvGridPositon(mousePos);
         if (_oldPositon == positionOnGrid || positionOnGrid == new Vector2Int(-1, -1)) return;
         
         _oldPositon = positionOnGrid;
-        if (SelectedItem == null)
+        if (HoldedItem == null)
         {
             _itemToHighlight = SelectedItemGRID.GetItem(positionOnGrid);
             if(_itemToHighlight != null)
@@ -98,16 +119,16 @@ public class InventoryManager : MonoBehaviour
         }
         else
         {
-            _inventoryHighlight.Show(SelectedItemGRID.BoundryCheck(positionOnGrid.x, -positionOnGrid.y, SelectedItem.WIDTH, SelectedItem.HEIGHT));
-            _inventoryHighlight.SetSize(SelectedItem);
+            _inventoryHighlight.Show(SelectedItemGRID.BoundryCheck(positionOnGrid.x, -positionOnGrid.y, HoldedItem.WIDTH, HoldedItem.HEIGHT));
+            _inventoryHighlight.SetSize(HoldedItem);
             _inventoryHighlight.SetParent(SelectedItemGRID);
-            _inventoryHighlight.SetPosition(SelectedItemGRID, SelectedItem, positionOnGrid.x, -positionOnGrid.y);
+            _inventoryHighlight.SetPosition(SelectedItemGRID, HoldedItem, positionOnGrid.x, -positionOnGrid.y);
         }
     }
 
     public Vector2Int GetInvGridPositon(Vector2 mousePosition)
     {
-        if (SelectedItem == null || SelectedItemGRID == null) {  return new Vector2Int(-1, -1); }
+        if (HoldedItem == null || SelectedItemGRID == null) {  return new Vector2Int(-1, -1); }
         SelectedItemGRID.PositionOnTheGrid = new Vector2(mousePosition.x - SelectedItemGRID.GridRectTransform.position.x, mousePosition.y - SelectedItemGRID.GridRectTransform.position.y);
         SelectedItemGRID.TileGridPosition = new Vector2Int ((int) (SelectedItemGRID.PositionOnTheGrid.x / InventoryGrid.TileSizeWidth), (int)(SelectedItemGRID.PositionOnTheGrid.y / InventoryGrid.TileSizeHeight));
         return SelectedItemGRID.TileGridPosition;
@@ -121,26 +142,26 @@ public class InventoryManager : MonoBehaviour
     {
         void GrabItemIcon(Vector2Int tileGridPosition)
         {
-            SelectedItem = _selectedItemGrid.PickUpItem(tileGridPosition.x, Mathf.Abs(tileGridPosition.y));
-            if (SelectedItem != null)
+            HoldedItem = _selectedItemGrid.PickUpItem(tileGridPosition.x, Mathf.Abs(tileGridPosition.y));
+            if (HoldedItem != null)
             {
-                _selectedItemGrid.ItemsOnGrid.Remove(SelectedItem);
-                CurrentItemRectTransform = SelectedItem.GetComponent<RectTransform>();
+                _selectedItemGrid.ItemsOnGrid.Remove(HoldedItem);
+                CurrentItemRectTransform = HoldedItem.GetComponent<RectTransform>();
             }
         }
 
         void DropItemIcon(Vector2Int tileGridPosition)
         {
-            bool dropComplete = _selectedItemGrid.PlaceItem(SelectedItem, tileGridPosition.x, Mathf.Abs(tileGridPosition.y), ref _overlapItem);
-            SelectedItem = null;
+            bool dropComplete = _selectedItemGrid.PlaceItem(HoldedItem, tileGridPosition.x, Mathf.Abs(tileGridPosition.y), ref _overlapItem);
+            HoldedItem = null;
             if (dropComplete)
             {
                 //SelectedItem = null;
                 if (_overlapItem != null)
                 {
-                    SelectedItem = _overlapItem;
+                    HoldedItem = _overlapItem;
                     _overlapItem = null;
-                    CurrentItemRectTransform = SelectedItem.GetComponent<RectTransform>();
+                    CurrentItemRectTransform = HoldedItem.GetComponent<RectTransform>();
                 }
                 else
                 {
@@ -155,7 +176,7 @@ public class InventoryManager : MonoBehaviour
             Vector2Int tileGridPosition = SelectedItemGRID.GetInvGridPositon(mousePos);
             Debug.Log(tileGridPosition.ToString());
 
-            if (SelectedItem == null)
+            if (HoldedItem == null)
             {
                 if (_selectedItemGrid.PositionCheck(tileGridPosition.x, tileGridPosition.y))
                 {
@@ -192,9 +213,9 @@ public class InventoryManager : MonoBehaviour
     public void RotateHoldedItem(InputAction.CallbackContext context)
     {
         Debug.Log("rotating");
-        if (SelectedItem != null)
+        if (HoldedItem != null)
         {
-            SelectedItem.rotate();
+            HoldedItem.rotate();
         }
 
     }
@@ -231,31 +252,31 @@ public class InventoryManager : MonoBehaviour
     public void SpawnRandomItem(InputAction.CallbackContext context)
     {
         ItemFromInventory item = Instantiate(ItemPrefab).GetComponent<ItemFromInventory>();
-        SelectedItem = item;
+        HoldedItem = item;
         
         CurrentItemRectTransform = item.GetComponent<RectTransform>();
         CurrentItemRectTransform.SetParent(InventoryCanvasTransform);
 
-        int selectedItemID = Random.Range(0, ItemsList.Count);
+        int selectedItemID = UnityEngine.Random.Range(0, ItemsList.Count);
         //item.itemData = 
-        SelectedItem.itemData = ItemsList[selectedItemID];
+        HoldedItem.itemData = ItemsList[selectedItemID];
 
-        Debug.Log($"Spawn {SelectedItem}");
+        Debug.Log($"Spawn {HoldedItem}");
     }
 
     public void SpawnRandomItem()
     {
         ItemFromInventory item = Instantiate(ItemPrefab).GetComponent<ItemFromInventory>();
-        SelectedItem = item;
+        HoldedItem = item;
 
         CurrentItemRectTransform = item.GetComponent<RectTransform>();
         CurrentItemRectTransform.SetParent(InventoryCanvasTransform);
 
-        int selectedItemID = Random.Range(0, ItemsList.Count);
+        int selectedItemID = UnityEngine.Random.Range(0, ItemsList.Count);
         //item.itemData = 
-        SelectedItem.itemData = ItemsList[selectedItemID];
+        HoldedItem.itemData = ItemsList[selectedItemID];
 
-        Debug.Log($"Spawn {SelectedItem}");
+        Debug.Log($"Spawn {HoldedItem}");
     }
     
     public void InsertRandomItem(InputAction.CallbackContext context)
@@ -264,8 +285,8 @@ public class InventoryManager : MonoBehaviour
 
         Debug.Log("Insert random");
         SpawnRandomItem();
-        ItemFromInventory itemToInsert = SelectedItem;
-        SelectedItem = null;
+        ItemFromInventory itemToInsert = HoldedItem;
+        HoldedItem = null;
         InsertCreatedItemOnSelectedGrid(itemToInsert);
     }
     void InsertCreatedItemOnSelectedGrid(ItemFromInventory itemToInsert)
@@ -299,15 +320,15 @@ public class InventoryManager : MonoBehaviour
         {
             GameObject newItem = Instantiate(ItemPrefab);
             ItemFromInventory item = newItem.GetComponent<ItemFromInventory>();
-            SelectedItem = item;
-            CurrentItemRectTransform = SelectedItem.GetComponent<RectTransform>();
+            HoldedItem = item;
+            CurrentItemRectTransform = HoldedItem.GetComponent<RectTransform>();
             CurrentItemRectTransform.SetParent(grid.GetComponent<RectTransform>());
 
-            Debug.Log("Created item " + SelectedItem.gameObject.transform.position);
+            Debug.Log("Created item " + HoldedItem.gameObject.transform.position);
 
-            SelectedItem.itemData = itemData;
+            HoldedItem.itemData = itemData;
             Debug.Log($"Spawn {item.name}");
-            return SelectedItem;
+            return HoldedItem;
         }
 
         void InsertCreatedItem(ItemFromInventory itemToInsert, InventoryGrid grid)
@@ -315,7 +336,7 @@ public class InventoryManager : MonoBehaviour
             Vector2Int? posOnGrid = grid.FindSpaceForObject(itemToInsert);
 
             grid.PlaceItemToGrid(itemToInsert, posOnGrid.Value.x, posOnGrid.Value.y);
-            SelectedItem = null;
+            HoldedItem = null;
         }
     }
 

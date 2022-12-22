@@ -55,6 +55,20 @@ public class ItemFromInventory : MonoBehaviour
         Debug.Log("I'm alive!");
     }
 
+    public void OnMouseEnter()
+    {
+        InventoryManager.OnMouseAboveItem(this);
+    }
+
+    public void OnMouseDown()
+    {
+        ClickHoverManager.OnHoverOpen(transform.parent.GetComponent<InventoryGrid>().stashType);
+    }
+
+    public void OnMouse()
+    {
+        ClickHoverManager.OnHoverOpen(transform.parent.GetComponent<InventoryGrid>().stashType);
+    }
 
     public ItemData itemData
     {

@@ -105,4 +105,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a970f217b571aab4ba30739a9d902d62, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  tipToShow: xD
+  ItemDescription: 
+  ItemName: 

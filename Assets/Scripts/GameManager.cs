@@ -61,7 +61,7 @@ public class GameManager : MonoBehaviour
 
     public void ShowNormalStash(_Item currentItemStash)
     {
-        if (_playerBasics.STATE != Assets.Scripts.Enums.InteractionState.INVENTORY)
+        if (_playerBasics.STATE != InteractionState.INVENTORY)
             _playerBasics.SwitchInventory(true);
 
         _inventoryManager.ShowItemStash();
@@ -72,7 +72,7 @@ public class GameManager : MonoBehaviour
 
     public void HideInventory()
     {
-        if(_inventoryManager.SelectedItem == null)
+        if(_inventoryManager.HoldedItem == null)
         {
             _playerBasics.SwitchInventory(false);
 

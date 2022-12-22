@@ -185,6 +185,16 @@ public class PlayerBasics : MonoBehaviour
         
     }
 
+    public void InventoryRightClick(InputAction.CallbackContext context)
+    {
+        if (context.phase == InputActionPhase.Started &&
+            STATE == InteractionState.INVENTORY &&
+            _inventoryManager.OnMouseItem != null)
+        {
+            ClickHoverManager.OnHoverOpen(_inventoryManager.OnMouseItem.transform.parent.GetComponent<InventoryGrid>().stashType);
+        }
+    }
+
     /// <summary>
     /// Actions when mouse is moving
     /// </summary>
@@ -195,7 +205,7 @@ public class PlayerBasics : MonoBehaviour
         {
             
             /*if (_inventoryManager.SelectedItemGRID && _inventoryManager.CheckMouseInInventory())*/
-            if(_inventoryManager.SelectedItem != null)
+            if(_inventoryManager.HoldedItem != null)
             {
                 if (_inventoryManager.CurrentItemRectTransform != null)
                 {
@@ -393,16 +403,16 @@ public class PlayerBasics : MonoBehaviour
     public void SpawnItem(InputAction.CallbackContext context)
     {
         ItemFromInventory item = Instantiate(_inventoryManager.ItemPrefab).GetComponent<ItemFromInventory>();
-        _inventoryManager.SelectedItem = item;
+        _inventoryManager.HoldedItem = item;
 
         _inventoryManager.CurrentItemRectTransform = item.GetComponent<RectTransform>();
         _inventoryManager.CurrentItemRectTransform.SetParent(_inventoryManager.InventoryCanvasTransform);
 
         int selectedItemID = Random.Range(0, _inventoryManager.ItemsList.Count - 1);
         //item.itemData = 
-        _inventoryManager.SelectedItem.itemData = _inventoryManager.ItemsList[selectedItemID];
+        _inventoryManager.HoldedItem.itemData = _inventoryManager.ItemsList[selectedItemID];
 
-        Debug.Log($"Spawn {_inventoryManager.SelectedItem}");
+        Debug.Log($"Spawn {_inventoryManager.HoldedItem}");
     }
 
     public void FlashlightONOFF(InputAction.CallbackContext context)

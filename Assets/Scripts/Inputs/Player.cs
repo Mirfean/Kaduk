@@ -272,6 +272,15 @@ public partial class @Player : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""MouseRClick"",
+                    ""type"": ""Button"",
+                    ""id"": ""254855a3-3359-4a48-907f-858ffec3edd1"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -340,6 +349,17 @@ public partial class @Player : IInputActionCollection2, IDisposable
                     ""action"": ""RotateItem"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""c4ce3b3d-f4c2-456f-94dc-f797bd43d45e"",
+                    ""path"": ""<Mouse>/rightButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""MouseRClick"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -363,6 +383,7 @@ public partial class @Player : IInputActionCollection2, IDisposable
         m_UI_SpawnItem = m_UI.FindAction("SpawnItem", throwIfNotFound: true);
         m_UI_InsertItem = m_UI.FindAction("InsertItem", throwIfNotFound: true);
         m_UI_RotateItem = m_UI.FindAction("RotateItem", throwIfNotFound: true);
+        m_UI_MouseRClick = m_UI.FindAction("MouseRClick", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -509,6 +530,7 @@ public partial class @Player : IInputActionCollection2, IDisposable
     private readonly InputAction m_UI_SpawnItem;
     private readonly InputAction m_UI_InsertItem;
     private readonly InputAction m_UI_RotateItem;
+    private readonly InputAction m_UI_MouseRClick;
     public struct UIActions
     {
         private @Player m_Wrapper;
@@ -519,6 +541,7 @@ public partial class @Player : IInputActionCollection2, IDisposable
         public InputAction @SpawnItem => m_Wrapper.m_UI_SpawnItem;
         public InputAction @InsertItem => m_Wrapper.m_UI_InsertItem;
         public InputAction @RotateItem => m_Wrapper.m_UI_RotateItem;
+        public InputAction @MouseRClick => m_Wrapper.m_UI_MouseRClick;
         public InputActionMap Get() { return m_Wrapper.m_UI; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -546,6 +569,9 @@ public partial class @Player : IInputActionCollection2, IDisposable
                 @RotateItem.started -= m_Wrapper.m_UIActionsCallbackInterface.OnRotateItem;
                 @RotateItem.performed -= m_Wrapper.m_UIActionsCallbackInterface.OnRotateItem;
                 @RotateItem.canceled -= m_Wrapper.m_UIActionsCallbackInterface.OnRotateItem;
+                @MouseRClick.started -= m_Wrapper.m_UIActionsCallbackInterface.OnMouseRClick;
+                @MouseRClick.performed -= m_Wrapper.m_UIActionsCallbackInterface.OnMouseRClick;
+                @MouseRClick.canceled -= m_Wrapper.m_UIActionsCallbackInterface.OnMouseRClick;
             }
             m_Wrapper.m_UIActionsCallbackInterface = instance;
             if (instance != null)
@@ -568,6 +594,9 @@ public partial class @Player : IInputActionCollection2, IDisposable
                 @RotateItem.started += instance.OnRotateItem;
                 @RotateItem.performed += instance.OnRotateItem;
                 @RotateItem.canceled += instance.OnRotateItem;
+                @MouseRClick.started += instance.OnMouseRClick;
+                @MouseRClick.performed += instance.OnMouseRClick;
+                @MouseRClick.canceled += instance.OnMouseRClick;
             }
         }
     }
@@ -590,5 +619,6 @@ public partial class @Player : IInputActionCollection2, IDisposable
         void OnSpawnItem(InputAction.CallbackContext context);
         void OnInsertItem(InputAction.CallbackContext context);
         void OnRotateItem(InputAction.CallbackContext context);
+        void OnMouseRClick(InputAction.CallbackContext context);
     }
 }
