@@ -18,6 +18,7 @@ public class HoverInfo : MonoBehaviour, IPointerEnterHandler, IPointerExitHandle
     public void OnPointerEnter(PointerEventData eventData)
     {
         StopAllCoroutines();
+        InventoryManager.OnMouseAboveItem(GetComponent<ItemFromInventory>());
         StartCoroutine(StartTimer());
     }
 

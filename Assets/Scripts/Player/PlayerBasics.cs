@@ -105,7 +105,8 @@ public class PlayerBasics : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
+        Debug.Log("Basic " + _playerInput.Basic.enabled);
+        Debug.Log("UI " + _playerInput.UI.enabled);
     }
 
     public void TurnOffInput()
@@ -187,10 +188,12 @@ public class PlayerBasics : MonoBehaviour
 
     public void InventoryRightClick(InputAction.CallbackContext context)
     {
+        Debug.Log("Right click");
         if (context.phase == InputActionPhase.Started &&
             STATE == InteractionState.INVENTORY &&
             _inventoryManager.OnMouseItem != null)
         {
+            Debug.Log("Right click right");
             ClickHoverManager.OnHoverOpen(_inventoryManager.OnMouseItem.transform.parent.GetComponent<InventoryGrid>().stashType);
         }
     }
@@ -321,7 +324,7 @@ public class PlayerBasics : MonoBehaviour
     public void OnAim(InputAction.CallbackContext context)
     {
         Debug.Log("Aiming");
-        StartCoroutine(AimCoroutine());
+        if (STATE == InteractionState.DEFAULT) StartCoroutine(AimCoroutine());
     }
 
     IEnumerator AimCoroutine()
