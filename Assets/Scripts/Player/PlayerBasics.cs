@@ -194,7 +194,8 @@ public class PlayerBasics : MonoBehaviour
             _inventoryManager.OnMouseItem != null)
         {
             Debug.Log("Right click right");
-            ClickHoverManager.OnHoverOpen(_inventoryManager.OnMouseItem.transform.parent.GetComponent<InventoryGrid>().stashType);
+            _inventoryManager.ClickedItem = _inventoryManager.OnMouseItem;
+            ClickHoverManager.OnHoverOpen(_inventoryManager.ClickedItem.transform.parent.GetComponent<InventoryGrid>().stashType);
         }
     }
 

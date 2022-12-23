@@ -1,3 +1,4 @@
+using Assets.Scripts.Enums;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -43,7 +44,7 @@ public class InventoryManager : MonoBehaviour
 
     [SerializeField] public ItemFromInventory HoldedItem;
 
-    [SerializeField] ItemFromInventory _clickedItem;
+    [SerializeField] public ItemFromInventory ClickedItem;
     
     [SerializeField] public ItemFromInventory OnMouseItem;
     
@@ -87,6 +88,42 @@ public class InventoryManager : MonoBehaviour
     public void SetOnMouseItem(ItemFromInventory item)
     {
          OnMouseItem = item;
+    }
+
+    public InventoryGrid GetSecondGrid(StashType stashType)
+    {
+        switch (stashType)
+        {
+            case StashType.INVENTORY:
+                if (_playerStash.gameObject.activeSelf) return _playerStash;
+                else if (_itemsStash.gameObject.activeSelf) return _itemsStash;
+                break;
+            case StashType.PLAYER_STASH:
+                return _playerInventory;
+            case StashType.ITEMSTASH:
+                return _playerInventory;
+        }
+
+        if(SelectedItemGRID == _playerInventory)
+        {
+            
+        }
+        else if (SelectedItemGRID == _playerStash || SelectedItemGRID == _itemsStash)
+        {
+            return _playerInventory;
+        }
+        Debug.Log("There is only one grid");
+        return SelectedItemGRID;
+     
+    }
+
+    public void ChangeGridForItem(StashType currentStashType)
+    {
+        CreateAndInsertCertainItem(ClickedItem.itemData, GetSecondGrid(currentStashType));
+        Destroy(ClickedItem.gameObject);
+        ClickedItem = null;
+        OnMouseItem = null;
+        HoldedItem = null;
     }
 
     public void HandleHighlight(Vector2 mousePos)

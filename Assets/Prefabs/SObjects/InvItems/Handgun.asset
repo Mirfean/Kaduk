@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: cd7d82a74ca7e094e821785a8e030f0c, type: 3}
-  m_Name: Gun
+  m_Name: Handgun
   m_EditorClassIdentifier: 
   Description: Old and rusty handgun.  Rubbed handle suggests that it came in handy
     too many times. Always keep one bullet, in case things will go pretty bad.
