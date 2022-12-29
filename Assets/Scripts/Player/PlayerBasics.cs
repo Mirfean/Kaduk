@@ -8,23 +8,15 @@ using UnityEngine.InputSystem;
 
 public class PlayerBasics : MonoBehaviour
 {
-    private Player _playerInput;
+    Player _playerInput;
 
-    [SerializeField]
-    float _defaultSpeed = 3f;
+    public Player PlayerInput { get => _playerInput; set => _playerInput = value; }
 
-    [SerializeField]
-    private float _speed = 3f;
+    [SerializeField] float _defaultSpeed = 3f;
 
-/*    [SerializeField]
-    private bool _isAiming = false;
+    [SerializeField] float _speed = 3f;
 
-    public bool IsDialogue = false;
-
-    public bool IsInventory = false;*/
-
-    [SerializeField]
-    InteractionState _state = InteractionState.DEFAULT;
+    [SerializeField] InteractionState _state = InteractionState.DEFAULT;
 
     public InteractionState STATE
     {
@@ -43,7 +35,7 @@ public class PlayerBasics : MonoBehaviour
         get { return _rotated; }
         set
         {
-            if (_weapon.gameObject.activeSelf && _rotated != value)
+            if (_playerWeapon.CurrentWeapon.gameObject.activeSelf && _rotated != value)
             {
                 RotateWeapon();
             }
@@ -52,46 +44,37 @@ public class PlayerBasics : MonoBehaviour
         }
     }
 
-    [SerializeField]
-    _Weapon _weapon;
+    [SerializeField] PlayerWeapon _playerWeapon;
 
-    [SerializeField]
-    private Texture2D _crosshair;
+    [SerializeField] Texture2D _crosshair;
 
-    //private List<Coroutine> moveCoroutineList;
-    [SerializeField]
-    private Coroutine _moveCoroutine;
+    [SerializeField] Coroutine _moveCoroutine;
 
-    [SerializeField]
-    private SkeletalMove _skeletanMove;
+    [SerializeField] SkeletalMove _skeletanMove;
 
-    [SerializeField]
-    Animator _animator;
+    [SerializeField] Animator _animator;
 
-    [SerializeField]
-    Transform _characterSprite;
+    [SerializeField] Transform _characterSprite;
 
-    [SerializeField]
-    CursorManager _cursorManager;
+    [SerializeField] CursorManager _cursorManager;
 
-    [SerializeField]
-    InventoryManager _inventoryManager;
+    [SerializeField] InventoryManager _inventoryManager;
 
-    [SerializeField]
-    Rigidbody2D _rigidbody;
+    [SerializeField] Rigidbody2D _rigidbody;
 
     PlayerMovement _playerMovement;
 
     public PlayerMovement PlayerMove { get { return _playerMovement; } }
 
+    
     [SerializeField]
     private GameManager _gameManager;
 
     // Start is called before the first frame update
     void Start()
     {
-        _playerInput = new Player();
-        _playerInput.Enable();
+        PlayerInput = new Player();
+        PlayerInput.Enable();
         //selector = GetComponent<Selector>();
         _inventoryManager = FindObjectOfType<InventoryManager>();
 
@@ -105,24 +88,24 @@ public class PlayerBasics : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        Debug.Log("Basic " + _playerInput.Basic.enabled);
-        Debug.Log("UI " + _playerInput.UI.enabled);
+        Debug.Log("Basic " + PlayerInput.Basic.enabled);
+        Debug.Log("UI " + PlayerInput.UI.enabled);
     }
 
     public void TurnOffInput()
     {
         StopMoveCoroutines();
-        _playerInput.Disable();
+        PlayerInput.Disable();
     }
 
     public void TurnOnInput()
     {
-        _playerInput.Enable();
+        PlayerInput.Enable();
     }
 
     public Vector2 GetMousePos()
     {
-        return _playerInput.Basic.MouseMovement.ReadValue<Vector2>();
+        return PlayerInput.Basic.MouseMovement.ReadValue<Vector2>();
     }
 
     /// <summary>
@@ -135,7 +118,7 @@ public class PlayerBasics : MonoBehaviour
         if (STATE == InteractionState.INVENTORY && context.phase == InputActionPhase.Started)
         {
             Debug.Log("Inventory click");
-            _inventoryManager.GrabAndDropItemIcon(_playerInput.UI.MousePosition.ReadValue<Vector2>());
+            _inventoryManager.GrabAndDropItemIcon(PlayerInput.UI.MousePosition.ReadValue<Vector2>());
             return;
         }
         else if (STATE == InteractionState.DIALOGUE)
@@ -147,15 +130,15 @@ public class PlayerBasics : MonoBehaviour
         else if (STATE == InteractionState.AIMING)
         {
             Debug.Log("Shooting click");
-            if (_weapon != null && !_playerInput.Basic.MouseLClick.inProgress && context.phase == InputActionPhase.Started)
+            if (_weapon != null && !PlayerInput.Basic.MouseLClick.inProgress && context.phase == InputActionPhase.Started)
             {
                 Debug.Log("Piu piu");
-                _weapon.GetComponent<_Weapon>().Attack(Camera.main.ScreenToWorldPoint(_playerInput.Basic.MouseMovement.ReadValue<Vector2>()), _skeletanMove.HoldedItem.rotation);
+                _weapon.GetComponent<_Weapon>().Attack(Camera.main.ScreenToWorldPoint(PlayerInput.Basic.MouseMovement.ReadValue<Vector2>()), _skeletanMove.HoldedItem.rotation);
             }
         }
 
         RaycastHit hit;
-        Ray ray = Camera.main.ScreenPointToRay(_playerInput.Basic.MouseMovement.ReadValue<Vector2>());
+        Ray ray = Camera.main.ScreenPointToRay(PlayerInput.Basic.MouseMovement.ReadValue<Vector2>());
         if (Physics.Raycast(ray, out hit) && STATE == InteractionState.DEFAULT)
         {
             Debug.Log("clicked something");
@@ -174,9 +157,9 @@ public class PlayerBasics : MonoBehaviour
             }
         }
 
-        if (!_playerInput.Basic.MouseLClick.inProgress && context.phase == InputActionPhase.Started && STATE == InteractionState.DEFAULT)
+        if (!PlayerInput.Basic.MouseLClick.inProgress && context.phase == InputActionPhase.Started && STATE == InteractionState.DEFAULT)
         {
-            Vector2 target = Camera.main.ScreenToWorldPoint(_playerInput.Basic.MouseMovement.ReadValue<Vector2>());
+            Vector2 target = Camera.main.ScreenToWorldPoint(PlayerInput.Basic.MouseMovement.ReadValue<Vector2>());
             Debug.Log(target);
 
             _playerMovement.MouseMovement(target);
@@ -213,17 +196,17 @@ public class PlayerBasics : MonoBehaviour
             {
                 if (_inventoryManager.CurrentItemRectTransform != null)
                 {
-                    _inventoryManager.MoveItemIcon(_playerInput.UI.MousePosition.ReadValue<Vector2>());
-                    _inventoryManager.HandleHighlight(_playerInput.UI.MousePosition.ReadValue<Vector2>());
+                    _inventoryManager.MoveItemIcon(PlayerInput.UI.MousePosition.ReadValue<Vector2>());
+                    _inventoryManager.HandleHighlight(PlayerInput.UI.MousePosition.ReadValue<Vector2>());
                 }
                 return;
             }
                 
             
         }
-        if (_playerInput.Basic.enabled)
+        if (PlayerInput.Basic.enabled)
         {
-            Vector2 realPos = Camera.main.ScreenToWorldPoint(_playerInput.Basic.MouseMovement.ReadValue<Vector2>());
+            Vector2 realPos = Camera.main.ScreenToWorldPoint(PlayerInput.Basic.MouseMovement.ReadValue<Vector2>());
             _skeletanMove.RotateFlashlight(realPos);
             if (realPos.x < transform.position.x)
             {
@@ -240,7 +223,6 @@ public class PlayerBasics : MonoBehaviour
             {
                 Debug.Log("Aim");
                 Aiming(realPos);
-                //CorrectPistolToLeftHand();
             }
         }
         
@@ -261,7 +243,7 @@ public class PlayerBasics : MonoBehaviour
     /// <returns></returns>
     IEnumerator AimWeapon(InputAction.CallbackContext context)
     {
-        _skeletanMove.TrackCursorByHands(Camera.main.ScreenToWorldPoint(_playerInput.Basic.MouseMovement.ReadValue<Vector2>()));
+        _skeletanMove.TrackCursorByHands(Camera.main.ScreenToWorldPoint(PlayerInput.Basic.MouseMovement.ReadValue<Vector2>()));
         yield return null;
     }
 
@@ -284,7 +266,7 @@ public class PlayerBasics : MonoBehaviour
             //yield return new WaitForSeconds(0.05f);
             yield return null;
 
-        } while (_playerInput.Basic.WSAD.phase.IsInProgress());
+        } while (PlayerInput.Basic.WSAD.phase.IsInProgress());
         _animator.SetBool("Walk", false);
         StopMoveCoroutines();
 
@@ -333,12 +315,12 @@ public class PlayerBasics : MonoBehaviour
         _speed = _speed / 3;
         ChangeAimStatus(true);
         //Aiming(Camera.main.ScreenToWorldPoint(_playerInput.Basic.MouseMovement.ReadValue<Vector2>()));
-        Aiming(Camera.main.ScreenToWorldPoint(_playerInput.Basic.MouseMovement.ReadValue<Vector2>()));
+        Aiming(Camera.main.ScreenToWorldPoint(PlayerInput.Basic.MouseMovement.ReadValue<Vector2>()));
         do
         {
             Debug.Log(InteractionState.INVENTORY);
             yield return null;
-        } while (_playerInput.Basic.Aim.IsInProgress());
+        } while (PlayerInput.Basic.Aim.IsInProgress());
         ChangeAimStatus(false);
         _speed = _defaultSpeed;
         Debug.Log("stop aiming");
@@ -391,14 +373,14 @@ public class PlayerBasics : MonoBehaviour
 
         if (STATE == InteractionState.INVENTORY)
         {
-            _playerInput.UI.Enable();
-            _playerInput.Basic.Disable();
+            PlayerInput.UI.Enable();
+            PlayerInput.Basic.Disable();
             Debug.Log("Enabling UI");
         }
         else
         {
-            _playerInput.Basic.Enable();
-            _playerInput.UI.Disable();
+            PlayerInput.Basic.Enable();
+            PlayerInput.UI.Disable();
             Debug.Log("Disabling UI");
         }
     }

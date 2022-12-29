@@ -4,10 +4,10 @@ using UnityEngine;
 
 public class _Weapon : MonoBehaviour
 {
-    public string Description;
-    public int Damage;
-    public float AttackSpeed;
-    //public WeaponType
+    public string description;
+    public int damage;
+    public float attackSpeed;
+    public WeaponData weaponData;
 
     public bool Rotated = false;
 

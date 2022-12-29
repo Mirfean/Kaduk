@@ -129,7 +129,7 @@ public class ClickHoverManager : MonoBehaviour
                 break;
             case HoverButtonEnum.LOOK:
                 Debug.Log("LOOK BUTTON");
-                //Show full description
+                HoverInfoManager.OnLookUpHover(invManager.ClickedItem.itemData.ItemName, invManager.ClickedItem.itemData.Description, GetMousePos());
                 break;
             case HoverButtonEnum.SPLIT:
                 // If item is stackable, allow to split it
@@ -138,7 +138,8 @@ public class ClickHoverManager : MonoBehaviour
                 // If item is combinable, try to combine with next clicked item
                 break;
             case HoverButtonEnum.DESTROY:
-                // After confirmation delete item
+                //Add confirmation window
+                Debug.Log("DESTROY BUTTON");
                 break;
             case HoverButtonEnum.CANCEL:
                 Debug.Log("CANCEL BUTTON");

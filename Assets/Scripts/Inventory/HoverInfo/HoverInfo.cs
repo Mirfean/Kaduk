@@ -11,7 +11,7 @@ public class HoverInfo : MonoBehaviour, IPointerEnterHandler, IPointerExitHandle
 
     public void Start()
     {
-        ItemName = GetComponent<ItemFromInventory>().itemData.name;
+        ItemName = GetComponent<ItemFromInventory>().itemData.ItemName;
         ItemDescription = GetComponent<ItemFromInventory>().itemData.Description;
     }
 
@@ -32,7 +32,7 @@ public class HoverInfo : MonoBehaviour, IPointerEnterHandler, IPointerExitHandle
     {
 
         Debug.Log("Mouse POS " + HoverInfoManager.GetMousePos());
-        HoverInfoManager.OnMouseHover(ItemName, ItemDescription, HoverInfoManager.GetMousePos());
+        HoverInfoManager.OnMouseAboveItem(ItemName, HoverInfoManager.GetMousePos());
     }
 
     private IEnumerator StartTimer()

@@ -260,7 +260,6 @@ public class InventoryGrid : MonoBehaviour
                 {
                     InventoryItemsSlot[item.OnGridPositionX + i, item.OnGridPositionY + j] = null;
                 }
-
             }
         }
     }

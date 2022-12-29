@@ -1,9 +1,13 @@
+using Assets.Scripts.Enums;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class Gun : _Weapon
 {
+    [SerializeField]
+    WeaponType weaponType;
+
     [SerializeField]
     GameObject _shootingPoint;
 
@@ -38,41 +42,80 @@ public class Gun : _Weapon
     [SerializeField]
     private float _bulletRange;
 
+    //TODO SHOTGUN AND RIFLE
     public override void Attack(Vector2 mousePos, Quaternion holdItemRot)
     {
         Debug.Log("Shooting by " + name);
 
         //_muzzleFlashAnimator.SetTrigger("Shoot");
 
-        Vector3 direction = MakeSpreadDirection();
+        Vector3 direction;
+        RaycastHit2D hit = new RaycastHit2D();
 
-        Debug.DrawRay(_shootingPoint.transform.position, direction, Color.blue, _bulletRange, true);
+        switch (weaponType)
+        {
+            case WeaponType.HANDGUN:
+                direction = MakeSpreadDirection();
+                RotateAim(mousePos, holdItemRot);
+                hit = Physics2D.Raycast(
+                    _shootingPoint.transform.position,
+                    direction,
+                    _bulletRange);
+                if (hit.collider != null)
+                {
+                    if (hit.collider.GetComponent<HitTarget>())
+                    {
+                        hit.collider.GetComponent<HitTarget>().TakeHit(damage);
 
-        RotateAim(mousePos, holdItemRot);
-        var hit = Physics2D.Raycast(
-            _shootingPoint.transform.position,
-            direction,
-            _bulletRange);
+                    }
+                }
+                else
+                {
+                    var endPosition = _shootingPoint.transform.position + transform.right * _bulletRange;
+                    Debug.Log("end " + endPosition);
+                }
+                break;
+            case WeaponType.SHOTGUN:
+                List<RaycastHit2D> hits = new List<RaycastHit2D>();
+                for (int i = 0; i < 7; i++)
+                {
+                    direction = MakeSpreadDirection();
+                    RotateAim(mousePos, holdItemRot);
+                    hit = Physics2D.Raycast(
+                        _shootingPoint.transform.position,
+                        direction,
+                        _bulletRange);
+                    hits.Add(hit);
+                }
+                foreach(var bullet in hits) 
+                {
+                    if (bullet.collider != null)
+                    {
+                        if (bullet.collider.GetComponent<HitTarget>())
+                        {
+                            bullet.collider.GetComponent<HitTarget>().TakeHit(damage);
+                        }
+                    }
+                    else
+                    {
+                        var endPosition = _shootingPoint.transform.position + transform.right * _bulletRange;
+                        Debug.Log("end " + endPosition);
+                    }
+                }
+                //TODO 
+                break;
+            case WeaponType.RIFLE:
+                //TODO
+                break;
 
-        var trail = Instantiate(_bulletTrail, _shootingPoint.transform.position, _shootingPoint.transform.rotation);
+        }
+        //var trail = Instantiate(_bulletTrail, _shootingPoint.transform.position, _shootingPoint.transform.rotation);
 
         Debug.Log("Transform right " + transform.right);
 
-        var trailScript = trail.GetComponent<BulletTrail>();
+        //var trailScript = trail.GetComponent<BulletTrail>();
 
-        if (hit.collider != null)
-        {
-            if(hit.collider.GetComponent<HitTarget>())
-            {
-                hit.collider.GetComponent<HitTarget>().TakeHit(Damage);
-            
-            }
-        }
-        else
-        {
-            var endPosition = _shootingPoint.transform.position + transform.right * _bulletRange;
-            Debug.Log("end " + endPosition);
-        }
+        
 
     }
 
@@ -83,21 +126,6 @@ public class Gun : _Weapon
         spread.Normalize();
         direction += spread * Random.Range(0f, 0.4f);
         return direction;
-    }
-
-    //old
-    private void ShootBullet()
-    {
-        //Shooting projectile
-        /*if(Time.time > _nextFire)
-        {
-            _nextFire = Time.time + _fireRate;
-            RotateAim(mousePos, holdItemRot);
-            GameObject newBullet = Instantiate(_bullet, _shootingPoint.transform.position, _shootingPoint.transform.rotation);
-            newBullet.GetComponent<Rigidbody2D>().AddForce(transform.right * _bulletSpeed, ForceMode2D.Impulse);
-            Destroy(newBullet, 10f);
-        }*/
-
     }
 
     public Vector2 normalizeMousePos(Vector2 mousePos)
