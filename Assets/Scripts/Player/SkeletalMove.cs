@@ -44,22 +44,6 @@ public class SkeletalMove : MonoBehaviour
         
     }
 
-/*    private void OnAnimatorIK(int layerIndex)
-    {
-        if (IsAiming)
-        {
-            Vector2 aimDiff = new Vector2(mousePos.x - leftHandTracker.position.x, mousePos.y - leftHandTracker.position.y);
-            float aimAngle = Mathf.Atan2(aimDiff.y, aimDiff.x) * Mathf.Rad2Deg;
-            leftHandTracker.rotation = Quaternion.Euler(0, 0, aimAngle);
-            animator.SetIKRotation(AvatarIKGoal.LeftHand, leftHandTracker.rotation);
-
-            aimDiff = new Vector2(mousePos.x - rightHandTracker.position.x, mousePos.y - rightHandTracker.position.y);
-            aimAngle = Mathf.Atan2(aimDiff.y, aimDiff.x) * Mathf.Rad2Deg;
-            rightHandTracker.rotation = Quaternion.Euler(0, 0, aimAngle);
-            animator.SetIKRotation(AvatarIKGoal.RightHand, rightHandTracker.rotation);
-        }
-    }*/
-
     /// <summary>
     /// Setting HoldItem to Idle basic status(Z rotation to -68)
     /// </summary>

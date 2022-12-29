@@ -1,5 +1,6 @@
 using Assets.Scripts.Enums;
 using PixelCrushers.DialogueSystem;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -27,62 +28,54 @@ public class PlayerBasics : MonoBehaviour
     [SerializeField]
     private bool _shootInProgress = false;
 
-    [SerializeField]
-    private bool _rotated = false;
-
-    private bool Rotated
-    {
-        get { return _rotated; }
-        set
-        {
-            if (_playerWeapon.CurrentWeapon.gameObject.activeSelf && _rotated != value)
-            {
-                RotateWeapon();
-            }
-            _rotated = value;
-            
-        }
-    }
+    [SerializeField] PlayerNavMeshMovement _playerMovement;
 
     [SerializeField] PlayerWeapon _playerWeapon;
-
-    [SerializeField] Texture2D _crosshair;
-
-    [SerializeField] Coroutine _moveCoroutine;
-
-    [SerializeField] SkeletalMove _skeletanMove;
-
-    [SerializeField] Animator _animator;
-
-    [SerializeField] Transform _characterSprite;
 
     [SerializeField] CursorManager _cursorManager;
 
     [SerializeField] InventoryManager _inventoryManager;
 
-    [SerializeField] Rigidbody2D _rigidbody;
 
-    PlayerMovement _playerMovement;
 
-    public PlayerMovement PlayerMove { get { return _playerMovement; } }
+    [SerializeField] Texture2D _crosshair;
 
-    
+    [SerializeField] Coroutine _moveCoroutine;
+
+    [SerializeField] SkeletalMove _skeletalMove;
+
+    [SerializeField] Animator _animator;
+
+    [SerializeField] Transform _characterSprite;
+
+    public PlayerNavMeshMovement PlayerMove { get { return _playerMovement; } }
+
     [SerializeField]
     private GameManager _gameManager;
+
+    [SerializeField]
+    private PlayerControl _playerControl;
+
+    Action<bool> AimModeChange;
+
 
     // Start is called before the first frame update
     void Start()
     {
         PlayerInput = new Player();
         PlayerInput.Enable();
-        //selector = GetComponent<Selector>();
+
+        _playerControl = new PlayerControl();
+
+        _playerWeapon = GetComponent<PlayerWeapon>();
+        _skeletalMove = GetComponent<SkeletalMove>();
+        _playerMovement = GetComponent<PlayerNavMeshMovement>();
+        
         _inventoryManager = FindObjectOfType<InventoryManager>();
-
-        _rigidbody = GetComponent<Rigidbody2D>();
-
-        _playerMovement = GetComponent<PlayerMovement>();
-
         _gameManager = FindObjectOfType<GameManager>();
+        
+        AimModeChange += ChangeAimStatus;
+        AimModeChange += ModifySpeed;
     }
 
     // Update is called once per frame
@@ -108,116 +101,47 @@ public class PlayerBasics : MonoBehaviour
         return PlayerInput.Basic.MouseMovement.ReadValue<Vector2>();
     }
 
-    /// <summary>
-    /// Used by PlayerInput in Player.Basic.MouseLClick
-    /// </summary>
-    /// <param name="context"></param>
+    #region Input
     public void OnMouseClick(InputAction.CallbackContext context)
     {
-
-        if (STATE == InteractionState.INVENTORY && context.phase == InputActionPhase.Started)
+        if (context.phase == InputActionPhase.Started)
         {
-            Debug.Log("Inventory click");
-            _inventoryManager.GrabAndDropItemIcon(PlayerInput.UI.MousePosition.ReadValue<Vector2>());
-            return;
-        }
-        else if (STATE == InteractionState.DIALOGUE)
-        {
-            Debug.Log("Dialogue click");
-            return;
-        }
-
-        else if (STATE == InteractionState.AIMING)
-        {
-            Debug.Log("Shooting click");
-            if (_weapon != null && !PlayerInput.Basic.MouseLClick.inProgress && context.phase == InputActionPhase.Started)
+            switch (STATE)
             {
-                Debug.Log("Piu piu");
-                _weapon.GetComponent<_Weapon>().Attack(Camera.main.ScreenToWorldPoint(PlayerInput.Basic.MouseMovement.ReadValue<Vector2>()), _skeletanMove.HoldedItem.rotation);
+                case InteractionState.AIMING:
+                    Debug.Log("Weapon attack");
+                    _playerWeapon.UseWeapon(_skeletalMove, PlayerInput);
+                    return;
+                case InteractionState.DEFAULT:
+                    ClickOnDefault();
+                    return;
+                case InteractionState.DIALOGUE:
+                    Debug.Log("Dialogue click");
+                    return;
+                case InteractionState.INVENTORY:
+                    Debug.Log("Inventory click");
+                    _inventoryManager.GrabAndDropItemIcon(PlayerInput.UI.MousePosition.ReadValue<Vector2>());
+                    return;
             }
-        }
-
-        RaycastHit hit;
-        Ray ray = Camera.main.ScreenPointToRay(PlayerInput.Basic.MouseMovement.ReadValue<Vector2>());
-        if (Physics.Raycast(ray, out hit) && STATE == InteractionState.DEFAULT)
-        {
-            Debug.Log("clicked something");
-            
-            //Debug.DrawLine(Camera.main.transform.position, Camera.main.ScreenToWorldPoint(_playerInput.Basic.MouseMovement.ReadValue<Vector2>()), Color.cyan, 10.0f);
-            if (Physics.Raycast(ray, out hit))
-            {
-                Transform objectHit = hit.transform;
-                Debug.Log("I clicked " + objectHit.gameObject.name);
-                if (objectHit != null && objectHit.gameObject.GetComponent<Door>() != null)
-                {
-                    Debug.Log("Door clicked");
-                    _gameManager.TransferPlayer(objectHit.gameObject.GetComponent<Door>());
-                }
-
-            }
-        }
-
-        if (!PlayerInput.Basic.MouseLClick.inProgress && context.phase == InputActionPhase.Started && STATE == InteractionState.DEFAULT)
-        {
-            Vector2 target = Camera.main.ScreenToWorldPoint(PlayerInput.Basic.MouseMovement.ReadValue<Vector2>());
-            Debug.Log(target);
-
-            _playerMovement.MouseMovement(target);
-        }
-
-        
-        
-    }
-
-    public void InventoryRightClick(InputAction.CallbackContext context)
-    {
-        Debug.Log("Right click");
-        if (context.phase == InputActionPhase.Started &&
-            STATE == InteractionState.INVENTORY &&
-            _inventoryManager.OnMouseItem != null)
-        {
-            Debug.Log("Right click right");
-            _inventoryManager.ClickedItem = _inventoryManager.OnMouseItem;
-            ClickHoverManager.OnHoverOpen(_inventoryManager.ClickedItem.transform.parent.GetComponent<InventoryGrid>().stashType);
         }
     }
 
-    /// <summary>
-    /// Actions when mouse is moving
-    /// </summary>
-    /// <param name="context"></param>
     public void OnMovementMouse(InputAction.CallbackContext context)
     {
+        if (PlayerInput == null) return;
         if (STATE == InteractionState.INVENTORY)
         {
-            
-            /*if (_inventoryManager.SelectedItemGRID && _inventoryManager.CheckMouseInInventory())*/
-            if(_inventoryManager.HoldedItem != null)
-            {
-                if (_inventoryManager.CurrentItemRectTransform != null)
-                {
-                    _inventoryManager.MoveItemIcon(PlayerInput.UI.MousePosition.ReadValue<Vector2>());
-                    _inventoryManager.HandleHighlight(PlayerInput.UI.MousePosition.ReadValue<Vector2>());
-                }
-                return;
-            }
-                
-            
+            _playerControl.MovingThroughInventory(ref _playerInput, ref _inventoryManager);
         }
+        if (STATE == InteractionState.DEFAULT)
+        {
+
+        }
+        Vector2 realPos = Camera.main.ScreenToWorldPoint(PlayerInput.Basic.MouseMovement.ReadValue<Vector2>());
         if (PlayerInput.Basic.enabled)
         {
-            Vector2 realPos = Camera.main.ScreenToWorldPoint(PlayerInput.Basic.MouseMovement.ReadValue<Vector2>());
-            _skeletanMove.RotateFlashlight(realPos);
-            if (realPos.x < transform.position.x)
-            {
-                _characterSprite.rotation = Quaternion.Euler(0, 180, 0);
-                if(!Rotated) Rotated = true;
-            }
-            else if (_rotated)
-            {
-                _characterSprite.rotation = Quaternion.Euler(0, 0, 0);
-                if (Rotated) Rotated = false;
-            }
+            _skeletalMove.RotateFlashlight(realPos);
+            CharacterRotation(realPos);
 
             if (STATE == InteractionState.AIMING)
             {
@@ -225,50 +149,22 @@ public class PlayerBasics : MonoBehaviour
                 Aiming(realPos);
             }
         }
-        
+
 
     }
 
-    private void Aiming(Vector2 realPos)
+    #endregion
+
+    #region Movement
+    void StopMoveCoroutines()
     {
-        _skeletanMove.TrackCursorByHands(realPos);
-        _weapon.transform.position = _skeletanMove.LeftHand.position;
-
-    }
-
-    /// <summary>
-    /// INACTIVE
-    /// </summary>
-    /// <param name="context"></param>
-    /// <returns></returns>
-    IEnumerator AimWeapon(InputAction.CallbackContext context)
-    {
-        _skeletanMove.TrackCursorByHands(Camera.main.ScreenToWorldPoint(PlayerInput.Basic.MouseMovement.ReadValue<Vector2>()));
-        yield return null;
-    }
-
-    /// <summary>
-    /// Coroutine to move character by WSAD
-    /// </summary>
-    /// <param name="context"></param>
-    /// <returns></returns>
-    IEnumerator CharacterMovementWSAD(InputAction.CallbackContext context)
-    {
-        _animator.SetBool("Walk", true);
-        do
-        {
-            Vector2 direction = reduceDiagonallyMovement(context.ReadValue<Vector2>());
-
-
-            _rigidbody.MovePosition(Vector2.MoveTowards(transform.position, new Vector3(transform.position.x + direction.x, transform.position.y + direction.y, 0), _speed * Time.deltaTime));
-            //transform.Translate(direction * Time.deltaTime * _speed);
-
-            //yield return new WaitForSeconds(0.05f);
-            yield return null;
-
-        } while (PlayerInput.Basic.WSAD.phase.IsInProgress());
         _animator.SetBool("Walk", false);
-        StopMoveCoroutines();
+        if (_moveCoroutine != null)
+        {
+            Debug.Log("Killing movement by mouse");
+            StopCoroutine(_moveCoroutine);
+        }
+
 
     }
 
@@ -287,18 +183,9 @@ public class PlayerBasics : MonoBehaviour
         return new Vector2(checkValue(vector2.x), checkValue(vector2.y));
     }
 
-    void StopMoveCoroutines()
-    {
-        _animator.SetBool("Walk", false);
-        if (_moveCoroutine != null)
-        {
-            Debug.Log("Killing movement by mouse");
-            StopCoroutine(_moveCoroutine);
-        }
-        
-        
-    }
+    #endregion
 
+    #region Aiming
 
     /// <summary>
     /// RIGHT MOUSE CLICK METHOD
@@ -306,25 +193,33 @@ public class PlayerBasics : MonoBehaviour
     /// </summary>
     public void OnAim(InputAction.CallbackContext context)
     {
-        Debug.Log("Aiming");
-        if (STATE == InteractionState.DEFAULT) StartCoroutine(AimCoroutine());
+        if (STATE == InteractionState.DEFAULT)
+        {
+            StartCoroutine(AimCoroutine());
+        }
+
     }
 
-    IEnumerator AimCoroutine()
+    //MUST STAY HERE :<
+    internal IEnumerator AimCoroutine()
     {
-        _speed = _speed / 3;
-        ChangeAimStatus(true);
         //Aiming(Camera.main.ScreenToWorldPoint(_playerInput.Basic.MouseMovement.ReadValue<Vector2>()));
+        AimModeChange(true);
         Aiming(Camera.main.ScreenToWorldPoint(PlayerInput.Basic.MouseMovement.ReadValue<Vector2>()));
         do
         {
-            Debug.Log(InteractionState.INVENTORY);
+            Debug.Log("Aiming!!!!!!");
             yield return null;
         } while (PlayerInput.Basic.Aim.IsInProgress());
-        ChangeAimStatus(false);
-        _speed = _defaultSpeed;
         Debug.Log("stop aiming");
+        AimModeChange(false);
         yield return null;
+    }
+
+    internal void Aiming(Vector2 realPos)
+    {
+        _skeletalMove.TrackCursorByHands(realPos);
+        _playerWeapon.CurrentWeapon.transform.position = _skeletalMove.LeftHand.position;
     }
 
     void ChangeAimStatus(bool status)
@@ -332,23 +227,42 @@ public class PlayerBasics : MonoBehaviour
         if (status) STATE = InteractionState.AIMING;
         else STATE = InteractionState.DEFAULT;
 
+        //Change Animator variables
         _animator.SetBool("IsAiming", status);
-        if (STATE != InteractionState.AIMING) {
+        if (_playerWeapon.IsItGun()) _animator.SetBool("RangedWeapon", status);
+        else _animator.SetBool("MeleeWeapon", status);
+
+        if (STATE != InteractionState.AIMING)
+        {
             _cursorManager.ShowCursor();
-            _weapon.gameObject.SetActive(false);
-            _skeletanMove.SetArmsToIdle();
+            _playerWeapon.HideWeapon();
+            _skeletalMove.SetArmsToIdle();
+            Debug.Log("Siema z Change Aim 2");
         }
         if (STATE == InteractionState.AIMING)
         {
             StopMoveCoroutines();
             _cursorManager.HideCursorToAim();
-            _weapon.gameObject.SetActive(true);
+            _playerWeapon.ShowWeapon();
+            Debug.Log("Siema z Change Aim");
         }
     }
 
-    void RotateWeapon()
+    #endregion
+
+    #region Inventory
+
+    public void InventoryRightClick(InputAction.CallbackContext context)
     {
-        _weapon.GetComponent<Gun>().RotateGun(Rotated);
+        Debug.Log("Right click");
+        if (context.phase == InputActionPhase.Started &&
+            STATE == InteractionState.INVENTORY &&
+            _inventoryManager.OnMouseItem != null)
+        {
+            Debug.Log("Right click right");
+            _inventoryManager.ClickedItem = _inventoryManager.OnMouseItem;
+            ClickHoverManager.OnHoverOpen(_inventoryManager.ClickedItem.transform.parent.GetComponent<InventoryGrid>().stashType);
+        }
     }
 
     public void OnInventoryButton(InputAction.CallbackContext context)
@@ -394,16 +308,92 @@ public class PlayerBasics : MonoBehaviour
         _inventoryManager.CurrentItemRectTransform = item.GetComponent<RectTransform>();
         _inventoryManager.CurrentItemRectTransform.SetParent(_inventoryManager.InventoryCanvasTransform);
 
-        int selectedItemID = Random.Range(0, _inventoryManager.ItemsList.Count - 1);
+        int selectedItemID = UnityEngine.Random.Range(0, _inventoryManager.ItemsList.Count - 1);
         //item.itemData = 
         _inventoryManager.HoldedItem.itemData = _inventoryManager.ItemsList[selectedItemID];
 
         Debug.Log($"Spawn {_inventoryManager.HoldedItem}");
     }
 
+    #endregion
+
+    #region Rotation of Character and Weapon
+    private void CharacterRotation(Vector2 realPos)
+    {
+        if (realPos.x < transform.position.x)
+        {
+            RotateCharacterAndWeapon(true);
+        }
+        else if (_playerWeapon.Rotated)
+        {
+            RotateCharacterAndWeapon(false);
+        }
+    }
+
+    private void RotateCharacterAndWeapon(bool reversed)
+    {
+        if (reversed)
+        {
+            _characterSprite.rotation = Quaternion.Euler(0, 180, 0);
+            _playerWeapon.Rotated = true;
+        }
+        else
+        {
+            _characterSprite.rotation = Quaternion.Euler(0, 0, 0);
+            _playerWeapon.Rotated = false;
+        }
+        
+    }
+    #endregion
+
+    private void ClickOnDefault()
+    {
+        RaycastHit hit;
+        Ray ray = Camera.main.ScreenPointToRay(PlayerInput.Basic.MouseMovement.ReadValue<Vector2>());
+        if (Physics.Raycast(ray, out hit))
+        {
+            Debug.Log("clicked something");
+
+            //Debug.DrawLine(Camera.main.transform.position, Camera.main.ScreenToWorldPoint(_playerInput.Basic.MouseMovement.ReadValue<Vector2>()), Color.cyan, 10.0f);
+            if (Physics.Raycast(ray, out hit))
+            {
+                Transform objectHit = hit.transform;
+                Debug.Log("I clicked " + objectHit.gameObject.name);
+                if (objectHit != null && objectHit.gameObject.GetComponent<Door>() != null)
+                {
+                    Debug.Log("Door clicked");
+                    _gameManager.TransferPlayer(objectHit.gameObject.GetComponent<Door>());
+                }
+
+            }
+        }
+
+        if (!PlayerInput.Basic.MouseLClick.inProgress)
+        {
+            Vector2 target = Camera.main.ScreenToWorldPoint(PlayerInput.Basic.MouseMovement.ReadValue<Vector2>());
+            Debug.Log(target);
+
+            _playerMovement.MouseMovement(target);
+        }
+    }
     public void FlashlightONOFF(InputAction.CallbackContext context)
     {
-        _skeletanMove.ChangeFlashlightMode();
-    } 
+        _skeletalMove.ChangeFlashlightMode();
+    }
+    private void ModifySpeed(bool v)
+    {
+        if (v)
+        {
+            _speed = _speed / 3;
+        }
+        else
+        {
+            _speed = _defaultSpeed;
+        }
+    }
+
+
+
+
 }
 

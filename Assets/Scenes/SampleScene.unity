@@ -6652,6 +6652,18 @@ MonoBehaviour:
   m_Area: 1
   m_IgnoreFromBuild: 0
   m_AffectedAgents: ffffffff
+--- !u!114 &416216346 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4656468749800971343, guid: b4882d2f71c74cd4aad5ef34932a43d8,
+    type: 3}
+  m_PrefabInstance: {fileID: 4656468749159547063}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5daf3c0d7e7ee194789f63603e375d38, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &431827238
 GameObject:
   m_ObjectHideFlags: 0
@@ -18670,8 +18682,18 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4656468749800971343, guid: b4882d2f71c74cd4aad5ef34932a43d8,
         type: 3}
+      propertyPath: maxBullets
+      value: 12
+      objectReference: {fileID: 0}
+    - target: {fileID: 4656468749800971343, guid: b4882d2f71c74cd4aad5ef34932a43d8,
+        type: 3}
       propertyPath: weaponType
       value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 4656468749800971343, guid: b4882d2f71c74cd4aad5ef34932a43d8,
+        type: 3}
+      propertyPath: remainingBullets
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 4656468749829801412, guid: b4882d2f71c74cd4aad5ef34932a43d8,
         type: 3}
@@ -19216,6 +19238,20 @@ MonoBehaviour:
     type: 3}
   Camera: {fileID: 519420031}
   _targetLerpSpeed: 1
+--- !u!114 &4656468749159547081
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1777937259}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6954c6cfe22af944fafae18bba61e039, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  CurrentWeapon: {fileID: 416216346}
+  _rotated: 0
 --- !u!4 &6495605836321290907 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1925885599827278380, guid: b4882d2f71c74cd4aad5ef34932a43d8,

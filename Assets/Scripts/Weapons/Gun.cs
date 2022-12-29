@@ -42,6 +42,12 @@ public class Gun : _Weapon
     [SerializeField]
     private float _bulletRange;
 
+    [SerializeField]
+    internal int maxBullets;
+
+    [SerializeField]
+    internal int remainingBullets;
+
     //TODO SHOTGUN AND RIFLE
     public override void Attack(Vector2 mousePos, Quaternion holdItemRot)
     {

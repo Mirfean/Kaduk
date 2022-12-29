@@ -6,7 +6,7 @@ using UnityEngine.InputSystem;
 #endif
 
 [RequireComponent(typeof(NavMeshAgent))]
-public class PlayerMovement : MonoBehaviour
+public class PlayerNavMeshMovement : MonoBehaviour
 {
 #if ENABLE_INPUT_SYSTEM
     [SerializeField]
