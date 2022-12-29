@@ -13,32 +13,18 @@ public class PlayerBasics : MonoBehaviour
 
     public Player PlayerInput { get => _playerInput; set => _playerInput = value; }
 
-    [SerializeField] float _defaultSpeed = 3f;
-
-    [SerializeField] float _speed = 3f;
-
     [SerializeField] InteractionState _state = InteractionState.DEFAULT;
-
     public InteractionState STATE
     {
         get { return _state; }
         set { _state = value; }
     }
 
-    [SerializeField]
-    private bool _shootInProgress = false;
-
-    [SerializeField] PlayerNavMeshMovement _playerMovement;
-
     [SerializeField] PlayerWeapon _playerWeapon;
 
     [SerializeField] CursorManager _cursorManager;
 
     [SerializeField] InventoryManager _inventoryManager;
-
-
-
-    [SerializeField] Texture2D _crosshair;
 
     [SerializeField] Coroutine _moveCoroutine;
 
@@ -48,6 +34,7 @@ public class PlayerBasics : MonoBehaviour
 
     [SerializeField] Transform _characterSprite;
 
+    [SerializeField] PlayerNavMeshMovement _playerMovement;
     public PlayerNavMeshMovement PlayerMove { get { return _playerMovement; } }
 
     [SerializeField]
@@ -56,8 +43,8 @@ public class PlayerBasics : MonoBehaviour
     [SerializeField]
     private PlayerControl _playerControl;
 
-    Action<bool> AimModeChange;
 
+    Action<bool> AimModeChange;
 
     // Start is called before the first frame update
     void Start()
@@ -75,7 +62,7 @@ public class PlayerBasics : MonoBehaviour
         _gameManager = FindObjectOfType<GameManager>();
         
         AimModeChange += ChangeAimStatus;
-        AimModeChange += ModifySpeed;
+        AimModeChange += _playerMovement.ModifySpeed;
     }
 
     // Update is called once per frame
@@ -380,17 +367,7 @@ public class PlayerBasics : MonoBehaviour
     {
         _skeletalMove.ChangeFlashlightMode();
     }
-    private void ModifySpeed(bool v)
-    {
-        if (v)
-        {
-            _speed = _speed / 3;
-        }
-        else
-        {
-            _speed = _defaultSpeed;
-        }
-    }
+
 
 
 

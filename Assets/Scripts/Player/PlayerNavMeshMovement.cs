@@ -28,6 +28,9 @@ public class PlayerNavMeshMovement : MonoBehaviour
 
     private bool _isMoving;
 
+    [SerializeField] float _defaultSpeed = 3f;
+    [SerializeField] float _speed = 3f;
+
     private void Awake()
     {
         _agent = GetComponent<NavMeshAgent>();
@@ -89,5 +92,17 @@ public class PlayerNavMeshMovement : MonoBehaviour
     {
         _agent.ResetPath();
         _agent.SetDestination(target);
+    }
+
+    public void ModifySpeed(bool v)
+    {
+        if (v)
+        {
+            _speed = _speed / 3;
+        }
+        else
+        {
+            _speed = _defaultSpeed;
+        }
     }
 }
