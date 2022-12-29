@@ -371,7 +371,7 @@ public class InventoryManager : MonoBehaviour
         void InsertCreatedItem(ItemFromInventory itemToInsert, InventoryGrid grid)
         {
             Vector2Int? posOnGrid = grid.FindSpaceForObject(itemToInsert);
-
+            if (posOnGrid == null) { return; }
             grid.PlaceItemToGrid(itemToInsert, posOnGrid.Value.x, posOnGrid.Value.y);
             HoldedItem = null;
         }

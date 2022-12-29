@@ -8,9 +8,12 @@ public class HoverInfoManager : MonoBehaviour
 {
     public TextMeshProUGUI DescriptionText;
     public TextMeshProUGUI NameText;
-    public RectTransform TipWindow;
+    public TextMeshProUGUI SoloNameText;
+    public RectTransform HoverWindow;
+    public RectTransform LookUpWindow;
 
-    public static Action <string, string, Vector2> OnMouseHover;
+    public static Action<string, Vector2> OnMouseAboveItem;
+    public static Action <string, string, Vector2> OnLookUpHover;
     public static Action OnMouseLoseFocus;
 
     private static Player _playerInput;
@@ -19,38 +22,55 @@ public class HoverInfoManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        if (DescriptionText == null) TipWindow.GetComponentInChildren<TextMeshProUGUI>();
+        if (DescriptionText == null) HoverWindow.GetComponentInChildren<TextMeshProUGUI>();
         _playerInput = new Player();
         _playerInput.Enable();
-        HideTip();
+        HideInfo();
     }
 
     private void OnEnable()
     {
-        OnMouseHover += ShowTip;
-        OnMouseLoseFocus += HideTip;
+        OnLookUpHover += ShowLookUpInfo;
+        OnMouseAboveItem += ShowInfo;
+        OnMouseLoseFocus += HideInfo;
     }
 
     private void OnDisable()
     {
-        OnMouseHover -= ShowTip;
-        OnMouseLoseFocus -= HideTip;
+        OnLookUpHover += ShowLookUpInfo;
+        OnMouseAboveItem += ShowInfo;
+        OnMouseLoseFocus -= HideInfo;
     }
 
-    private void ShowTip(string name, string description, Vector2 mousePos)
+    private void ShowInfo(string name, Vector2 mousePos)
+    {
+        SoloNameText.text = name;
+        HoverWindow.sizeDelta = new Vector2(SoloNameText.preferredWidth, SoloNameText.preferredHeight + 50);
+        HoverWindow.gameObject.SetActive(true);
+        HoverWindow.transform.position = new Vector2(mousePos.x + 50, mousePos.y + 50);
+    }
+
+    private void HideInfo()
+    {
+        SoloNameText.text = default;
+        HoverWindow.gameObject.SetActive(false);
+    }
+
+    private void ShowLookUpInfo(string name, string description, Vector2 mousePos)
     {
         DescriptionText.text = description;
         NameText.text = name;
-        TipWindow.sizeDelta = new Vector2(DescriptionText.preferredWidth > 300 ? 300: DescriptionText.preferredWidth * 2, DescriptionText.preferredHeight + 50);
+        LookUpWindow.sizeDelta = new Vector2(DescriptionText.preferredWidth > 300 ? 300 : DescriptionText.preferredWidth * 2, DescriptionText.preferredHeight + 50);
 
-        TipWindow.gameObject.SetActive(true);
-        TipWindow.transform.position = new Vector2(mousePos.x + 50, mousePos.y + 50);
+        LookUpWindow.gameObject.SetActive(true);
+        LookUpWindow.transform.position = new Vector2(mousePos.x + 50, mousePos.y + 50);
     }
 
-    private void HideTip()
+    private void HideLookUpInfo()
     {
+        NameText.text = default;
         DescriptionText.text = default;
-        TipWindow.gameObject.SetActive(false);
+        LookUpWindow.gameObject.SetActive(false);
     }
 
     public static Vector2 GetMousePos()

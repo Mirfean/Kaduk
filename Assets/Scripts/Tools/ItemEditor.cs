@@ -11,6 +11,7 @@ public class ItemEditor : EditorWindow
     int _width = 1;
     int _height = 1;
     string _description;
+    string _name;
     Sprite _icon;
 
     
@@ -37,6 +38,7 @@ public class ItemEditor : EditorWindow
         }
 
         GUILayout.Label("Item", EditorStyles.boldLabel);
+        _name = EditorGUILayout.TextField("Name", _name);
         _description = EditorGUILayout.TextField("Description", _description);
         _icon = (Sprite)EditorGUILayout.ObjectField(_icon, typeof(Sprite), false);
         
@@ -64,6 +66,7 @@ public class ItemEditor : EditorWindow
     {
         if (_itemData != null)
         {
+            _itemData.ItemName = _name;
             _itemData.Description = _description;
             _itemData.ItemIcon = _icon;
             _itemData.Width = _width;
@@ -90,6 +93,7 @@ public class ItemEditor : EditorWindow
     {
         if (_itemData != null)
         {
+            _name = _itemData.ItemName;
             _description = _itemData.Description;
             _width = _itemData.Width;
             _height = _itemData.Height;

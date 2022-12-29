@@ -4,10 +4,10 @@ using UnityEngine;
 
 public class _Weapon : MonoBehaviour
 {
-    public string Description;
-    public int Damage;
-    public float AttackSpeed;
-    //public WeaponType
+    public string description;
+    public int damage;
+    public float attackSpeed;
+    public WeaponData weaponData;
 
     public bool Rotated = false;
 
@@ -37,5 +37,19 @@ public class _Weapon : MonoBehaviour
     {
         Debug.Log("Base Weapon rotation");
         return transform.rotation.z;
+    }
+
+    public void RotateWeapon(bool rotated)
+    {
+        if (rotated)
+        {
+            Debug.Log("rotation on");
+            transform.Rotate(180f - transform.rotation.x, 0f, 0f);
+        }
+        else
+        {
+            Debug.Log("rotation off");
+            transform.Rotate(-transform.rotation.x, 0f, 0f);
+        }
     }
 }

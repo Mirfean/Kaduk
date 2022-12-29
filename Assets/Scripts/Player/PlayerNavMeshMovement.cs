@@ -6,7 +6,7 @@ using UnityEngine.InputSystem;
 #endif
 
 [RequireComponent(typeof(NavMeshAgent))]
-public class PlayerMovement : MonoBehaviour
+public class PlayerNavMeshMovement : MonoBehaviour
 {
 #if ENABLE_INPUT_SYSTEM
     [SerializeField]
@@ -27,6 +27,9 @@ public class PlayerMovement : MonoBehaviour
     private Vector3 _movementVector;
 
     private bool _isMoving;
+
+    [SerializeField] float _defaultSpeed = 3f;
+    [SerializeField] float _speed = 3f;
 
     private void Awake()
     {
@@ -89,5 +92,17 @@ public class PlayerMovement : MonoBehaviour
     {
         _agent.ResetPath();
         _agent.SetDestination(target);
+    }
+
+    public void ModifySpeed(bool v)
+    {
+        if (v)
+        {
+            _speed = _speed / 3;
+        }
+        else
+        {
+            _speed = _defaultSpeed;
+        }
     }
 }

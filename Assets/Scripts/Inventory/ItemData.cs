@@ -9,7 +9,8 @@ public class ItemData : ScriptableObject
 {
     [SerializeField]
     public string Description;
-
+    [SerializeField]
+    public string ItemName;
     [SerializeField]
     public int Width = 1;
     [SerializeField]
