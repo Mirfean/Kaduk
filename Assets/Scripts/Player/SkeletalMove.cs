@@ -13,6 +13,12 @@ public class SkeletalMove : MonoBehaviour
     public Transform LeftHand;
 
     [SerializeField]
+    public Transform RightHand;
+
+    [SerializeField]
+    public Transform RightArm;
+
+    [SerializeField]
     private PlayerBasics _player;
 
     [SerializeField]

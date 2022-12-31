@@ -133,7 +133,11 @@ public class PlayerBasics : MonoBehaviour
             if (STATE == InteractionState.AIMING)
             {
                 Debug.Log("Aim");
-                Aiming(realPos);
+                if(_playerWeapon.CurrentWeapon.weaponType == WeaponType.HANDGUN)
+                {
+                    PistolAiming(realPos);
+                }
+                
             }
         }
 
@@ -145,7 +149,7 @@ public class PlayerBasics : MonoBehaviour
     #region Movement
     void StopMoveCoroutines()
     {
-        _animator.SetBool("Walk", false);
+        _animator.SetBool(AnimVariable.Walk, false);
         if (_moveCoroutine != null)
         {
             Debug.Log("Killing movement by mouse");
@@ -192,10 +196,12 @@ public class PlayerBasics : MonoBehaviour
     {
         //Aiming(Camera.main.ScreenToWorldPoint(_playerInput.Basic.MouseMovement.ReadValue<Vector2>()));
         AimModeChange(true);
-        Aiming(Camera.main.ScreenToWorldPoint(PlayerInput.Basic.MouseMovement.ReadValue<Vector2>()));
+        if(_playerWeapon.IsItGun()) PistolAiming(Camera.main.ScreenToWorldPoint(PlayerInput.Basic.MouseMovement.ReadValue<Vector2>()));
+        if (_playerWeapon.CurrentWeapon.weaponType == WeaponType.KNIFE) KnifeInHand();
         do
         {
-            Debug.Log("Aiming!!!!!!");
+            _playerWeapon.AttachKnife(arm: _skeletalMove.RightArm, hand: _skeletalMove.RightHand);
+            Debug.Log("Aiming !!! !!!");
             yield return null;
         } while (PlayerInput.Basic.Aim.IsInProgress());
         Debug.Log("stop aiming");
@@ -203,10 +209,15 @@ public class PlayerBasics : MonoBehaviour
         yield return null;
     }
 
-    internal void Aiming(Vector2 realPos)
+    internal void PistolAiming(Vector2 realPos)
     {
         _skeletalMove.TrackCursorByHands(realPos);
         _playerWeapon.CurrentWeapon.transform.position = _skeletalMove.LeftHand.position;
+    }
+
+    internal void KnifeInHand()
+    {
+        _playerWeapon.CurrentWeapon.transform.position = _skeletalMove.RightHand.position;
     }
 
     void ChangeAimStatus(bool status)
@@ -215,15 +226,15 @@ public class PlayerBasics : MonoBehaviour
         else STATE = InteractionState.DEFAULT;
 
         //Change Animator variables
-        _animator.SetBool("IsAiming", status);
-        if (_playerWeapon.IsItGun()) _animator.SetBool("RangedWeapon", status);
-        else _animator.SetBool("MeleeWeapon", status);
+        _animator.SetBool(AnimVariable.IsAiming, status);
+        if (_playerWeapon.IsItGun()) _animator.SetBool(AnimVariable.RangedWeapon, status);
+        else _animator.SetBool(AnimVariable.MeleeWeapon, status);
 
         if (STATE != InteractionState.AIMING)
         {
             _cursorManager.ShowCursor();
             _playerWeapon.HideWeapon();
-            _skeletalMove.SetArmsToIdle();
+            if(_playerWeapon.IsItGun()) _skeletalMove.SetArmsToIdle();
             Debug.Log("Siema z Change Aim 2");
         }
         if (STATE == InteractionState.AIMING)

@@ -5,8 +5,6 @@ using UnityEngine;
 
 public class Gun : _Weapon
 {
-    [SerializeField]
-    WeaponType weaponType;
 
     [SerializeField]
     GameObject _shootingPoint;

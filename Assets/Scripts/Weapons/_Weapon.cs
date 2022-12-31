@@ -1,9 +1,12 @@
+using Assets.Scripts.Enums;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class _Weapon : MonoBehaviour
 {
+    [SerializeField]
+    public WeaponType weaponType;
     public string description;
     public int damage;
     public float attackSpeed;
