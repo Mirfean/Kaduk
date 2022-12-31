@@ -5,8 +5,6 @@ using UnityEngine;
 
 public class MeleeWeapon : _Weapon
 {
-    [SerializeField]
-    WeaponType weaponType;
 
     Collider2D m_Collider;
 

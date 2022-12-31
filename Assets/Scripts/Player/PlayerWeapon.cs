@@ -1,3 +1,4 @@
+using Assets.Scripts.Enums;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -7,6 +8,8 @@ using UnityEngine.InputSystem;
 public class PlayerWeapon : MonoBehaviour
 {
     [SerializeField] public _Weapon CurrentWeapon;
+
+    [SerializeField] private Animator _animator;
 
     [SerializeField]
     private bool _rotated = false;
@@ -22,6 +25,11 @@ public class PlayerWeapon : MonoBehaviour
             _rotated = value;
 
         }
+    }
+
+    private void Start()
+    {
+        _animator = transform.GetComponentInChildren<Animator>();
     }
 
     public bool IsItGun()
@@ -47,6 +55,16 @@ public class PlayerWeapon : MonoBehaviour
         }
         else if (CurrentWeapon is MeleeWeapon)
         {
+
+            //transform.GetComponentInChildren<Animator>().SetBool(AnimVariable.MeleeAttack, true);
+            transform.GetComponentInChildren<Animator>().Play("Base Layer.Protag_1_Knife_Attack_1");
+            CurrentWeapon.GetComponent<Collider2D>().enabled = true;
+            while (transform.GetComponentInChildren<Animator>().
+                GetCurrentAnimatorStateInfo(0).IsName("Base Layer.Protag_1_Knife_Attack_1"))
+            {
+                //CurrentWeapon.GetComponent<Collider2D>().enabled = true;
+            }
+            CurrentWeapon.GetComponent<Collider2D>().enabled = false;
             /* Activate trigger
              * Animation
              * Attack
@@ -70,6 +88,11 @@ public class PlayerWeapon : MonoBehaviour
         CurrentWeapon.RotateWeapon(rotated);
     }
 
-    
+    internal void AttachKnife(Transform arm, Transform hand)
+    {
+        CurrentWeapon.transform.position = hand.position;
+        CurrentWeapon.transform.rotation = arm.rotation;
+
+    }
 
 }
