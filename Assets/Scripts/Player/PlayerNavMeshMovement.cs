@@ -18,6 +18,10 @@ public class PlayerNavMeshMovement : MonoBehaviour
     private Camera Camera;
     private NavMeshAgent _agent;
     public NavMeshAgent Agent { get { return _agent; } }
+
+    public bool IsMoving { get => _isMoving; set { _isMoving = value; PlayerBasics.WalkModeChange(value); } }
+    public bool IsPath { get => _isPath; set { _isPath = value; PlayerBasics.WalkModeChange(value); } }
+
     [SerializeField]
     private float _targetLerpSpeed = 1;
 
@@ -27,6 +31,7 @@ public class PlayerNavMeshMovement : MonoBehaviour
     private Vector3 _movementVector;
 
     private bool _isMoving;
+    private bool _isPath;
 
     [SerializeField] float _defaultSpeed = 3f;
     [SerializeField] float _speed = 3f;
@@ -55,15 +60,21 @@ public class PlayerNavMeshMovement : MonoBehaviour
     private void Update()
     {
         if (_movement.inProgress && _movementVector != Vector3.zero) WsadMovement();
-        else if (_movementVector == Vector3.zero && _isMoving)
+        else if (_movementVector == Vector3.zero && IsMoving)
         {
             _agent.ResetPath();
-            _isMoving = false;
+            //Add action to change IsMoving
+            IsMoving = false;
         }
+        if (!_agent.hasPath && IsPath)
+        {
+            IsPath = false;
+        }
+
     }
     private void WsadMovement()
     {
-        if (!_isMoving) _isMoving = true;
+        if (!IsMoving) IsMoving = true;
         _movementVector.Normalize();
 
         //Workaround on issue with moving UP/DOWN
@@ -92,6 +103,7 @@ public class PlayerNavMeshMovement : MonoBehaviour
     {
         _agent.ResetPath();
         _agent.SetDestination(target);
+        IsPath = true;
     }
 
     public void ModifySpeed(bool v)

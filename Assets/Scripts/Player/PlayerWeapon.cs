@@ -55,22 +55,29 @@ public class PlayerWeapon : MonoBehaviour
         }
         else if (CurrentWeapon is MeleeWeapon)
         {
-
-            //transform.GetComponentInChildren<Animator>().SetBool(AnimVariable.MeleeAttack, true);
-            transform.GetComponentInChildren<Animator>().Play("Base Layer.Protag_1_Knife_Attack_1");
-            CurrentWeapon.GetComponent<Collider2D>().enabled = true;
-            while (transform.GetComponentInChildren<Animator>().
-                GetCurrentAnimatorStateInfo(0).IsName("Base Layer.Protag_1_Knife_Attack_1"))
-            {
-                //CurrentWeapon.GetComponent<Collider2D>().enabled = true;
+            string attackAnimation = "Base Layer.Protag_1_Knife_Attack_1";
+            if (!IsAnimationRunning(attackAnimation)){
+                transform.GetComponentInChildren<Animator>().Play(attackAnimation);
+                StartCoroutine(KnifeCoroutine(attackAnimation));
             }
-            CurrentWeapon.GetComponent<Collider2D>().enabled = false;
-            /* Activate trigger
-             * Animation
-             * Attack
-             * combo?
-             */
+            
         }
+    }
+
+    internal IEnumerator KnifeCoroutine(string animationName)
+    {
+        CurrentWeapon.GetComponent<Collider2D>().enabled = true;
+        do
+        {
+            yield return new WaitForEndOfFrame();
+        } while (IsAnimationRunning(animationName));
+        CurrentWeapon.GetComponent<Collider2D>().enabled = false;
+        yield return null;
+    }
+
+    internal IEnumerator AttackCoroutine()
+    {
+        yield break;
     }
 
     internal void ShowWeapon()
@@ -93,6 +100,16 @@ public class PlayerWeapon : MonoBehaviour
         CurrentWeapon.transform.position = hand.position;
         CurrentWeapon.transform.rotation = arm.rotation;
 
+    }
+
+    internal Animator GetAnimator()
+    {
+        return transform.GetComponentInChildren<Animator>();
+    }
+
+    internal bool IsAnimationRunning(string animName)
+    {
+        return GetAnimator().GetCurrentAnimatorStateInfo(0).IsName(animName);
     }
 
 }

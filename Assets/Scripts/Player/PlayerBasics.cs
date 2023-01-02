@@ -46,6 +46,8 @@ public class PlayerBasics : MonoBehaviour
 
     Action<bool> AimModeChange;
 
+    public static Action<bool> WalkModeChange;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -63,6 +65,8 @@ public class PlayerBasics : MonoBehaviour
         
         AimModeChange += ChangeAimStatus;
         AimModeChange += _playerMovement.ModifySpeed;
+
+        WalkModeChange += ChangeWalking;
     }
 
     // Update is called once per frame
@@ -370,7 +374,6 @@ public class PlayerBasics : MonoBehaviour
         {
             Vector2 target = Camera.main.ScreenToWorldPoint(PlayerInput.Basic.MouseMovement.ReadValue<Vector2>());
             Debug.Log(target);
-
             _playerMovement.MouseMovement(target);
         }
     }
@@ -379,7 +382,10 @@ public class PlayerBasics : MonoBehaviour
         _skeletalMove.ChangeFlashlightMode();
     }
 
-
+    private void ChangeWalking(bool status)
+    {
+        _animator.SetBool(AnimVariable.Walk, status);
+    }
 
 
 
