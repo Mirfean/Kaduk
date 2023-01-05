@@ -36,7 +36,7 @@ public class InvGridInteract : MonoBehaviour, IPointerEnterHandler, IPointerExit
         }
         
     }
-    
+
     
 
 

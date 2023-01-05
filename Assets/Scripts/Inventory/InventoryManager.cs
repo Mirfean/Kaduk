@@ -117,6 +117,13 @@ public class InventoryManager : MonoBehaviour
      
     }
 
+    public void ChangeGridForHoldedItem(StashType currentStashType)
+    {
+        CreateAndInsertCertainItem(HoldedItem.itemData, GetSecondGrid(currentStashType));
+        Destroy(HoldedItem.gameObject);
+        HoldedItem = null;
+    }
+
     public void ChangeGridForItem(StashType currentStashType)
     {
         CreateAndInsertCertainItem(ClickedItem.itemData, GetSecondGrid(currentStashType));
@@ -189,7 +196,12 @@ public class InventoryManager : MonoBehaviour
 
         void DropItemIcon(Vector2Int tileGridPosition)
         {
-            bool dropComplete = _selectedItemGrid.PlaceItem(HoldedItem, tileGridPosition.x, Mathf.Abs(tileGridPosition.y), ref _overlapItem);
+            bool dropComplete = _selectedItemGrid.IsThisPlaceForItem(HoldedItem, tileGridPosition.x, Mathf.Abs(tileGridPosition.y), ref _overlapItem);
+            if (HoldedItem._inventorygrid != _selectedItemGrid)
+            {
+                HoldedItem.transform.SetParent(_selectedItemGrid.transform, false);
+            }
+            _selectedItemGrid.PlaceItemToGrid(HoldedItem, tileGridPosition.x, -tileGridPosition.y);
             HoldedItem = null;
             if (dropComplete)
             {
@@ -211,7 +223,7 @@ public class InventoryManager : MonoBehaviour
         if (_selectedItemGrid != null)
         {
             Vector2Int tileGridPosition = SelectedItemGRID.GetInvGridPositon(mousePos);
-            Debug.Log(tileGridPosition.ToString());
+            Debug.Log($"On grid {SelectedItemGRID} position {tileGridPosition.ToString()}");
 
             if (HoldedItem == null)
             {
@@ -229,13 +241,18 @@ public class InventoryManager : MonoBehaviour
         }
     }
 
+    bool CheckIfItemsFromSameGrid(ItemFromInventory holded, ItemFromInventory overlaped)
+    {
+        return holded._inventorygrid == overlaped._inventorygrid;
+    }
+
     /// <summary>
     /// Move clicked item icon across inventory following cursor
     /// </summary>
     /// <param name="mousePos"></param>
     public void MoveItemIcon(Vector2 mousePos)
     {
-        if (CurrentItemRectTransform != null) CurrentItemRectTransform.position = mousePos;
+        if (CurrentItemRectTransform != null) CurrentItemRectTransform.position = mousePos + new Vector2(1, -1);
     }
 
     public bool CheckMouseInInventory()

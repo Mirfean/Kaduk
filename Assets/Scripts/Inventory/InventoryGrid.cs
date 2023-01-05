@@ -70,7 +70,7 @@ public class InventoryGrid : MonoBehaviour
         return _tileGridPosition;
     }
 
-    public bool PlaceItem(ItemFromInventory inventoryItem, int posX, int posY, ref ItemFromInventory overlapItem)
+    public bool IsThisPlaceForItem(ItemFromInventory inventoryItem, int posX, int posY, ref ItemFromInventory overlapItem)
     {
         if (!BoundryCheck(posX, posY, inventoryItem.WIDTH, inventoryItem.HEIGHT))
         {
@@ -88,7 +88,7 @@ public class InventoryGrid : MonoBehaviour
             CleanGridReference(overlapItem);
         }
 
-        PlaceItemToGrid(inventoryItem, posX, posY);
+        
         return true;
     }
 
@@ -113,6 +113,9 @@ public class InventoryGrid : MonoBehaviour
         Vector2 position = GetItemPosition(itemToPlace, posX, posY);
 
         itemToPlace.GetComponent<RectTransform>().localPosition = position;
+
+        itemToPlace._inventorygrid = this;
+        ItemsOnGrid.Add(itemToPlace);
     }
 
     /// <summary>
@@ -231,12 +234,17 @@ public class InventoryGrid : MonoBehaviour
 
         if (toReturn == null) { return null; }
 
-        CleanGridReference(toReturn);
-
-        ItemsOnGrid.Remove(toReturn);
+        ClearItem(toReturn);
 
         return toReturn;
     }
+
+    public void ClearItem(ItemFromInventory item)
+    {
+        CleanGridReference(item);
+        ItemsOnGrid.Remove(item);
+    }
+
 /*
       ,~~.
      (  9 )-_,

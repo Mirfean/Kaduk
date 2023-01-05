@@ -72,8 +72,8 @@ public class PlayerBasics : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        Debug.Log("Basic " + PlayerInput.Basic.enabled);
-        Debug.Log("UI " + PlayerInput.UI.enabled);
+/*        Debug.Log("Basic " + PlayerInput.Basic.enabled);
+        Debug.Log("UI " + PlayerInput.UI.enabled);*/
     }
 
     public void TurnOffInput()
@@ -279,12 +279,14 @@ public class PlayerBasics : MonoBehaviour
         if (mode)
         {
             STATE = InteractionState.INVENTORY;
+            _gameManager.ShowInventoryWindow();
             _inventoryManager.ShowInventory();
         }
         else
         {
             STATE = InteractionState.DEFAULT;
             _inventoryManager.HideInventory();
+            _gameManager.HideInventoryWindow();
         }
 
         if (STATE == InteractionState.INVENTORY)

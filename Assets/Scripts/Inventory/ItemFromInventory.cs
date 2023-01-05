@@ -31,6 +31,9 @@ public class ItemFromInventory : MonoBehaviour
 
     public int OnGridPositionY;
 
+    [SerializeField]
+    internal InventoryGrid _inventorygrid;
+
     public int HEIGHT
     {
         get

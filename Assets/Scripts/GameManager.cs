@@ -27,6 +27,8 @@ public class GameManager : MonoBehaviour
     [SerializeField]
     public static Vector2 MousePosition;
 
+    [SerializeField] GameObject _inventoryWindow;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -80,8 +82,20 @@ public class GameManager : MonoBehaviour
             currentItemStash_Item = null;
             
             _inventoryManager.HidePlayerStash();
+
+            HideInventoryWindow();
         }
         else Debug.Log("Can't close Inventory, item is holded");
+    }
+
+    public void ShowInventoryWindow()
+    {
+        _inventoryWindow.SetActive(true);
+    }
+
+    public void HideInventoryWindow()
+    {
+        _inventoryWindow.SetActive(false);
     }
 
 

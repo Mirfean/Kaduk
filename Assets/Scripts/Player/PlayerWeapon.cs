@@ -55,7 +55,8 @@ public class PlayerWeapon : MonoBehaviour
         }
         else if (CurrentWeapon is MeleeWeapon)
         {
-            string attackAnimation = "Base Layer.Protag_1_Knife_Attack_1";
+            //string attackAnimation = "Base Layer.Protag_1_Knife_Attack_1";
+            string attackAnimation = "Base Layer.Protag_1_Knife_Attack_2_stab";
             if (!IsAnimationRunning(attackAnimation)){
                 transform.GetComponentInChildren<Animator>().Play(attackAnimation);
                 StartCoroutine(KnifeCoroutine(attackAnimation));
@@ -98,8 +99,9 @@ public class PlayerWeapon : MonoBehaviour
     internal void AttachKnife(Transform arm, Transform hand)
     {
         CurrentWeapon.transform.position = hand.position;
-        CurrentWeapon.transform.rotation = arm.rotation;
-
+        Quaternion x = arm.rotation;
+        x.z += hand.localRotation.z;
+        CurrentWeapon.transform.rotation = x;
     }
 
     internal Animator GetAnimator()
