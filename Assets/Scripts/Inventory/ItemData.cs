@@ -7,19 +7,15 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "Item Data", menuName = "Duck/ItemData"), Serializable]
 public class ItemData : ScriptableObject
 {
-    [SerializeField]
-    public string Description;
-    [SerializeField]
-    public string ItemName;
-    [SerializeField]
-    public int Width = 1;
-    [SerializeField]
-    public int Height = 1;
-    [SerializeField]
-    public Sprite ItemIcon;
-
-    [SerializeField]
-    public bool[,] Fill;
+    [SerializeField] public string Description;
+    [SerializeField] public string ItemName;
+    [SerializeField] public int Width = 1;
+    [SerializeField] public int Height = 1;
+    [SerializeField] public bool IsAmmo;
+    [SerializeField] public ItemData WeaponAmmo;
+    [SerializeField] public bool IsWeapon;
+    [SerializeField] public Sprite ItemIcon;
+    [SerializeField] public bool[,] Fill;
 
 
     public void CreateFill()

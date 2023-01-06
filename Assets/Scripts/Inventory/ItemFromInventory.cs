@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -52,6 +53,10 @@ public class ItemFromInventory : MonoBehaviour
             else return _itemdata.Height;
         }
     }
+
+    public bool IsWeapon;
+
+    public TextMeshProUGUI Amount;
 
     public void Awake()
     {

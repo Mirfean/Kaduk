@@ -5,6 +5,7 @@ using UnityEngine;
 public enum HoverButtonEnum
 {
     TAKE_ITEM,
+    EQUIP,
     USE,
     LOOK,
     SPLIT,

@@ -10,6 +10,9 @@ public class ItemEditor : EditorWindow
     bool[,] _fieldsArray = new bool[0, 0];
     int _width = 1;
     int _height = 1;
+    bool _isAmmo;
+    ItemData WeaponAmmo;
+    bool _isWeapon;
     string _description;
     string _name;
     Sprite _icon;
@@ -41,7 +44,12 @@ public class ItemEditor : EditorWindow
         _name = EditorGUILayout.TextField("Name", _name);
         _description = EditorGUILayout.TextField("Description", _description);
         _icon = (Sprite)EditorGUILayout.ObjectField(_icon, typeof(Sprite), false);
-        
+        _isWeapon = EditorGUILayout.Toggle("Is it a Weapon?", _isWeapon);
+        _isAmmo = EditorGUILayout.Toggle("Is it an Ammo?", _isAmmo);
+        if (_isAmmo)
+        {
+            WeaponAmmo = (ItemData)EditorGUILayout.ObjectField(_itemData, typeof(ItemData), true);
+        }
         GUILayout.Label("Array width/height", EditorStyles.boldLabel);
         _width = EditorGUILayout.IntField("Width", _width);
         _height = EditorGUILayout.IntField("Height", _height);
@@ -69,6 +77,9 @@ public class ItemEditor : EditorWindow
             _itemData.ItemName = _name;
             _itemData.Description = _description;
             _itemData.ItemIcon = _icon;
+            _itemData.IsAmmo = _isAmmo;
+            _itemData.IsWeapon = _isWeapon;
+            _itemData.WeaponAmmo = WeaponAmmo;
             _itemData.Width = _width;
             _itemData.Height = _height;
             _itemData.Fill = new bool[_width, _height];
@@ -95,6 +106,9 @@ public class ItemEditor : EditorWindow
         {
             _name = _itemData.ItemName;
             _description = _itemData.Description;
+            _isAmmo = _itemData.IsAmmo;
+            WeaponAmmo = _itemData.WeaponAmmo;
+            _isWeapon = _itemData.IsWeapon;
             _width = _itemData.Width;
             _height = _itemData.Height;
             _icon = _itemData.ItemIcon;

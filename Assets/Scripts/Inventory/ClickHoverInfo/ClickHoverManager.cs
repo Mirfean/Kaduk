@@ -65,6 +65,7 @@ public class ClickHoverManager : MonoBehaviour
         {
             case StashType.INVENTORY:
                 x.Add(HoverButtonEnum.TAKE_ITEM);
+                x.Add(HoverButtonEnum.EQUIP);
                 x.Add(HoverButtonEnum.USE);
                 x.Add(HoverButtonEnum.LOOK);
                 //x.Add(HoverButtonEnum.COMBINE); TO ADD
@@ -116,20 +117,25 @@ public class ClickHoverManager : MonoBehaviour
 
     public void ServiceButton(GameObject button)
     {
-        InventoryManager invManager = FindObjectOfType<InventoryManager>();
+        //InventoryManager invManager = FindObjectOfType<InventoryManager>();
         switch (button.GetComponent<HoverButton>().ButtonType)
         {
             case HoverButtonEnum.TAKE_ITEM:
                 Debug.Log("TAKE ITEM BUTTON");
-                invManager.ChangeGridForItem(_currentStashType);
+                _inventoryManager.ChangeGridForItem(_currentStashType);
                 break;
             case HoverButtonEnum.USE:
                 Debug.Log("USE BUTTON");
                 //Healing, etc
                 break;
+            case HoverButtonEnum.EQUIP:
+                Debug.Log("EQUIP BUTTON");
+                break;
             case HoverButtonEnum.LOOK:
                 Debug.Log("LOOK BUTTON");
-                HoverInfoManager.OnLookUpHover(invManager.ClickedItem.itemData.ItemName, invManager.ClickedItem.itemData.Description, GetMousePos());
+                HoverInfoManager.OnLookUpHover(_inventoryManager.ClickedItem.itemData.ItemName, 
+                    _inventoryManager.ClickedItem.itemData.Description, 
+                    GetMousePos());
                 break;
             case HoverButtonEnum.SPLIT:
                 // If item is stackable, allow to split it

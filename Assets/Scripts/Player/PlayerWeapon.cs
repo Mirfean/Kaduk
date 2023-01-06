@@ -114,4 +114,9 @@ public class PlayerWeapon : MonoBehaviour
         return GetAnimator().GetCurrentAnimatorStateInfo(0).IsName(animName);
     }
 
+    internal void ChangeWeapon(_Weapon newWeapon)
+    {
+        CurrentWeapon = newWeapon;
+    }
+
 }

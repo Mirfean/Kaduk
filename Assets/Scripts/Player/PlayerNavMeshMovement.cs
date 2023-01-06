@@ -94,6 +94,8 @@ public class PlayerNavMeshMovement : MonoBehaviour
             Debug.Log("WsadMovement");
         }
 
+        Debug.Log("Speed on WSAD " + _targetDirection * _agent.speed * Time.deltaTime);
+
         _agent.Move(_targetDirection * _agent.speed * Time.deltaTime);
 
         _lerpTime += Time.deltaTime;
