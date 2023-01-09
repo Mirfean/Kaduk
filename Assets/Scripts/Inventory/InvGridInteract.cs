@@ -16,8 +16,7 @@ public class InvGridInteract : MonoBehaviour, IPointerEnterHandler, IPointerExit
     {
         _inventoryManager = FindObjectOfType<InventoryManager>();
         _itemGrid = GetComponent<InventoryGrid>();
-        _playerInput = new Player();
-        _playerInput.Enable();
+        _playerInput = FindObjectOfType<PlayerControl>().PlayerInput;
     }
 
     public void OnPointerEnter(PointerEventData eventData)

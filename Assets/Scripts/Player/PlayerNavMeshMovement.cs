@@ -19,8 +19,8 @@ public class PlayerNavMeshMovement : MonoBehaviour
     private NavMeshAgent _agent;
     public NavMeshAgent Agent { get { return _agent; } }
 
-    public bool IsMoving { get => _isMoving; set { _isMoving = value; PlayerBasics.WalkModeChange(value); } }
-    public bool IsPath { get => _isPath; set { _isPath = value; PlayerBasics.WalkModeChange(value); } }
+    public bool IsMoving { get => _isMoving; set { _isMoving = value; PlayerControl.WalkModeChange(value); } }
+    public bool IsPath { get => _isPath; set { _isPath = value; PlayerControl.WalkModeChange(value); } }
 
     [SerializeField]
     private float _targetLerpSpeed = 1;

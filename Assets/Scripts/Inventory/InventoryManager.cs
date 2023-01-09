@@ -76,8 +76,7 @@ public class InventoryManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        _playerInput = new Player();
-        _playerInput.Enable();
+        _playerInput = FindObjectOfType<PlayerControl>().PlayerInput;
         _playerInput.UI.SpawnItem.performed += ctx => SpawnRandomItem(ctx);
         _playerInput.UI.InsertItem.performed += ctx => InsertRandomItem(ctx);
         _playerInput.UI.RotateItem.performed += ctx => RotateHoldedItem(ctx);
