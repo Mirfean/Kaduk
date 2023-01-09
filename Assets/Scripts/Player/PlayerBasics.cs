@@ -37,12 +37,9 @@ public class PlayerBasics : MonoBehaviour
     [SerializeField] PlayerNavMeshMovement _playerMovement;
     public PlayerNavMeshMovement PlayerMove { get { return _playerMovement; } }
 
-    [SerializeField]
-    private GameManager _gameManager;
+    [SerializeField] private GameManager _gameManager;
 
-    [SerializeField]
-    private PlayerControl _playerControl;
-
+    [SerializeField] private PlayerControl _playerControl;
 
     Action<bool> AimModeChange;
 
