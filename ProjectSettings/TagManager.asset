@@ -9,6 +9,11 @@ TagManager:
   - Enemy
   - World
   - NoMask
+  - InventoryItem
+  - CritLimb
+  - LessLimb
+  - NormalLimb
+  - Item
   layers:
   - Default
   - TransparentFX

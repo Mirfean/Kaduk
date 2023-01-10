@@ -6,15 +6,15 @@ using UnityEngine;
 public class CursorManager : MonoBehaviour
 {
     [SerializeField]
-    CursorType currentCursor;
+    CursorType _currentCursor;
 
     [SerializeField]
-    Texture2D[] cursors;
+    Texture2D[] _cursors;
 
     public void Start()
     {
-        currentCursor = CursorType.STANDARD;
-        ChangeCursorTo(currentCursor);
+        _currentCursor = CursorType.STANDARD;
+        ChangeCursorTo(_currentCursor);
     }
 
     public void HideCursorToAim()
@@ -29,10 +29,10 @@ public class CursorManager : MonoBehaviour
 
     public CursorType CurrentCursor
     {
-        get { return currentCursor; }
+        get { return _currentCursor; }
         set 
         { 
-            currentCursor = value;
+            _currentCursor = value;
             
         }
     }
@@ -40,9 +40,9 @@ public class CursorManager : MonoBehaviour
     public void ChangeCursorTo(CursorType cursorType)
     {
         int cursorInt = (int) cursorType;
-        if(cursorInt <= cursors.Length - 1)
+        if(cursorInt <= _cursors.Length - 1)
         {
-            Cursor.SetCursor(cursors[cursorInt], Vector2.zero, CursorMode.ForceSoftware);
+            Cursor.SetCursor(_cursors[cursorInt], Vector2.zero, CursorMode.ForceSoftware);
         }
         
     }

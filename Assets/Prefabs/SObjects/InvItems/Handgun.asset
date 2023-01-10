@@ -1,0 +1,57 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cd7d82a74ca7e094e821785a8e030f0c, type: 3}
+  m_Name: Handgun
+  m_EditorClassIdentifier: 
+  Description: Old and rusty handgun.  Rubbed handle suggests that it came in handy
+    too many times. Always keep one bullet, in case things will go pretty bad.
+  ItemName: Handgun
+  Width: 4
+  Height: 3
+  ItemIcon: {fileID: 21300000, guid: 4406ddb0a84b3ea4c9b66bf601d8a7f7, type: 3}
+  serializable:
+  - Index0: 0
+    Index1: 0
+    Element: 1
+  - Index0: 0
+    Index1: 1
+    Element: 1
+  - Index0: 0
+    Index1: 2
+    Element: 1
+  - Index0: 1
+    Index1: 0
+    Element: 1
+  - Index0: 1
+    Index1: 1
+    Element: 1
+  - Index0: 1
+    Index1: 2
+    Element: 0
+  - Index0: 2
+    Index1: 0
+    Element: 1
+  - Index0: 2
+    Index1: 1
+    Element: 0
+  - Index0: 2
+    Index1: 2
+    Element: 0
+  - Index0: 3
+    Index1: 0
+    Element: 1
+  - Index0: 3
+    Index1: 1
+    Element: 0
+  - Index0: 3
+    Index1: 2
+    Element: 0
