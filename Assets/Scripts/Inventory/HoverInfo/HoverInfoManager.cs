@@ -23,8 +23,7 @@ public class HoverInfoManager : MonoBehaviour
     void Start()
     {
         if (DescriptionText == null) HoverWindow.GetComponentInChildren<TextMeshProUGUI>();
-        _playerInput = new Player();
-        _playerInput.Enable();
+        _playerInput = FindObjectOfType<PlayerControl>().PlayerInput;
         HideInfo();
     }
 

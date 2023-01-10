@@ -19,7 +19,7 @@ public class SkeletalMove : MonoBehaviour
     public Transform RightArm;
 
     [SerializeField]
-    private PlayerBasics _player;
+    private PlayerControl _player;
 
     [SerializeField]
     Animator _animator;

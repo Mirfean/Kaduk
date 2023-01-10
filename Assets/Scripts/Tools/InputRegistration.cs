@@ -18,9 +18,9 @@ public class InputRegistration : MonoBehaviour
     protected static bool isRegistered = false;
     private bool _didIRegister = false;
 
-    void Awake()
+    private void Awake()
     {
-        _playerInput = new Player();
+        _playerInput = FindObjectOfType<PlayerControl>().PlayerInput;
     }
 
     void OnEnable()

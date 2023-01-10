@@ -7,7 +7,7 @@ public class GameManager : MonoBehaviour
 {
 
     [SerializeField]
-    PlayerBasics _playerBasics;
+    PlayerControl _playerBasics;
 
     [SerializeField]
     InventoryManager _inventoryManager;
@@ -34,7 +34,7 @@ public class GameManager : MonoBehaviour
     {
         if (_playerBasics == null)
         {
-            _playerBasics = FindObjectOfType<PlayerBasics>();
+            _playerBasics = FindObjectOfType<PlayerControl>();
         }
         if (_inventoryManager == null)
         {

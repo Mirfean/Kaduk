@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-[RequireComponent(typeof(PlayerBasics))]
+[RequireComponent(typeof(PlayerControl))]
 public class PlayerWeapon : MonoBehaviour
 {
     [SerializeField] public _Weapon CurrentWeapon;

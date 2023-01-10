@@ -19,8 +19,8 @@ public class PlayerNavMeshMovement : MonoBehaviour
     private NavMeshAgent _agent;
     public NavMeshAgent Agent { get { return _agent; } }
 
-    public bool IsMoving { get => _isMoving; set { _isMoving = value; PlayerBasics.WalkModeChange(value); } }
-    public bool IsPath { get => _isPath; set { _isPath = value; PlayerBasics.WalkModeChange(value); } }
+    public bool IsMoving { get => _isMoving; set { _isMoving = value; PlayerControl.WalkModeChange(value); } }
+    public bool IsPath { get => _isPath; set { _isPath = value; PlayerControl.WalkModeChange(value); } }
 
     [SerializeField]
     private float _targetLerpSpeed = 1;
@@ -36,9 +36,12 @@ public class PlayerNavMeshMovement : MonoBehaviour
     [SerializeField] float _defaultSpeed = 3f;
     [SerializeField] float _speed = 3f;
 
+    PlayerControl _playerControl;
+
     private void Awake()
     {
         _agent = GetComponent<NavMeshAgent>();
+        _playerControl = GetComponent<PlayerControl>();
         _playerActionMap = _inputActions.FindActionMap("Basic");
         _movement = _playerActionMap.FindAction("WSAD");
         _movement.Enable();
@@ -59,7 +62,7 @@ public class PlayerNavMeshMovement : MonoBehaviour
 
     private void Update()
     {
-        if (_movement.inProgress && _movementVector != Vector3.zero) WsadMovement();
+        if (_movement.inProgress && _movementVector != Vector3.zero && _playerControl.STATE == Assets.Scripts.Enums.InteractionState.DEFAULT) WsadMovement();
         else if (_movementVector == Vector3.zero && IsMoving)
         {
             _agent.ResetPath();

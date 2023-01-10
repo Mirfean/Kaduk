@@ -45,8 +45,7 @@ public class ClickHoverManager : MonoBehaviour
         {
             ButtonList.Add(HB);
         }
-        _playerInput = new Player();
-        _playerInput.Enable();
+        _playerInput = FindObjectOfType<PlayerControl>().PlayerInput;
     }
 
     public static Vector2 GetMousePos()
