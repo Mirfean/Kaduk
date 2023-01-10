@@ -36,9 +36,12 @@ public class PlayerNavMeshMovement : MonoBehaviour
     [SerializeField] float _defaultSpeed = 3f;
     [SerializeField] float _speed = 3f;
 
+    PlayerControl _playerControl;
+
     private void Awake()
     {
         _agent = GetComponent<NavMeshAgent>();
+        _playerControl = GetComponent<PlayerControl>();
         _playerActionMap = _inputActions.FindActionMap("Basic");
         _movement = _playerActionMap.FindAction("WSAD");
         _movement.Enable();
@@ -59,7 +62,7 @@ public class PlayerNavMeshMovement : MonoBehaviour
 
     private void Update()
     {
-        if (_movement.inProgress && _movementVector != Vector3.zero) WsadMovement();
+        if (_movement.inProgress && _movementVector != Vector3.zero && _playerControl.STATE == Assets.Scripts.Enums.InteractionState.DEFAULT) WsadMovement();
         else if (_movementVector == Vector3.zero && IsMoving)
         {
             _agent.ResetPath();
