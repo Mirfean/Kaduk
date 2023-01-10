@@ -1,3 +1,4 @@
+using Assets.Scripts.Enums;
 using System;
 using UnityEngine;
 using UnityEngine.AI;
@@ -62,7 +63,9 @@ public class PlayerNavMeshMovement : MonoBehaviour
 
     private void Update()
     {
-        if (_movement.inProgress && _movementVector != Vector3.zero && _playerControl.STATE == Assets.Scripts.Enums.InteractionState.DEFAULT) WsadMovement();
+        if (_movement.inProgress &&
+            _movementVector != Vector3.zero && 
+            (_playerControl.STATE == InteractionState.DEFAULT || _playerControl.STATE == InteractionState.AIMING)) WsadMovement();
         else if (_movementVector == Vector3.zero && IsMoving)
         {
             _agent.ResetPath();
@@ -99,7 +102,10 @@ public class PlayerNavMeshMovement : MonoBehaviour
 
         Debug.Log("Speed on WSAD " + _targetDirection * _agent.speed * Time.deltaTime);
 
-        _agent.Move(_targetDirection * _agent.speed * Time.deltaTime);
+        if (_playerControl.STATE == InteractionState.DEFAULT)
+            _agent.Move(_targetDirection * (_agent.speed/2) * Time.deltaTime);
+        else if (_playerControl.STATE == InteractionState.AIMING)
+            _agent.Move(_targetDirection * (_agent.speed/6) * Time.deltaTime);
 
         _lerpTime += Time.deltaTime;
     }
