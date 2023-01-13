@@ -15,6 +15,8 @@ public class EnemyMovement : MonoBehaviour
 
     [SerializeField] private NavMeshAgent _player;
 
+    public bool Active { get => active; set => active = value; }
+
     // Start is called before the first frame update
     void Start()
     {
@@ -25,7 +27,7 @@ public class EnemyMovement : MonoBehaviour
         _agent.updateUpAxis = false;
     }
 
-    void GotoNextPoint()
+    void GoToNextPoint()
     {
         if (_patrolPoints.Length == 0) return;
 
@@ -35,14 +37,26 @@ public class EnemyMovement : MonoBehaviour
 
     }
 
+    public void GoToPoint(int point)
+    {
+        if (_agent.Warp(_patrolPoints[point].position))
+        {
+            Debug.Log("Player moved to another room");
+            destPoint = point;
+        }
+    }
 
+    public void GoToRandomPoint()
+    {
+        GoToPoint(Random.Range(0, _patrolPoints.Length - 1));
+    }
 
     // Update is called once per frame
     void Update()
     {
-        if (active && !_agent.pathPending && _agent.remainingDistance < 0.3f)
+        if (Active && !_agent.pathPending && _agent.remainingDistance < 0.3f)
         {
-            GotoNextPoint();
+            GoToNextPoint();
         }
 
         else if (hunt)
@@ -50,6 +64,4 @@ public class EnemyMovement : MonoBehaviour
             _agent.SetDestination(_player.transform.position);
         }
     }
-
-
 }
