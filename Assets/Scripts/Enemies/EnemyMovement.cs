@@ -31,13 +31,13 @@ public class EnemyMovement : MonoBehaviour
     {
         if (_patrolPoints.Length == 0) return;
 
-        _agent.SetDestination(_patrolPoints[destPoint].position);
+        SetNewDestination(_patrolPoints[destPoint].position);
 
         destPoint = (destPoint + 1) % _patrolPoints.Length;
 
     }
 
-    public void GoToPoint(int point)
+    public void TeleportToPoint(int point)
     {
         if (_agent.Warp(_patrolPoints[point].position))
         {
@@ -46,9 +46,9 @@ public class EnemyMovement : MonoBehaviour
         }
     }
 
-    public void GoToRandomPoint()
+    public void TeleportToRandomPoint()
     {
-        GoToPoint(Random.Range(0, _patrolPoints.Length - 1));
+        TeleportToPoint(Random.Range(0, _patrolPoints.Length - 1));
     }
 
     // Update is called once per frame
@@ -61,7 +61,21 @@ public class EnemyMovement : MonoBehaviour
 
         else if (hunt)
         {
-            _agent.SetDestination(_player.transform.position);
+            SetNewDestination(_player.transform.position);
+        }
+        
+    }
+
+    void SetNewDestination(Vector3 destination)
+    {
+        _agent.SetDestination(destination);
+        if(destination.x < transform.position.x)
+        {
+            transform.rotation = Quaternion.Euler(0, 0, 0);
+        }
+        else
+        {
+            transform.rotation = Quaternion.Euler(0, 180, 0);
         }
     }
 }

@@ -100,7 +100,7 @@ public class PlayerNavMeshMovement : MonoBehaviour
             Debug.Log("WsadMovement");
         }
 
-        Debug.Log("Speed on WSAD " + _targetDirection * _agent.speed * Time.deltaTime);
+        //Debug.Log("Speed on WSAD " + _targetDirection * _agent.speed * Time.deltaTime);
 
         if (_playerControl.STATE == InteractionState.DEFAULT)
             _agent.Move(_targetDirection * (_agent.speed/2) * Time.deltaTime);

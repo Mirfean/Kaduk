@@ -27,7 +27,7 @@ public class Room : MonoBehaviour
 
     void RandomPlaceEnemy(Enemy enemy)
     {
-        enemy.gameObject.GetComponent<EnemyMovement>().GoToRandomPoint();
+        enemy.gameObject.GetComponent<EnemyMovement>().TeleportToRandomPoint();
     }
 
     void ActivateEnemy(Enemy enemy, bool state)
