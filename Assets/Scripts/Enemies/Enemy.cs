@@ -44,7 +44,7 @@ public class Enemy : MonoBehaviour
 
     IEnumerator ImmuneCoroutine()
     {
-
+        yield return null;
     }
 
     private void DeathSequence()

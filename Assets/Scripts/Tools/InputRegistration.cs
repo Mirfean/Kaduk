@@ -20,11 +20,12 @@ public class InputRegistration : MonoBehaviour
 
     private void Awake()
     {
-        _playerInput = FindObjectOfType<PlayerControl>().PlayerInput;
+        
     }
 
     void OnEnable()
     {
+        _playerInput = FindObjectOfType<PlayerControl>().PlayerInput;
         if (!isRegistered)
         {
             isRegistered = true;

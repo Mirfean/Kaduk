@@ -19,7 +19,8 @@ public class ClickHoverManager : MonoBehaviour
     public static Action <GameObject> OnButtonClick;
     public static Action OnHoverClose;
 
-    private static Player _playerInput;
+
+    private PlayerControl _playerControl;
 
     private void OnEnable()
     {
@@ -39,18 +40,18 @@ public class ClickHoverManager : MonoBehaviour
     void Start()
     {
         _inventoryManager = FindObjectOfType<InventoryManager>();
+        _playerControl = FindObjectOfType<PlayerControl>();
         ClickHoverWindow.gameObject.SetActive(false);
         ButtonList = new List<HoverButton>();
         foreach(HoverButton HB in ClickHoverWindow.gameObject.GetComponentsInChildren<HoverButton>())
         {
             ButtonList.Add(HB);
         }
-        _playerInput = FindObjectOfType<PlayerControl>().PlayerInput;
     }
 
-    public static Vector2 GetMousePos()
+    public Vector2 GetMousePos()
     {
-        return _playerInput.Basic.MouseMovement.ReadValue<Vector2>();
+        return _playerControl.PlayerInput.Basic.MouseMovement.ReadValue<Vector2>();
     }
 
     public void PrepareAndShowHover(StashType stashType)
@@ -128,6 +129,7 @@ public class ClickHoverManager : MonoBehaviour
                 //Healing, etc
                 break;
             case HoverButtonEnum.EQUIP:
+                _inventoryManager.ChangeCurrentWeapon(_inventoryManager.ClickedItem.gameObject);
                 Debug.Log("EQUIP BUTTON");
                 break;
             case HoverButtonEnum.LOOK:

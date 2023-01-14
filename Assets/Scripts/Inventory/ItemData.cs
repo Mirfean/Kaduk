@@ -11,10 +11,15 @@ public class ItemData : ScriptableObject
     [SerializeField] public string ItemName;
     [SerializeField] public int Width = 1;
     [SerializeField] public int Height = 1;
+    
     [SerializeField] public bool IsAmmo;
     [SerializeField] public ItemData WeaponAmmo;
+    
     [SerializeField] public bool IsWeapon;
+    [SerializeField] public WeaponData Weapon;
+    
     [SerializeField] public Sprite ItemIcon;
+    
     [SerializeField] public bool[,] Fill;
 
 

@@ -61,7 +61,9 @@ public class InventoryManager : MonoBehaviour
     [SerializeField]
     InventoryHighlight _inventoryHighlight;
 
-    public static Action<ItemFromInventory> OnMouseAboveItem; 
+    public static Action<ItemFromInventory> OnMouseAboveItem;
+
+    EquippedWeapon _equipedWeapon;
 
     private void OnEnable()
     {
@@ -449,5 +451,9 @@ public class InventoryManager : MonoBehaviour
         currentItemStash.Items = newItems;
     }
 
-    
+    public void ChangeCurrentWeapon(GameObject newWeapon)
+    {
+        FindObjectOfType<PlayerWeapon>().ChangeWeapon(newWeapon.GetComponent<ItemFromInventory>().itemData.Weapon.WeaponPrefab);
+        _equipedWeapon.ChangeWeapon(newWeapon.GetComponent<_Weapon>());
+    }
 }

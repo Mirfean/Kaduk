@@ -7,7 +7,13 @@ using UnityEngine.InputSystem;
 [RequireComponent(typeof(PlayerControl))]
 public class PlayerWeapon : MonoBehaviour
 {
-    [SerializeField] public _Weapon CurrentWeapon;
+    //[SerializeField] public _Weapon CurrentWeapon;
+
+    [SerializeField] public GameObject CurrentWeapon;
+
+    [SerializeField] List<GameObject> WeaponPrefabs;
+
+    [SerializeField] Transform _attachments;
 
     [SerializeField] private Animator _animator;
 
@@ -18,9 +24,13 @@ public class PlayerWeapon : MonoBehaviour
         get { return _rotated; }
         set
         {
-            if (CurrentWeapon.gameObject.activeSelf && _rotated != value)
+            if (CurrentWeapon != null)
             {
-                RotateWeapon(value);
+                if (CurrentWeapon.activeSelf && _rotated != value)
+                {
+                    RotateWeapon(value);
+                }
+                
             }
             _rotated = value;
 
@@ -34,35 +44,59 @@ public class PlayerWeapon : MonoBehaviour
 
     public bool IsItGun()
     {
-        if (CurrentWeapon is Gun)
+        if (CurrentWeapon != null)
         {
-            return true;
+            if (CurrentWeapon.GetComponent<_Weapon>() is Gun)
+            {
+                return true;
+            }
         }
         return false;
     }
 
+    public void ShowWeapon()
+    {
+        if (CurrentWeapon != null)
+        {
+            CurrentWeapon.SetActive(true);
+        }
+    }
+
+    public void HideWeapon()
+    {
+        if (CurrentWeapon != null)
+        {
+            CurrentWeapon.SetActive(false);
+        }
+    }
+
     public void UseWeapon(SkeletalMove skeletalMove, Player playerInput) {
-        if (CurrentWeapon is Gun)
+        if (CurrentWeapon != null)
         {
-            if(CurrentWeapon.GetComponent<Gun>().remainingBullets > 0)
-            CurrentWeapon.Attack(
-                Camera.main.ScreenToWorldPoint(playerInput.Basic.MouseMovement.ReadValue<Vector2>()),
-                skeletalMove.HoldedItem.rotation);
-            else
+            if (CurrentWeapon.GetComponent<_Weapon>() is Gun)
             {
-                Debug.Log("Reload required!");
+                if (CurrentWeapon.GetComponent<Gun>().remainingBullets > 0)
+                    CurrentWeapon.GetComponent<_Weapon>().Attack(
+                        Camera.main.ScreenToWorldPoint(playerInput.Basic.MouseMovement.ReadValue<Vector2>()),
+                        skeletalMove.HoldedItem.rotation);
+                else
+                {
+                    Debug.Log("Reload required!");
+                }
+            }
+            else if (CurrentWeapon.GetComponent<_Weapon>() is MeleeWeapon)
+            {
+                //string attackAnimation = "Base Layer.Protag_1_Knife_Attack_1";
+                string attackAnimation = "Base Layer.Protag_1_Knife_Attack_2_stab";
+                if (!IsAnimationRunning(attackAnimation))
+                {
+                    transform.GetComponentInChildren<Animator>().Play(attackAnimation);
+                    StartCoroutine(KnifeCoroutine(attackAnimation));
+                }
+
             }
         }
-        else if (CurrentWeapon is MeleeWeapon)
-        {
-            //string attackAnimation = "Base Layer.Protag_1_Knife_Attack_1";
-            string attackAnimation = "Base Layer.Protag_1_Knife_Attack_2_stab";
-            if (!IsAnimationRunning(attackAnimation)){
-                transform.GetComponentInChildren<Animator>().Play(attackAnimation);
-                StartCoroutine(KnifeCoroutine(attackAnimation));
-            }
             
-        }
     }
 
     internal IEnumerator KnifeCoroutine(string animationName)
@@ -81,19 +115,13 @@ public class PlayerWeapon : MonoBehaviour
         yield break;
     }
 
-    internal void ShowWeapon()
-    {
-        CurrentWeapon.gameObject.SetActive(true);
-    }
-
-    internal void HideWeapon()
-    {
-       CurrentWeapon.gameObject.SetActive(false);
-    }
-
     void RotateWeapon(bool rotated)
     {
-        CurrentWeapon.RotateWeapon(rotated);
+        if(CurrentWeapon != null)
+        {
+            CurrentWeapon.GetComponent<_Weapon>().RotateWeapon(rotated);
+        }
+        
     }
 
     internal void AttachKnife(Transform arm, Transform hand)
@@ -114,9 +142,20 @@ public class PlayerWeapon : MonoBehaviour
         return GetAnimator().GetCurrentAnimatorStateInfo(0).IsName(animName);
     }
 
-    internal void ChangeWeapon(_Weapon newWeapon)
+    internal void ChangeWeapon(GameObject newWeapon)
     {
+        if(CurrentWeapon != null) Destroy(CurrentWeapon.gameObject);
         CurrentWeapon = newWeapon;
+        Instantiate(CurrentWeapon).transform.SetParent(_attachments);
+        /*        foreach(GameObject weapon in WeaponPrefabs)
+                {
+                    if (weapon.GetComponent<_Weapon>() == newWeapon)
+                    {
+                        CurrentWeapon = weapon;
+                        Instantiate(weapon).transform.SetParent(_attachments);
+
+                    }
+                }*/
     }
 
 }

@@ -95,9 +95,8 @@ MonoBehaviour:
   OnGridPositionX: 0
   OnGridPositionY: 0
   _inventorygrid: {fileID: 0}
-  IsStackable: 0
-  IsCombinable: 0
   IsWeapon: 0
+  Amount: {fileID: 0}
 --- !u!114 &7829080771245908201
 MonoBehaviour:
   m_ObjectHideFlags: 0

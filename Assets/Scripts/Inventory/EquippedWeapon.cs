@@ -6,14 +6,18 @@ using UnityEngine.UI;
 
 public class EquippedWeapon : MonoBehaviour
 {
-    [SerializeField]
-    Image _weapon;
+    [SerializeField] Image _weaponImage;  
 
-    [SerializeField]
-    List<Image> weapons;
+    [SerializeField] public _Weapon CurrentWeapon;
 
     void ChangeWeapon(WeaponType weaponToChange)
     {
         
+    }
+
+    public void ChangeWeapon(_Weapon newWeapon)
+    {
+        CurrentWeapon = newWeapon;
+        _weaponImage.sprite = CurrentWeapon.weaponData.WeaponIcon;
     }
 }

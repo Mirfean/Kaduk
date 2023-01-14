@@ -138,7 +138,7 @@ public class PlayerControl : MonoBehaviour
             if (STATE == InteractionState.AIMING)
             {
                 Debug.Log("Aim");
-                if(_playerWeapon.CurrentWeapon.weaponType == WeaponType.HANDGUN)
+                if(_playerWeapon.CurrentWeapon.GetComponent<_Weapon>().weaponType == WeaponType.HANDGUN)
                 {
                     PistolAiming(realPos);
                 }
@@ -199,18 +199,21 @@ public class PlayerControl : MonoBehaviour
     //MUST STAY HERE :<
     internal IEnumerator AimCoroutine()
     {
-        //Aiming(Camera.main.ScreenToWorldPoint(_playerInput.Basic.MouseMovement.ReadValue<Vector2>()));
-        AimModeChange(true);
-        if(_playerWeapon.IsItGun()) PistolAiming(Camera.main.ScreenToWorldPoint(PlayerInput.Basic.MouseMovement.ReadValue<Vector2>()));
-        if (_playerWeapon.CurrentWeapon.weaponType == WeaponType.KNIFE) KnifeInHand();
-        do
+        if(_playerWeapon.CurrentWeapon != null)
         {
-            _playerWeapon.AttachKnife(arm: _skeletalMove.RightArm, hand: _skeletalMove.RightHand);
-            Debug.Log("Aiming !!! !!!");
-            yield return null;
-        } while (PlayerInput.Basic.Aim.IsInProgress());
-        Debug.Log("stop aiming");
-        AimModeChange(false);
+            AimModeChange(true);
+            if (_playerWeapon.IsItGun()) PistolAiming(Camera.main.ScreenToWorldPoint(PlayerInput.Basic.MouseMovement.ReadValue<Vector2>()));
+            if (_playerWeapon.CurrentWeapon.GetComponent<_Weapon>().weaponType == WeaponType.KNIFE) KnifeInHand();
+            do
+            {
+                _playerWeapon.AttachKnife(arm: _skeletalMove.RightArm, hand: _skeletalMove.RightHand);
+                Debug.Log("Aiming !!! !!!");
+                yield return null;
+            } while (PlayerInput.Basic.Aim.IsInProgress());
+            Debug.Log("stop aiming");
+            AimModeChange(false);
+        }
+        //Aiming(Camera.main.ScreenToWorldPoint(_playerInput.Basic.MouseMovement.ReadValue<Vector2>()));
         yield return null;
     }
 
