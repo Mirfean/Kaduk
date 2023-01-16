@@ -17,6 +17,10 @@ MonoBehaviour:
   ItemName: Handgun
   Width: 4
   Height: 3
+  IsAmmo: 1
+  WeaponAmmo: {fileID: 0}
+  IsWeapon: 1
+  Weapon: {fileID: 11400000, guid: 8f222db36fcc14a4f8c08131cf1b312d, type: 2}
   ItemIcon: {fileID: 21300000, guid: 4406ddb0a84b3ea4c9b66bf601d8a7f7, type: 3}
   serializable:
   - Index0: 0

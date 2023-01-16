@@ -118,11 +118,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5daf3c0d7e7ee194789f63603e375d38, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  weaponType: 3
+  weaponType: 4
   description: 
   damage: 5
   attackSpeed: 0
-  weaponData: {fileID: 0}
+  weaponData: {fileID: 11400000, guid: 8f222db36fcc14a4f8c08131cf1b312d, type: 2}
   Rotated: 0
   _shootingPoint: {fileID: 1868292467014128437}
   _holdedItem: {fileID: 0}

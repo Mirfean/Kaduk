@@ -18,7 +18,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &4428549600459000474
 Transform:
   m_ObjectHideFlags: 0
@@ -26,8 +26,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4428549600459000472}
-  m_LocalRotation: {x: -0, y: -0, z: 0.00000009362675, w: 1}
-  m_LocalPosition: {x: 0.241, y: 0.741, z: 0}
+  m_LocalRotation: {x: -0, y: -0, z: -0.4458338, w: 0.89511573}
+  m_LocalPosition: {x: -1.3376539, y: 2.0994015, z: -0.02899975}
   m_LocalScale: {x: 0.75, y: 0.75, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -98,11 +98,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a50c9e707236cd94ba0573007fad2fa2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  weaponType: 0
+  weaponType: 1
   description: 
   damage: 4
   attackSpeed: 1
-  weaponData: {fileID: 0}
+  weaponData: {fileID: 11400000, guid: 52a287492dfd5e746b6bbdcda00027e2, type: 2}
   Rotated: 0
 --- !u!70 &4428549600459000476
 CapsuleCollider2D:

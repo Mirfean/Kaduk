@@ -20,7 +20,7 @@ public class ClickHoverManager : MonoBehaviour
     public static Action OnHoverClose;
 
 
-    private PlayerControl _playerControl;
+    [SerializeField] private PlayerControl _playerControl;
 
     private void OnEnable()
     {
@@ -135,8 +135,7 @@ public class ClickHoverManager : MonoBehaviour
             case HoverButtonEnum.LOOK:
                 Debug.Log("LOOK BUTTON");
                 HoverInfoManager.OnLookUpHover(_inventoryManager.ClickedItem.itemData.ItemName, 
-                    _inventoryManager.ClickedItem.itemData.Description, 
-                    GetMousePos());
+                    _inventoryManager.ClickedItem.itemData.Description);
                 break;
             case HoverButtonEnum.SPLIT:
                 // If item is stackable, allow to split it

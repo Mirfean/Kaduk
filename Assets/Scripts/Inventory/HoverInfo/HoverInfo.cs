@@ -30,9 +30,7 @@ public class HoverInfo : MonoBehaviour, IPointerEnterHandler, IPointerExitHandle
 
     private void ShowMessage()
     {
-
-        Debug.Log("Mouse POS " + HoverInfoManager.GetMousePos());
-        HoverInfoManager.OnMouseAboveItem(ItemName, HoverInfoManager.GetMousePos());
+        HoverInfoManager.OnMouseAboveItem(ItemName);
     }
 
     private IEnumerator StartTimer()

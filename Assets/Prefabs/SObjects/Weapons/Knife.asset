@@ -20,4 +20,5 @@ MonoBehaviour:
   Magazine: 0
   Recoil: 0
   WeaponIcon: {fileID: 21300000, guid: 29e4d7666e3d05f47bf88379a55dddae, type: 3}
-  WeaponPrefab: {fileID: 0}
+  WeaponPrefab: {fileID: 4428549600459000472, guid: 617582df2e23011489ca807fc79a7792,
+    type: 3}
