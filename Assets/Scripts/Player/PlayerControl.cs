@@ -9,9 +9,6 @@ using UnityEngine.InputSystem;
 
 public class PlayerControl : MonoBehaviour
 {
-    Player _playerInput;
-    public Player PlayerInput { get => _playerInput; set => _playerInput = value; }
-
     [SerializeField] InteractionState _state = InteractionState.DEFAULT;
     public InteractionState STATE
     {
@@ -44,17 +41,11 @@ public class PlayerControl : MonoBehaviour
 
     public static Action<bool> WalkModeChange;
 
-    private void Awake()
-    {
-        PlayerInput = new Player();
-        PlayerInput.Enable();
-    }
+
 
     // Start is called before the first frame update
     void Start()
     {
-
-
         _playerControl = new PlayerControlsAssist();
 
         _playerWeapon = GetComponent<PlayerWeapon>();
@@ -80,17 +71,12 @@ public class PlayerControl : MonoBehaviour
     public void TurnOffInput()
     {
         StopMoveCoroutines();
-        PlayerInput.Disable();
+        UserInput.Instance.Input.Disable();
     }
 
     public void TurnOnInput()
     {
-        PlayerInput.Enable();
-    }
-
-    public Vector2 GetMousePos()
-    {
-        return PlayerInput.Basic.MouseMovement.ReadValue<Vector2>();
+        UserInput.Instance.Input.Enable();
     }
 
     #region Input
@@ -102,7 +88,7 @@ public class PlayerControl : MonoBehaviour
             {
                 case InteractionState.AIMING:
                     Debug.Log("Weapon attack");
-                    _playerWeapon.UseWeapon(_skeletalMove, PlayerInput);
+                    _playerWeapon.UseWeapon(_skeletalMove);
                     return;
                 case InteractionState.DEFAULT:
                     ClickOnDefault();
@@ -112,7 +98,7 @@ public class PlayerControl : MonoBehaviour
                     return;
                 case InteractionState.INVENTORY:
                     Debug.Log("Inventory click");
-                    _inventoryManager.GrabAndDropItemIcon(PlayerInput.UI.MousePosition.ReadValue<Vector2>());
+                    _inventoryManager.GrabAndDropItemIcon(UserInput.Instance.Input.UI.MousePosition.ReadValue<Vector2>());
                     return;
             }
         }
@@ -120,17 +106,17 @@ public class PlayerControl : MonoBehaviour
 
     public void OnMovementMouse(InputAction.CallbackContext context)
     {
-        if (PlayerInput == null) return;
+        if (UserInput.Instance.Input == null) return;
         if (STATE == InteractionState.INVENTORY)
         {
-            _playerControl.MovingThroughInventory(ref _playerInput, ref _inventoryManager);
+            _playerControl.MovingThroughInventory(ref UserInput.Instance.Input, ref _inventoryManager);
         }
         if (STATE == InteractionState.DEFAULT)
         {
 
         }
-        Vector2 realPos = Camera.main.ScreenToWorldPoint(PlayerInput.Basic.MouseMovement.ReadValue<Vector2>());
-        if (PlayerInput.Basic.enabled)
+        Vector2 realPos = UserInput.Instance.GetBasicScreenToWorld();
+        if (UserInput.Instance.Input.Basic.enabled)
         {
             _skeletalMove.RotateFlashlight(realPos);
             CharacterRotation(realPos);
@@ -196,28 +182,43 @@ public class PlayerControl : MonoBehaviour
 
     }
 
-    //MUST STAY HERE :<
-    internal IEnumerator AimCoroutine()
+    private IEnumerator AimCoroutine()
     {
-        if(_playerWeapon.CurrentWeapon != null)
+        if (_playerWeapon.CurrentWeapon != null)
         {
             AimModeChange(true);
-            if (_playerWeapon.IsItGun()) PistolAiming(Camera.main.ScreenToWorldPoint(PlayerInput.Basic.MouseMovement.ReadValue<Vector2>()));
-            if (_playerWeapon.CurrentWeapon.GetComponent<_Weapon>().weaponType == WeaponType.KNIFE) KnifeInHand();
-            do
+            switch (_playerWeapon.CurrentWeapon.GetComponent<_Weapon>().weaponType)
             {
-                _playerWeapon.AttachKnife(arm: _skeletalMove.RightArm, hand: _skeletalMove.RightHand);
-                Debug.Log("Aiming !!! !!!");
-                yield return null;
-            } while (PlayerInput.Basic.Aim.IsInProgress());
+                case WeaponType.KNIFE:
+                    KnifeInHand();
+                    do
+                    {
+                        _playerWeapon.AttachKnife(arm: _skeletalMove.RightArm, hand: _skeletalMove.RightHand);
+                        Debug.Log("Holding Knife!");
+                        yield return null;
+                    } while (UserInput.Instance.Input.Basic.Aim.IsInProgress());   
+                    break;
+                case WeaponType.HANDGUN:
+                    _skeletalMove.HoldedItem.gameObject.SetActive(true);
+                    do
+                    {
+                        PistolAiming(UserInput.Instance.GetBasicScreenToWorld());
+                        Debug.Log("Aiming from handgun");
+                        yield return null;
+                    } while (UserInput.Instance.Input.Basic.Aim.IsInProgress());
+                    _skeletalMove.HoldedItem.gameObject.SetActive(false);
+                    break;
+            }
+            
             Debug.Log("stop aiming");
             AimModeChange(false);
         }
+        else Debug.Log("No weapon!");
         //Aiming(Camera.main.ScreenToWorldPoint(_playerInput.Basic.MouseMovement.ReadValue<Vector2>()));
         yield return null;
     }
 
-    internal void PistolAiming(Vector2 realPos)
+    private void PistolAiming(Vector2 realPos)
     {
         _skeletalMove.TrackCursorByHands(realPos);
         _playerWeapon.CurrentWeapon.transform.position = _skeletalMove.LeftHand.position;
@@ -242,7 +243,7 @@ public class PlayerControl : MonoBehaviour
         {
             _cursorManager.ShowCursor();
             _playerWeapon.HideWeapon();
-            if(_playerWeapon.IsItGun()) _skeletalMove.SetArmsToIdle();
+            //if(_playerWeapon.IsItGun()) _skeletalMove.SetArmsToIdle();
             Debug.Log("Siema z Change Aim 2");
         }
         if (STATE == InteractionState.AIMING)
@@ -295,14 +296,14 @@ public class PlayerControl : MonoBehaviour
 
         if (STATE == InteractionState.INVENTORY)
         {
-            PlayerInput.UI.Enable();
-            PlayerInput.Basic.Disable();
+            UserInput.Instance.Input.UI.Enable();
+            UserInput.Instance.Input.Basic.Disable();
             Debug.Log("Enabling UI");
         }
         else
         {
-            PlayerInput.Basic.Enable();
-            PlayerInput.UI.Disable();
+            UserInput.Instance.Input.Basic.Enable();
+            UserInput.Instance.Input.UI.Disable();
             Debug.Log("Disabling UI");
         }
     }
@@ -357,7 +358,7 @@ public class PlayerControl : MonoBehaviour
     private void ClickOnDefault()
     {
         RaycastHit hit;
-        Ray ray = Camera.main.ScreenPointToRay(PlayerInput.Basic.MouseMovement.ReadValue<Vector2>());
+        Ray ray = Camera.main.ScreenPointToRay(UserInput.Instance.Input.Basic.MouseMovement.ReadValue<Vector2>());
         if (Physics.Raycast(ray, out hit))
         {
             Debug.Log("clicked something");
@@ -376,9 +377,9 @@ public class PlayerControl : MonoBehaviour
             }
         }
 
-        if (!PlayerInput.Basic.MouseLClick.inProgress)
+        if (!UserInput.Instance.Input.Basic.MouseLClick.inProgress)
         {
-            Vector2 target = Camera.main.ScreenToWorldPoint(PlayerInput.Basic.MouseMovement.ReadValue<Vector2>());
+            Vector2 target = UserInput.Instance.GetBasicScreenToWorld();
             Debug.Log(target);
             _playerMovement.MouseMovement(target);
         }

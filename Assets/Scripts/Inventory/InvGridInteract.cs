@@ -9,14 +9,12 @@ public class InvGridInteract : MonoBehaviour, IPointerEnterHandler, IPointerExit
     InventoryManager _inventoryManager;
     [SerializeField]
     InventoryGrid _itemGrid;
-    Player _playerInput;
 
     // Start is called before the first frame update
     void Awake()
     {
         _inventoryManager = FindObjectOfType<InventoryManager>();
         _itemGrid = GetComponent<InventoryGrid>();
-        _playerInput = FindObjectOfType<PlayerControl>().PlayerInput;
     }
 
     public void OnPointerEnter(PointerEventData eventData)

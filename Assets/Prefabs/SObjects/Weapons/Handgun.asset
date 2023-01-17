@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: Handgun
   m_EditorClassIdentifier: 
   Name: 
-  Damage: 0
-  AttackSpeed: 0
+  Damage: 5
+  AttackSpeed: 0.7
   IsGun: 1
   BulletsPerShot: 1
   Magazine: 6

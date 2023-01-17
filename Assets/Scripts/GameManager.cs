@@ -19,13 +19,10 @@ public class GameManager : MonoBehaviour
     InventoryGrid _itemsGrid;
 
     [SerializeField]
-    _Item currentItemStash_Item;
+    EnvObject currentItemStash_Item;
 
     [SerializeField]
     Door[] _doors;
-
-    [SerializeField]
-    public static Vector2 MousePosition;
 
     [SerializeField] GameObject _inventoryWindow;
 
@@ -43,12 +40,6 @@ public class GameManager : MonoBehaviour
         GetAllDoors();
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        MousePosition = _playerBasics.GetMousePos();
-    }
-
     public InteractionState GetPlayerSTATE()
     {
         return _playerBasics.STATE;
@@ -61,7 +52,7 @@ public class GameManager : MonoBehaviour
         _playerStash.SetActive(true);
     }
 
-    public void ShowNormalStash(_Item currentItemStash)
+    public void ShowNormalStash(EnvObject currentItemStash)
     {
         if (_playerBasics.STATE != InteractionState.INVENTORY)
             _playerBasics.SwitchInventory(true);

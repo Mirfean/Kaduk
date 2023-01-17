@@ -30,8 +30,8 @@ public class SkeletalMove : MonoBehaviour
     [SerializeField]
     public Transform HoldedItem;
 
-    [SerializeField]
-    float _holdItemRotationIdle = -68f;
+/*    [SerializeField]
+    float _holdItemRotationIdle = -68f;*/
 
     [SerializeField]
     GameObject _flashlight;
@@ -53,10 +53,10 @@ public class SkeletalMove : MonoBehaviour
     /// <summary>
     /// Setting HoldItem to Idle basic status(Z rotation to -68)
     /// </summary>
-    public void SetArmsToIdle()
+/*    public void SetArmsToIdle()
     {
         HoldedItem.rotation = Quaternion.Euler(0, 0, _holdItemRotationIdle);
-    }
+    }*/
 
     public void TrackCursorByHands(Vector2 mousePos)
     {
@@ -66,8 +66,10 @@ public class SkeletalMove : MonoBehaviour
 
     private float GetMouseAngle(Vector2 mousePos, Transform refGameObject)
     {
-        Vector2 aimDiff = new Vector2(mousePos.x - refGameObject.position.x, mousePos.y - refGameObject.position.y);
-        float aimAngle = Mathf.Atan2(aimDiff.y, aimDiff.x) * Mathf.Rad2Deg;
+        //Vector2 aimDiff = new Vector2(mousePos.x - refGameObject.position.x, mousePos.y - refGameObject.position.y);
+        Vector2 aimDiff2 = (Vector3)mousePos - refGameObject.position;
+        aimDiff2.Normalize();
+        float aimAngle = Mathf.Atan2(aimDiff2.y, aimDiff2.x) * Mathf.Rad2Deg;
         return aimAngle;
     }
 

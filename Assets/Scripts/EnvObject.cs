@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
-public class _Item : OutlineObject
+public class EnvObject : OutlineObject
 {
     [SerializeField]
     private CursorManager _cursorManager;

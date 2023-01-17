@@ -10,9 +10,6 @@ public class InputRegistration : MonoBehaviour
 {
 #if USE_NEW_INPUT
 
-    private Player _playerInput;
-
-
     // Track which instance of this script registered the inputs, to prevent
     // another instance from accidentally unregistering them.
     protected static bool isRegistered = false;
@@ -23,18 +20,17 @@ public class InputRegistration : MonoBehaviour
         
     }
 
-    void OnEnable()
+/*    void OnEnable()
     {
-        _playerInput = FindObjectOfType<PlayerControl>().PlayerInput;
         if (!isRegistered)
         {
             isRegistered = true;
             _didIRegister = true;
-            _playerInput.Enable();
-            InputDeviceManager.RegisterInputAction("WSAD", _playerInput.Basic.WSAD);
-            InputDeviceManager.RegisterInputAction("MouseMovement", _playerInput.Basic.MouseMovement);
-            InputDeviceManager.RegisterInputAction("MouseLClick", _playerInput.Basic.MouseLClick);
-            InputDeviceManager.RegisterInputAction("Aim", _playerInput.Basic.Aim);
+            //UserInput.Instance.Input.Enable();
+            InputDeviceManager.RegisterInputAction("WSAD", UserInput.Instance.Input.Basic.WSAD);
+            InputDeviceManager.RegisterInputAction("MouseMovement", UserInput.Instance.Input.Basic.MouseMovement);
+            InputDeviceManager.RegisterInputAction("MouseLClick", UserInput.Instance.Input.Basic.MouseLClick);
+            InputDeviceManager.RegisterInputAction("Aim", UserInput.Instance.Input.Basic.Aim);
         }
     }
 
@@ -44,13 +40,13 @@ public class InputRegistration : MonoBehaviour
         {
             isRegistered = false;
             _didIRegister = false;
-            _playerInput.Disable();
+            //UserInput.Instance.Input.Disable();
             InputDeviceManager.UnregisterInputAction("WSAD");
             InputDeviceManager.UnregisterInputAction("MouseMovement");
             InputDeviceManager.UnregisterInputAction("MouseLClick");
             InputDeviceManager.UnregisterInputAction("Aim");
         }
-    }
+    }*/
 
 #endif
 

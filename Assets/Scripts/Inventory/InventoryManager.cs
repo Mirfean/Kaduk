@@ -11,8 +11,6 @@ using UnityEngine.InputSystem;
 /// </summary>
 public class InventoryManager : MonoBehaviour
 {
-    Player _playerInput;
-
     [SerializeField]
     InventoryGrid _selectedItemGrid;
     public InventoryGrid SelectedItemGRID
@@ -78,10 +76,9 @@ public class InventoryManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        _playerInput = FindObjectOfType<PlayerControl>().PlayerInput;
-        _playerInput.UI.SpawnItem.performed += ctx => SpawnRandomItem(ctx);
-        _playerInput.UI.InsertItem.performed += ctx => InsertRandomItem(ctx);
-        _playerInput.UI.RotateItem.performed += ctx => RotateHoldedItem(ctx);
+        UserInput.Instance.Input.UI.SpawnItem.performed += ctx => SpawnRandomItem(ctx);
+        UserInput.Instance.Input.UI.InsertItem.performed += ctx => InsertRandomItem(ctx);
+        UserInput.Instance.Input.UI.RotateItem.performed += ctx => RotateHoldedItem(ctx);
 
         _inventoryHighlight = GetComponent<InventoryHighlight>();
     }
@@ -258,7 +255,7 @@ public class InventoryManager : MonoBehaviour
 
     public bool CheckMouseInInventory()
     {
-        Vector2 mousePos = GetInvGridPositon(_playerInput.UI.MousePosition.ReadValue<Vector2>());
+        Vector2 mousePos = GetInvGridPositon(UserInput.Instance.Input.UI.MousePosition.ReadValue<Vector2>());
         if (mousePos == new Vector2(-1, -1)) return false;
         Vector2 gridsize = _selectedItemGrid.GridSize;
         //Debug.Log($"CheckMouseInInventory mousePos {mousePos} vs gridsize {gridsize}");
@@ -426,7 +423,7 @@ public class InventoryManager : MonoBehaviour
         _itemsStash.InventoryItemsSlot = new ItemFromInventory[_itemsStash.GridSize.x, _itemsStash.GridSize.y];
     }
 
-    public void HideItemStash(_Item currentItemStash)
+    public void HideItemStash(EnvObject currentItemStash)
     {
         Debug.Log("Hide Item Stash");
         SaveChangesInItemStash(currentItemStash);
@@ -435,7 +432,7 @@ public class InventoryManager : MonoBehaviour
     }
     #endregion
 
-    private void SaveChangesInItemStash(_Item currentItemStash)
+    private void SaveChangesInItemStash(EnvObject currentItemStash)
     {
         ItemFromInventory[] ItemsInInventory = _itemsStash.GetComponentsInChildren<ItemFromInventory>();
         Debug.Log("ItemsInInventory " + ItemsInInventory.Length);

@@ -51,7 +51,7 @@ public class ClickHoverManager : MonoBehaviour
 
     public Vector2 GetMousePos()
     {
-        return _playerControl.PlayerInput.Basic.MouseMovement.ReadValue<Vector2>();
+        return Camera.main.ScreenToWorldPoint(UserInput.Instance.Input.Basic.MouseMovement.ReadValue<Vector2>());
     }
 
     public void PrepareAndShowHover(StashType stashType)

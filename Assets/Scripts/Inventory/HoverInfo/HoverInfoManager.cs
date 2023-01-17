@@ -16,14 +16,11 @@ public class HoverInfoManager : MonoBehaviour
     public static Action <string, string> OnLookUpHover;
     public static Action OnMouseLoseFocus;
 
-    [SerializeField] PlayerControl _playerControl;
-
 
     // Start is called before the first frame update
     void Start()
     {
         if (DescriptionText == null) HoverWindow.GetComponentInChildren<TextMeshProUGUI>();
-        if (_playerControl is null) _playerControl = FindObjectOfType<PlayerControl>();
         HideInfo();
     }
 
@@ -76,7 +73,7 @@ public class HoverInfoManager : MonoBehaviour
 
     public Vector2 GetMousePos()
     {
-        Debug.Log("GetMousePos " + _playerControl.PlayerInput.Basic.MouseMovement.ReadValue<Vector2>());
-        return _playerControl.PlayerInput.Basic.MouseMovement.ReadValue<Vector2>();
+        Debug.Log("GetMousePos user input " + Camera.main.ScreenToWorldPoint(UserInput.Instance.Input.Basic.MouseMovement.ReadValue<Vector2>()));
+        return Camera.main.ScreenToWorldPoint(UserInput.Instance.Input.Basic.MouseMovement.ReadValue<Vector2>());
     }
 }

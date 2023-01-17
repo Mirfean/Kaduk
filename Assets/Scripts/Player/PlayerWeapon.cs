@@ -2,6 +2,7 @@ using Assets.Scripts.Enums;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Animations;
 using UnityEngine.InputSystem;
 
 [RequireComponent(typeof(PlayerControl))]
@@ -16,6 +17,8 @@ public class PlayerWeapon : MonoBehaviour
     [SerializeField] Transform _attachments;
 
     [SerializeField] private Animator _animator;
+
+    [SerializeField] Transform _holdedItem;
 
     [SerializeField]
     private bool _rotated = false;
@@ -70,14 +73,14 @@ public class PlayerWeapon : MonoBehaviour
         }
     }
 
-    public void UseWeapon(SkeletalMove skeletalMove, Player playerInput) {
+    public void UseWeapon(SkeletalMove skeletalMove) {
         if (CurrentWeapon != null)
         {
             if (CurrentWeapon.GetComponent<_Weapon>() is Gun)
             {
                 if (CurrentWeapon.GetComponent<Gun>().remainingBullets > 0)
                     CurrentWeapon.GetComponent<_Weapon>().Attack(
-                        Camera.main.ScreenToWorldPoint(playerInput.Basic.MouseMovement.ReadValue<Vector2>()),
+                        UserInput.Instance.GetBasicScreenToWorld(),
                         skeletalMove.HoldedItem.rotation);
                 else
                 {
@@ -124,7 +127,7 @@ public class PlayerWeapon : MonoBehaviour
         
     }
 
-    internal void AttachKnife(Transform arm, Transform hand)
+    public void AttachKnife(Transform arm, Transform hand)
     {
         CurrentWeapon.transform.position = hand.position;
         Quaternion x = arm.rotation;
@@ -145,8 +148,19 @@ public class PlayerWeapon : MonoBehaviour
     internal void ChangeWeapon(GameObject newWeapon)
     {
         if(CurrentWeapon != null) Destroy(CurrentWeapon.gameObject);
-        CurrentWeapon = newWeapon;
-        Instantiate(CurrentWeapon).transform.SetParent(_attachments);
+        CurrentWeapon = Instantiate(newWeapon);
+        CurrentWeapon.transform.SetParent(_holdedItem);
+        CurrentWeapon.SetActive(false);
+        if(CurrentWeapon.GetComponent<_Weapon>() is Gun)
+        {
+            Debug.Log("Siema");
+            var source = new ConstraintSource();
+            source.sourceTransform = _holdedItem;
+            source.weight = 1.0f;
+            CurrentWeapon.GetComponent<RotationConstraint>().SetSource(0, source);
+            CurrentWeapon.GetComponent<RotationConstraint>().constraintActive = true;
+        }
+
         /*        foreach(GameObject weapon in WeaponPrefabs)
                 {
                     if (weapon.GetComponent<_Weapon>() == newWeapon)
