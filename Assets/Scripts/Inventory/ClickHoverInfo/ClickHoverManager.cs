@@ -49,11 +49,6 @@ public class ClickHoverManager : MonoBehaviour
         }
     }
 
-    public Vector2 GetMousePos()
-    {
-        return Camera.main.ScreenToWorldPoint(UserInput.Instance.Input.Basic.MouseMovement.ReadValue<Vector2>());
-    }
-
     public void PrepareAndShowHover(StashType stashType)
     {
         Debug.Log("Stash type " + stashType);
@@ -95,7 +90,7 @@ public class ClickHoverManager : MonoBehaviour
                 ShowProperButtons(x);
                 break;
         }
-        ClickHoverWindow.transform.position = GetMousePos();
+        ClickHoverWindow.transform.position = UserInput.Instance.GetUIMousePos();
     }
 
     void ShowProperButtons(List<HoverButtonEnum> activeButtons)

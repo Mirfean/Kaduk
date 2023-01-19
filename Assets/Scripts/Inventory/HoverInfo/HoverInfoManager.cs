@@ -42,8 +42,10 @@ public class HoverInfoManager : MonoBehaviour
     {
         SoloNameText.text = name;
         HoverWindow.sizeDelta = new Vector2(SoloNameText.preferredWidth, SoloNameText.preferredHeight + 50);
+        
         HoverWindow.gameObject.SetActive(true);
-        Vector2 hoverNewPos = GetMousePos();
+        
+        Vector2 hoverNewPos = UserInput.Instance.GetUIMousePos();
         HoverWindow.transform.position = new Vector2(hoverNewPos.x + 50, hoverNewPos.y + 50);
     }
 
@@ -57,10 +59,11 @@ public class HoverInfoManager : MonoBehaviour
     {
         DescriptionText.text = description;
         NameText.text = name;
+        
         LookUpWindow.sizeDelta = new Vector2(DescriptionText.preferredWidth > 300 ? 300 : DescriptionText.preferredWidth * 2, DescriptionText.preferredHeight + 50);
-
         LookUpWindow.gameObject.SetActive(true);
-        Vector2 hoverNewPos = GetMousePos();
+        
+        Vector2 hoverNewPos = UserInput.Instance.GetUIMousePos();
         LookUpWindow.transform.position = new Vector2(hoverNewPos.x + 50, hoverNewPos.y + 50);
     }
 
@@ -69,11 +72,5 @@ public class HoverInfoManager : MonoBehaviour
         NameText.text = default;
         DescriptionText.text = default;
         LookUpWindow.gameObject.SetActive(false);
-    }
-
-    public Vector2 GetMousePos()
-    {
-        Debug.Log("GetMousePos user input " + Camera.main.ScreenToWorldPoint(UserInput.Instance.Input.Basic.MouseMovement.ReadValue<Vector2>()));
-        return Camera.main.ScreenToWorldPoint(UserInput.Instance.Input.Basic.MouseMovement.ReadValue<Vector2>());
     }
 }

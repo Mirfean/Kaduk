@@ -7,10 +7,12 @@ public class GameManager : MonoBehaviour
 {
 
     [SerializeField]
-    PlayerControl _playerBasics;
+    PlayerControl _playerControl;
 
     [SerializeField]
     InventoryManager _inventoryManager;
+
+    [SerializeField] RoomManager _roomManager;
 
     [SerializeField]
     GameObject _playerStash;
@@ -29,9 +31,9 @@ public class GameManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        if (_playerBasics == null)
+        if (_playerControl == null)
         {
-            _playerBasics = FindObjectOfType<PlayerControl>();
+            _playerControl = FindObjectOfType<PlayerControl>();
         }
         if (_inventoryManager == null)
         {
@@ -42,20 +44,20 @@ public class GameManager : MonoBehaviour
 
     public InteractionState GetPlayerSTATE()
     {
-        return _playerBasics.STATE;
+        return _playerControl.STATE;
     }
 
     //Player's Stash with items moving along all game
     public void ShowPlayerStash()
     {
-        _playerBasics.SwitchInventory(true);
+        _playerControl.SwitchInventory(true);
         _playerStash.SetActive(true);
     }
 
     public void ShowNormalStash(EnvObject currentItemStash)
     {
-        if (_playerBasics.STATE != InteractionState.INVENTORY)
-            _playerBasics.SwitchInventory(true);
+        if (_playerControl.STATE != InteractionState.INVENTORY)
+            _playerControl.SwitchInventory(true);
 
         _inventoryManager.ShowItemStash();
         currentItemStash_Item = currentItemStash;
@@ -67,7 +69,7 @@ public class GameManager : MonoBehaviour
     {
         if(_inventoryManager.HoldedItem == null)
         {
-            _playerBasics.SwitchInventory(false);
+            _playerControl.SwitchInventory(false);
 
             if (currentItemStash_Item != null) _inventoryManager.HideItemStash(currentItemStash_Item);
             currentItemStash_Item = null;
@@ -91,13 +93,24 @@ public class GameManager : MonoBehaviour
 
 
     //Transport Player between doors
-    internal void TransferPlayer(Door door)
+    public bool TransferPlayer(Door door)
     {
-        //ANIMATION ACTIONS
-        if (_playerBasics.PlayerMove.Agent.Warp(door.Destination.SpawnPoint.position))
+        if (_playerControl.STATE == InteractionState.DEFAULT)
         {
-            Debug.Log("Player moved to another room");
+            if (_playerControl.PlayerMove.Agent.Warp(door.Destination.SpawnPoint.position))
+            {
+                ChangeCurrentRoom(door.Destination.ThisRoom);
+                Debug.Log("Player moved to another room");
+                return true;
+            }
         }
+        return false;
+        //ANIMATION ACTIONS
+    }
+
+    public void ChangeCurrentRoom(Room room)
+    {
+        RoomManager.ChangeRoom(room);
     }
 
     private Door[] GetAllDoors()

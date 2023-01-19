@@ -98,7 +98,7 @@ public class PlayerControl : MonoBehaviour
                     return;
                 case InteractionState.INVENTORY:
                     Debug.Log("Inventory click");
-                    _inventoryManager.GrabAndDropItemIcon(UserInput.Instance.Input.UI.MousePosition.ReadValue<Vector2>());
+                    _inventoryManager.GrabAndDropItemIcon(UserInput.Instance.GetBasicMousePos());
                     return;
             }
         }
@@ -358,7 +358,7 @@ public class PlayerControl : MonoBehaviour
     private void ClickOnDefault()
     {
         RaycastHit hit;
-        Ray ray = Camera.main.ScreenPointToRay(UserInput.Instance.Input.Basic.MouseMovement.ReadValue<Vector2>());
+        Ray ray = Camera.main.ScreenPointToRay(UserInput.Instance.GetBasicMousePos());
         if (Physics.Raycast(ray, out hit))
         {
             Debug.Log("clicked something");

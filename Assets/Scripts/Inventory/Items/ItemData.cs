@@ -20,12 +20,6 @@ public class ItemData : ScriptableObject
     
     [SerializeField] public bool IsWeapon;
     [SerializeField] public WeaponData Weapon;
-
-    [SerializeField] public bool IsHeal;
-    [SerializeField] public int HealPower;
-
-    [SerializeField] public bool IsSanity;
-    [SerializeField] public int SanityPower;
     
     [SerializeField] public Sprite ItemIcon;
     [SerializeField] public bool[,] Fill;

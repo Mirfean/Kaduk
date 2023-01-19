@@ -17,13 +17,26 @@ public class RoomManager : MonoBehaviour
         ChangeRoom += ChangeActiveRoom;
     }
 
-    void ChangeActiveRoom(Room room)
+    void ChangeActiveRoom(Room newRoom)
     {
-        //Enemies
-        ActiveRoom.ActiveAllEnemies(false);
-        ActiveRoom = room;
-        ActiveRoom.ActiveAllEnemies(true);
+        SwitchActiveRoom(false);
+        
+        ActiveRoom = newRoom;
+
+        SwitchActiveRoom(true);
 
 
+    }
+
+    void SwitchActiveRoom(bool status)
+    {
+        ActiveRoom.Active = status;
+        ActiveRoom.ActiveAllEnemies(status);
+    }
+
+    void SwitchRoom(Room room, bool status)
+    {
+        room.Active = status;
+        room.ActiveAllEnemies(status);
     }
 }

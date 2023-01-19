@@ -6,8 +6,9 @@ public class Door : OutlineObject
 {
     [SerializeField]
     private Door _destination;
-
     public Door Destination { get { return _destination; } }
+
+    [SerializeField] public Room ThisRoom;
 
     [SerializeField]
     private Transform _spawnPoint;
@@ -18,6 +19,8 @@ public class Door : OutlineObject
     private Collider _collider;
 
     private GameManager _gameManager;
+
+    public bool Closed;
 
 
     // Start is called before the first frame update
@@ -43,7 +46,16 @@ public class Door : OutlineObject
     private void OnMouseUpAsButton()
     {
         if (_gameManager == null) FindObjectOfType<GameManager>();
-        _gameManager.TransferPlayer(this);
+
+        if (!Closed)
+        {
+            if (_gameManager.TransferPlayer(this))
+            {
+                RoomManager.ChangeRoom(Destination.ThisRoom);
+            }
+            
+        }
+        
     }
 
     private new void OnMouseExit()

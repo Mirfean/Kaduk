@@ -69,7 +69,7 @@ public class Gun : _Weapon
                 {
                     if (hit.collider.GetComponent<HitTarget>())
                     {
-                        hit.collider.GetComponent<HitTarget>().TakeHit(damage);
+                        hit.collider.GetComponent<HitTarget>().TakeHit(damage, weaponType);
 
                     }
                 }
@@ -97,7 +97,7 @@ public class Gun : _Weapon
                     {
                         if (bullet.collider.GetComponent<HitTarget>())
                         {
-                            bullet.collider.GetComponent<HitTarget>().TakeHit(damage);
+                            bullet.collider.GetComponent<HitTarget>().TakeHit(damage, weaponType);
                         }
                     }
                     else
@@ -128,7 +128,7 @@ public class Gun : _Weapon
         Vector3 direction = transform.right;
         Vector3 spread = Vector3.zero + (transform.up * Random.Range(-1f, 1f)) + (transform.right * Random.Range(-1f, 1f));
         spread.Normalize();
-        direction += spread * Random.Range(0f, 0.4f);
+        direction += spread * Random.Range(0f, _recoil);
         return direction;
     }
 

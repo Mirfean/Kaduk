@@ -18,6 +18,13 @@ public class EquippedWeapon : MonoBehaviour
     public void ChangeWeapon(_Weapon newWeapon)
     {
         CurrentWeapon = newWeapon;
+        CurrentWeapon.transform.rotation = new Quaternion();
         _weaponImage.sprite = CurrentWeapon.weaponData.WeaponIcon;
+        if (CurrentWeapon.weaponType == WeaponType.KNIFE)
+        {
+            _weaponImage.transform.Rotate(0, 0, 270f);
+        }
+        _weaponImage.GetComponent<RectTransform>().sizeDelta =
+            new Vector2(_weaponImage.preferredWidth, _weaponImage.preferredHeight);
     }
 }

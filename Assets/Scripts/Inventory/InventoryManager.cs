@@ -117,6 +117,7 @@ public class InventoryManager : MonoBehaviour
 
     public void ChangeGridForHoldedItem(StashType currentStashType)
     {
+        if (IsChangingCurrentWeapon()) return;
         CreateAndInsertCertainItem(HoldedItem.itemData, GetSecondGrid(currentStashType));
         Destroy(HoldedItem.gameObject);
         HoldedItem = null;
@@ -124,11 +125,24 @@ public class InventoryManager : MonoBehaviour
 
     public void ChangeGridForItem(StashType currentStashType)
     {
+        if (IsChangingCurrentWeapon()) return;
         CreateAndInsertCertainItem(ClickedItem.itemData, GetSecondGrid(currentStashType));
         Destroy(ClickedItem.gameObject);
         ClickedItem = null;
         OnMouseItem = null;
         HoldedItem = null;
+    }
+
+    bool IsChangingCurrentWeapon()
+    {
+        if (ClickedItem.GetComponent<_Weapon>())
+        {
+            if (ClickedItem.GetComponent<_Weapon>().weaponData.Name == _equipedWeapon.CurrentWeapon.weaponData.Name)
+            {
+                return true;
+            }
+        }
+        return false;
     }
 
     public void HandleHighlight(Vector2 mousePos)
@@ -255,7 +269,7 @@ public class InventoryManager : MonoBehaviour
 
     public bool CheckMouseInInventory()
     {
-        Vector2 mousePos = GetInvGridPositon(UserInput.Instance.Input.UI.MousePosition.ReadValue<Vector2>());
+        Vector2 mousePos = GetInvGridPositon(UserInput.Instance.GetBasicMousePos());
         if (mousePos == new Vector2(-1, -1)) return false;
         Vector2 gridsize = _selectedItemGrid.GridSize;
         //Debug.Log($"CheckMouseInInventory mousePos {mousePos} vs gridsize {gridsize}");

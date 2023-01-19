@@ -24,7 +24,7 @@ public class MeleeWeapon : _Weapon
     {
         if (collision.gameObject.GetComponent<HitTarget>())
         {
-            collision.gameObject.GetComponent<HitTarget>().TakeHit(damage);
+            collision.gameObject.GetComponent<HitTarget>().TakeHit(damage, weaponType);
         }
     }
 }

@@ -1,3 +1,4 @@
+using Assets.Scripts.Enums;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -5,6 +6,10 @@ using UnityEngine;
 public class Enemy : MonoBehaviour
 {
     [SerializeField] private int _maxHp;
+
+    [SerializeField] public bool _dead = false;
+
+    [SerializeField] private bool immune = false;
 
     [SerializeField] private int _currentHp;
 
@@ -36,14 +41,29 @@ public class Enemy : MonoBehaviour
         return distance < _attackDistance;
     }
 
-    public void TakeDamage(int damage)
+    public void TakeDamage(int damage, WeaponType weaponType)
     {
-        CurrentHp -= (damage - EnemyData._defence);
-        if (CurrentHp <= 0) DeathSequence();
+        if (!immune)
+        {
+            CurrentHp -= (damage - EnemyData._defence);
+            if (weaponType is WeaponType.KNIFE or WeaponType.AXE or WeaponType.PIPE)
+            {
+                ImmuneCoroutine();
+            }
+            if (CurrentHp <= 0)
+            {
+                _dead = true;
+                DeathSequence();
+            }
+        } 
     }
 
     IEnumerator ImmuneCoroutine()
     {
+        immune = true;
+        yield return new WaitForSecondsRealtime(0.5f);
+
+        immune = false;
         yield return null;
     }
 

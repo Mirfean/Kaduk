@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -40,14 +41,34 @@ public class UserInput : MonoBehaviour
         
     }
 
+    public Vector2 GetBasicMousePos()
+    {
+        if (Instance.Input.Basic.enabled)
+            //Debug.Log(Instance.Input.Basic.MouseMovement.ReadValue<Vector2>());
+            return Instance.Input.Basic.MouseMovement.ReadValue<Vector2>();
+        Debug.Log("Basic Input not enabled!");
+        return new Vector2();
+        
+    }
+
+    public Vector2 GetUIMousePos()
+    {
+        if (Instance.Input.UI.enabled)
+            return Instance.Input.UI.MousePosition.ReadValue<Vector2>();
+        Debug.Log("UI not enabled!");
+        return new Vector2();
+    }
+
     public Vector2 GetBasicScreenToWorld()
     {
-        return Camera.main.ScreenToWorldPoint(Input.Basic.MouseMovement.ReadValue<Vector2>());
+        Debug.Log("Screen to world " + Camera.main.ScreenToWorldPoint(Instance.Input.Basic.MouseMovement.ReadValue<Vector2>()));
+        return Camera.main.ScreenToWorldPoint(GetBasicMousePos());
     }
 
     public Vector2 GetUIScreenToWorld()
     {
         return Camera.main.ScreenToWorldPoint(Input.UI.MousePosition.ReadValue<Vector2>());
     }
+
 
 }

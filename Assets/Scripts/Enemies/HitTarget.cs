@@ -28,23 +28,23 @@ public class HitTarget : MonoBehaviour
         
     }
 
-    public void TakeHit(int damage)
+    public void TakeHit(int damage, WeaponType weaponType)
     {
         switch (_limbHit)
         {
             case LimbHit.NormalLimb:
                 {
-                    _parentEnemy.TakeDamage(damage);
+                    _parentEnemy.TakeDamage(damage, weaponType);
                     break;
                 }
             case LimbHit.CritLimb:
                 {
-                    _parentEnemy.TakeDamage(damage + (damage / 2));
+                    _parentEnemy.TakeDamage(damage + (damage / 2), weaponType);
                     break;
                 }
             case LimbHit.LessLimb:
                 {
-                    _parentEnemy.TakeDamage(damage/2);
+                    _parentEnemy.TakeDamage(damage/2, weaponType);
                     break;
                 }
 
