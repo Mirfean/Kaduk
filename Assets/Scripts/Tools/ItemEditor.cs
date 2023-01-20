@@ -79,7 +79,7 @@ public class ItemEditor : EditorWindow
             _itemData.ItemIcon = _icon;
             _itemData.IsAmmo = _isAmmo;
             _itemData.IsWeapon = _isWeapon;
-            _itemData.WeaponAmmo = WeaponAmmo;
+            //_itemData.WeaponAmmo = WeaponAmmo;
             _itemData.Width = _width;
             _itemData.Height = _height;
             _itemData.Fill = new bool[_width, _height];
@@ -107,7 +107,7 @@ public class ItemEditor : EditorWindow
             _name = _itemData.ItemName;
             _description = _itemData.Description;
             _isAmmo = _itemData.IsAmmo;
-            WeaponAmmo = _itemData.WeaponAmmo;
+            //WeaponAmmo = _itemData.WeaponAmmo;
             _isWeapon = _itemData.IsWeapon;
             _width = _itemData.Width;
             _height = _itemData.Height;

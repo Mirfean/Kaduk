@@ -6,12 +6,11 @@ using System.Threading.Tasks;
 
 namespace Assets.Scripts.Enums
 {
-    public enum ConsumableEffect
+    public enum ItemType
     {
-        Health,
-        Sanity,
-        Poison,
-        Bleed,
-        Terror
+        WEAPON,
+        AMMO,
+        CONSUMABLE,
+        KEYITEM
     }
 }

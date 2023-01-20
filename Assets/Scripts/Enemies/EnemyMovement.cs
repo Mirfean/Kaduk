@@ -78,4 +78,9 @@ public class EnemyMovement : MonoBehaviour
             transform.rotation = Quaternion.Euler(0, 180, 0);
         }
     }
+
+    void GetDirection()
+    {
+        _agent.path.corners
+    }
 }

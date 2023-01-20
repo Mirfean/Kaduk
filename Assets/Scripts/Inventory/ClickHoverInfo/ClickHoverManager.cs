@@ -124,6 +124,7 @@ public class ClickHoverManager : MonoBehaviour
                 //Healing, etc
                 break;
             case HoverButtonEnum.EQUIP:
+                if(_inventoryManager.ClickedItem.itemData.itemType == ItemType.WEAPON)
                 _inventoryManager.ChangeCurrentWeapon(_inventoryManager.ClickedItem.gameObject);
                 Debug.Log("EQUIP BUTTON");
                 break;
