@@ -95,13 +95,6 @@ public class PlayerNavMeshMovement : MonoBehaviour
         _targetDirection = Vector3.Lerp(_targetDirection, _movementVector, Mathf.Clamp01(_lerpTime * _targetLerpSpeed));
         _agent.ResetPath();
 
-        if (_agent.SetDestination(transform.position + _targetDirection))
-        {
-            Debug.Log("WsadMovement");
-        }
-
-        //Debug.Log("Speed on WSAD " + _targetDirection * _agent.speed * Time.deltaTime);
-
         if (_playerControl.STATE == InteractionState.DEFAULT)
             _agent.Move(_targetDirection * (_agent.speed/2) * Time.deltaTime);
         else if (_playerControl.STATE == InteractionState.AIMING)

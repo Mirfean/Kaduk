@@ -61,7 +61,7 @@ public class ItemData : ScriptableObject
             Element = element;
         }
     }
-    [SerializeField, HideInInspector] private Dictionary<ItemData, ItemData> combinable;
+    [SerializeField, HideInInspector] private Dictionary<string, ItemData> combinable;
     
     public void OnBeforeSerialize()
     {
@@ -76,11 +76,11 @@ public class ItemData : ScriptableObject
             }
         }
 
-        combinable = new Dictionary<ItemData, ItemData>();
+/*        combinable = new Dictionary<ItemData, ItemData>();
         for(int i = 0; i < Keys.Length; i++)
         {
             combinable.Add(Keys[i], Results[i]);
-        }
+        }*/
 
     }
     public void OnAfterDeserialize()
@@ -92,7 +92,7 @@ public class ItemData : ScriptableObject
             Fill[package.IndexX, package.IndexY] = package.Element;
         }
 
-        Keys = new ItemData[combinable.Count];
+/*        Keys = new ItemData[combinable.Count];
         Results = new ItemData[combinable.Count];
         int index = 0;
         foreach(KeyValuePair<ItemData, ItemData> dict in combinable)
@@ -100,6 +100,6 @@ public class ItemData : ScriptableObject
             Keys[index] = dict.Key;
             Results[index] = dict.Value;
             index++;
-        }
+        }*/
     }
 }

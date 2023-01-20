@@ -17,6 +17,10 @@ public class EnemyMovement : MonoBehaviour
 
     public bool Active { get => active; set => active = value; }
 
+    public bool debugFirstTime;
+    public List<GameObject> PathBalls;
+    public GameObject Ballprefab;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -27,14 +31,21 @@ public class EnemyMovement : MonoBehaviour
         _agent.updateUpAxis = false;
     }
 
+    private void FixedUpdate()
+    {
+
+    }
+
     void GoToNextPoint()
     {
+
         if (_patrolPoints.Length == 0) return;
 
         SetNewDestination(_patrolPoints[destPoint].position);
 
         destPoint = (destPoint + 1) % _patrolPoints.Length;
 
+        //DebugBalls();
     }
 
     public void TeleportToPoint(int point)
@@ -54,16 +65,36 @@ public class EnemyMovement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+/*        if (!debugFirstTime) debugFirstTime = true;
+        else DebugClearBalls();*/
+
         if (Active && !_agent.pathPending && _agent.remainingDistance < 0.3f)
         {
             GoToNextPoint();
+            if (_agent.pathPending)
+            {
+                Debug.Log("Next pos " + _agent.nextPosition);
+                Debug.Log("Corners " + _agent.path.GetCornersNonAlloc(_agent.path.corners));
+                foreach (Vector3 corn in _agent.path.corners)
+                {
+                    Debug.Log("Corner" + corn);
+                }
+            }
+            
+            
         }
 
         else if (hunt)
         {
             SetNewDestination(_player.transform.position);
+            
         }
-        
+
+        if (_agent.pathPending)
+        {
+            Debug.Log(_agent.nextPosition);
+        }
+
     }
 
     void SetNewDestination(Vector3 destination)
@@ -79,8 +110,37 @@ public class EnemyMovement : MonoBehaviour
         }
     }
 
+    public void SetHunt()
+    {
+        active = false;
+        hunt = true;
+    }
+
+    public void SetPatrol()
+    {
+        hunt = false;
+        Active = true;
+    }
+
     void GetDirection()
     {
-        _agent.path.corners
+        //_agent.path.corners;
     }
+
+/*    void DebugBalls()
+    {
+        PathBalls = new List<GameObject>();
+        GameObject x;
+        foreach(Vector3 corn in _agent.path.corners)
+        {
+            Instantiate(Ballprefab).transform.position = corn;
+        }
+    }
+    void DebugClearBalls()
+    {
+        foreach(GameObject gameO in PathBalls)
+        {
+            Destroy(gameO);
+        }
+    }*/
 }

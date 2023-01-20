@@ -465,7 +465,8 @@ public class InventoryManager : MonoBehaviour
     public void ChangeCurrentWeapon(GameObject weaponItem)
     {
         PlayerWeapon weapon = FindObjectOfType<PlayerWeapon>();
-        GameObject newWeaponPrefab = weaponItem.GetComponent<ItemFromInventory>().itemData.Weapon.WeaponPrefab;
+        //GameObject newWeaponPrefab = weaponItem.GetComponent<ItemFromInventory>().itemData.Weapon.WeaponPrefab;
+        GameObject newWeaponPrefab = new GameObject();
         weapon.ChangeWeapon(newWeaponPrefab);
         _equipedWeapon.ChangeWeapon(newWeaponPrefab.GetComponent<_Weapon>());
     }

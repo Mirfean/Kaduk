@@ -61,7 +61,7 @@ public class UserInput : MonoBehaviour
 
     public Vector2 GetBasicScreenToWorld()
     {
-        Debug.Log("Screen to world " + Camera.main.ScreenToWorldPoint(Instance.Input.Basic.MouseMovement.ReadValue<Vector2>()));
+        //Debug.Log("Screen to world " + Camera.main.ScreenToWorldPoint(Instance.Input.Basic.MouseMovement.ReadValue<Vector2>()));
         return Camera.main.ScreenToWorldPoint(GetBasicMousePos());
     }
 
