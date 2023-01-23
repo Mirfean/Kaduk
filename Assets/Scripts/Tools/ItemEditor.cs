@@ -2,22 +2,38 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
+using Assets.Scripts.Enums;
+using System;
 
 public class ItemEditor : EditorWindow
 {
     ItemData _itemData;
+    SerializedProperty _SPitemData;
 
-    bool[,] _fieldsArray = new bool[0, 0];
+    string _id;
+    string _name;
+    string _description;
+
     int _width = 1;
     int _height = 1;
-    bool _isAmmo;
-    ItemData WeaponAmmo;
-    bool _isWeapon;
-    string _description;
-    string _name;
+    bool[,] _fieldsArray = new bool[0, 0];
+
+    ItemType _itemType;
     Sprite _icon;
 
-    
+    int _combinableSize;
+    public string[] _secondItem = new string[0];
+    public string[] _result = new string [0];
+
+    ScriptableObject scriptableObj;
+    SerializedObject serialObj;
+    SerializedProperty secondItemProperty;
+    SerializedProperty resultProperty;
+
+    private void OnEnable()
+    {
+        
+    }
 
     [MenuItem("Window/ItemEditor")]
     public static void ShowWindow()
@@ -41,31 +57,79 @@ public class ItemEditor : EditorWindow
         }
 
         GUILayout.Label("Item", EditorStyles.boldLabel);
+        _id = EditorGUILayout.TextField("ID", _id);
         _name = EditorGUILayout.TextField("Name", _name);
         _description = EditorGUILayout.TextField("Description", _description);
         _icon = (Sprite)EditorGUILayout.ObjectField(_icon, typeof(Sprite), false);
-        _isWeapon = EditorGUILayout.Toggle("Is it a Weapon?", _isWeapon);
-        _isAmmo = EditorGUILayout.Toggle("Is it an Ammo?", _isAmmo);
-        if (_isAmmo)
+        _itemType = (ItemType)EditorGUILayout.EnumFlagsField(_itemType);
+
+        GUILayout.Label("Combinables", EditorStyles.miniBoldLabel);
+        if (secondItemProperty != null && resultProperty != null)
         {
-            WeaponAmmo = (ItemData)EditorGUILayout.ObjectField(_itemData, typeof(ItemData), true);
+            EditorGUILayout.PropertyField(secondItemProperty, true);
+            EditorGUILayout.PropertyField(resultProperty, true);
+            serialObj.ApplyModifiedProperties();
+            Debug.Log("Second " + _secondItem.Length);
+            Debug.Log("Result " + _result.Length);
         }
-        GUILayout.Label("Array width/height", EditorStyles.boldLabel);
+        
+        GUILayout.Label("Array width/height", EditorStyles.miniBoldLabel);
         _width = EditorGUILayout.IntField("Width", _width);
         _height = EditorGUILayout.IntField("Height", _height);
+        
         EditorGUI.BeginChangeCheck();
+        
         if (_width != _fieldsArray.GetLength(0) || _height != _fieldsArray.GetLength(1))
         {
             _fieldsArray = new bool[_width, _height];
         }
         if (EditorGUI.EndChangeCheck())
         {
-            ApplyNewItem();
+            UpdateEditorItem();
         }
         ChangeArrayWidthAndHeight();
         if (GUILayout.Button("Apply"))
         {
             SaveItemChanges();
+        }
+    }
+
+    void ApplyNewItem()
+    {
+        if (_itemData != null)
+        {
+            
+
+            _id = _itemData.id;
+            _name = _itemData.ItemName;
+            _description = _itemData.Description;
+            _width = _itemData.Width;
+            _height = _itemData.Height;
+            _icon = _itemData.ItemIcon;
+
+            if (_itemData.Fill != null) _fieldsArray = _itemData.Fill;
+            else
+            {
+                Debug.Log("fill is empty " + _itemData.Fill.Length);
+                _itemData.OnAfterDeserialize();
+                _fieldsArray = _itemData.Fill;
+            }
+
+            scriptableObj = this;
+            serialObj = new SerializedObject(scriptableObj);
+            secondItemProperty = serialObj.FindProperty("_secondItem");
+            resultProperty = serialObj.FindProperty("_result");
+
+            secondItemProperty.ClearArray();
+            resultProperty.ClearArray();
+
+            _secondItem = _itemData.SecondItem;
+            _result = _itemData.Result;
+
+            for (int i = 0; i < _secondItem.Length; i++)
+            {
+
+            }            
 
         }
     }
@@ -74,17 +138,25 @@ public class ItemEditor : EditorWindow
     {
         if (_itemData != null)
         {
+            _itemData.id = _id;
             _itemData.ItemName = _name;
             _itemData.Description = _description;
             _itemData.ItemIcon = _icon;
-            _itemData.IsAmmo = _isAmmo;
-            _itemData.IsWeapon = _isWeapon;
-            //_itemData.WeaponAmmo = WeaponAmmo;
+
+
             _itemData.Width = _width;
             _itemData.Height = _height;
             _itemData.Fill = new bool[_width, _height];
 
+            _itemData.SecondItem = new string[_secondItem.Length];
+            _itemData.Result = new string [_result.Length];
+
+            Debug.Log("Second Item " + _secondItem.Length + " " + _secondItem[0]);
+            Debug.Log("Result Item " + _result.Length + " " + _result[0]);
+
             System.Array.Copy(_fieldsArray, _itemData.Fill, _fieldsArray.Length);
+            System.Array.Copy(_secondItem, _itemData.SecondItem, _secondItem.Length);
+            System.Array.Copy(_result, _itemData.Result, _result.Length);
             //itemData.fill = fieldsArray;
             
             _itemData.OnBeforeSerialize();
@@ -100,36 +172,22 @@ public class ItemEditor : EditorWindow
         }
     }
 
-    private void ApplyNewItem()
+    private void UpdateEditorItem()
     {
         if (_itemData != null)
         {
             _name = _itemData.ItemName;
             _description = _itemData.Description;
-            _isAmmo = _itemData.IsAmmo;
-            //WeaponAmmo = _itemData.WeaponAmmo;
-            _isWeapon = _itemData.IsWeapon;
             _width = _itemData.Width;
             _height = _itemData.Height;
             _icon = _itemData.ItemIcon;
-            if(_itemData.Fill != null)
-            {
-                Debug.Log("fill is not empty? " + _itemData.Fill.Length);
-                _fieldsArray = _itemData.Fill;
-            }
+
+            if(_itemData.Fill != null) _fieldsArray = _itemData.Fill;
             else
             {
                 Debug.Log("fill is empty " + _itemData.Fill.Length);
                 _itemData.OnAfterDeserialize();
                 _fieldsArray = _itemData.Fill;
-            }
-
-            foreach(bool x in _itemData.Fill)
-            {
-                if (x)
-                {
-                    Debug.Log("FILL asd");
-                }
             }
         }
     }
@@ -146,5 +204,22 @@ public class ItemEditor : EditorWindow
             EditorGUILayout.EndHorizontal();
         }
     }
+
+    void SetArrays()
+    {
+        
+
+    }
+
+/*    void ChangeCombinableArrays()
+    {
+        int i = 0;
+        foreach (KeyValuePair<string, string> comb in _itemData.Combinables)
+        {
+            _secondItem[i] = comb.Key;
+            _result[i] = comb.Value;
+            i++;
+        }
+    }*/
 
 }

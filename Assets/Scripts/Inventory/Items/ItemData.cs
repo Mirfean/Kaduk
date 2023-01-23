@@ -8,25 +8,19 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "Item Data", menuName = "Duck/ItemData"), Serializable]
 public class ItemData : ScriptableObject
 {
-    [SerializeField] public string Description;
+    [SerializeField] public string id;
     [SerializeField] public string ItemName;
+    [SerializeField] public string Description;
+
     [SerializeField] public int Width = 1;
     [SerializeField] public int Height = 1;
-
-    [SerializeField] public ItemType itemType;
-
-    [SerializeField] public bool IsWeapon;
-    [SerializeField] public WeaponData weaponData;
-    [SerializeField] public bool IsGun;
-
-    [SerializeField] public bool IsAmmo;
-    [SerializeField] public ItemData AmmoWeapon;
-    
-    [SerializeField] public Sprite ItemIcon;
     [SerializeField] public bool[,] Fill;
 
-    [SerializeField] public ItemData[] Keys;
-    [SerializeField] public ItemData[] Results;
+    [SerializeField] public ItemType itemType;
+    [SerializeField] public Sprite ItemIcon;
+
+    [SerializeField] public string[] SecondItem;
+    [SerializeField] public string[] Result;
 
     public void CreateFill()
     {
@@ -61,8 +55,8 @@ public class ItemData : ScriptableObject
             Element = element;
         }
     }
-    [SerializeField, HideInInspector] private Dictionary<string, ItemData> combinable;
-    
+
+
     public void OnBeforeSerialize()
     {
         // Convert our unserializable array into a serializable list
@@ -76,10 +70,11 @@ public class ItemData : ScriptableObject
             }
         }
 
-/*        combinable = new Dictionary<ItemData, ItemData>();
-        for(int i = 0; i < Keys.Length; i++)
+/*        Keys = new string[Combinables.Count];
+        Results = new string[Combinables.Count];
+        for (int i = 0; i < Keys.Length; i++)
         {
-            combinable.Add(Keys[i], Results[i]);
+            Combinables.Add(Keys[i], Results[i]);
         }*/
 
     }
@@ -91,11 +86,10 @@ public class ItemData : ScriptableObject
         {
             Fill[package.IndexX, package.IndexY] = package.Element;
         }
-
-/*        Keys = new ItemData[combinable.Count];
-        Results = new ItemData[combinable.Count];
+        
+/*        Combinables = new Dictionary<string, string>();
         int index = 0;
-        foreach(KeyValuePair<ItemData, ItemData> dict in combinable)
+        foreach (KeyValuePair<string, string> dict in Combinables)
         {
             Keys[index] = dict.Key;
             Results[index] = dict.Value;
