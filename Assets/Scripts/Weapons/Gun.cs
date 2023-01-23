@@ -60,18 +60,27 @@ public class Gun : _Weapon
         {
             case WeaponType.HANDGUN:
                 direction = MakeSpreadDirection();
+                //Debug.Log("Direction " + direction);
                 RotateAim(mousePos, holdItemRot);
                 hit = Physics2D.Raycast(
                     _shootingPoint.transform.position,
                     direction,
-                    _bulletRange);
+                    _bulletRange, 
+                    ~layerEnemyToIgnore);
+                if(hit.collider == null) Debug.DrawLine(_shootingPoint.transform.position, direction * _bulletRange, Color.red, duration: 60f);
                 if (hit.collider != null)
                 {
+/*                    Debug.Log("Hitted " + hit.collider.name);
+                    Debug.DrawLine(_shootingPoint.transform.position, hit.collider.transform.position, Color.cyan, duration: 60f);
+                    
+                    if (hit.collider.gameObject.layer == 13) Debug.Log("Hit Enemy Core!");
+                    if (hit.collider.gameObject.layer == 23) Debug.Log("Hit Enemy Limb!");*/
                     if (hit.collider.GetComponent<HitTarget>())
                     {
+                        Debug.Log("Bullet hitted enemy!");
                         hit.collider.GetComponent<HitTarget>().TakeHit(damage, weaponType);
-
                     }
+                    Debug.Log("Bullet");
                 }
                 else
                 {
@@ -144,7 +153,7 @@ public class Gun : _Weapon
     {
         Vector2 aimDiff = new Vector2(mousePos.x - _shootingPoint.transform.position.x - transform.position.x, mousePos.y - _shootingPoint.transform.position.y - transform.position.y);
         float aimAngle = (Mathf.Atan2(aimDiff.y, aimDiff.x) * Mathf.Rad2Deg);
-        Debug.Log($"aimAngle {aimAngle} and gun rotation {transform.rotation.z} and holdItemRot {holdItemRot.z}");
+        //Debug.Log($"aimAngle {aimAngle} and gun rotation {transform.rotation.z} and holdItemRot {holdItemRot.z}");
     }
 
     public void RotateGun(bool rotated)

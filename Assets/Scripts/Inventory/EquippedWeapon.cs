@@ -17,6 +17,7 @@ public class EquippedWeapon : MonoBehaviour
 
     public void ChangeWeapon(_Weapon newWeapon)
     {
+        Debug.Log("New weapon " + newWeapon);
         CurrentWeapon = newWeapon;
         CurrentWeapon.transform.rotation = new Quaternion();
         _weaponImage.sprite = CurrentWeapon.weaponData.WeaponIcon;

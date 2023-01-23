@@ -134,7 +134,7 @@ MonoBehaviour:
   _bulletTrail: {fileID: 8330340890964394386, guid: e7bd0963f0b077243bf57784db5727d9,
     type: 3}
   _muzzleFlashAnimator: {fileID: 0}
-  _bulletRange: 20
+  _bulletRange: 162.91
   maxBullets: 12
   remainingBullets: 10
 --- !u!1 &1868292467014128437

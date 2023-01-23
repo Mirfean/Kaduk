@@ -96,9 +96,9 @@ public class PlayerNavMeshMovement : MonoBehaviour
         _agent.ResetPath();
 
         if (_playerControl.STATE == InteractionState.DEFAULT)
-            _agent.Move(_targetDirection * (_agent.speed/2) * Time.deltaTime);
+            _agent.Move(_targetDirection * _agent.speed * Time.deltaTime);
         else if (_playerControl.STATE == InteractionState.AIMING)
-            _agent.Move(_targetDirection * (_agent.speed/6) * Time.deltaTime);
+            _agent.Move(_targetDirection * _agent.speed/3 * Time.deltaTime);
 
         _lerpTime += Time.deltaTime;
     }

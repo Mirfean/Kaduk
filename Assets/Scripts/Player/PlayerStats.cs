@@ -1,3 +1,4 @@
+using Assets.Scripts.Enums;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -9,6 +10,8 @@ public class PlayerStats : MonoBehaviour
 
     [SerializeField] int _sanityCurrent;
     [SerializeField] internal int SanityMax;
+
+    [SerializeField] public List<Status> Statuses;
 
     public int Sanity { 
         get => _sanityCurrent;

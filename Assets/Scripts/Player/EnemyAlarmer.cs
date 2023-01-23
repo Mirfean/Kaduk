@@ -19,9 +19,9 @@ public class EnemyAlarmer : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.tag is "Enemy")
+        if (collision.gameObject.layer == 13)
         {
-            collision.gameObject.GetComponent<EnemyMovement>().SetHunt();
+            collision.gameObject.transform.parent.GetComponent<EnemyMovement>().SetHunt();
         }
     }
 }

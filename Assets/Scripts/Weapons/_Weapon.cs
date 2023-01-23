@@ -5,7 +5,6 @@ using UnityEngine;
 
 public class _Weapon : MonoBehaviour
 {
-    [SerializeField]
     public WeaponType weaponType;
     public string description;
     public int damage;
@@ -13,6 +12,8 @@ public class _Weapon : MonoBehaviour
     public WeaponData weaponData;
 
     public bool Rotated = false;
+
+    internal LayerMask layerEnemyToIgnore = 1 << 13 | 1 << 10;
 
     public virtual void Attack(Vector2 mousePos)
     {

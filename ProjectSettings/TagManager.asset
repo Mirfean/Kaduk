@@ -28,7 +28,7 @@ TagManager:
   - Player
   - ObstaclesDoors
   - NoPathfinding
-  - Enemies
+  - EnemiesCore
   - NoCollisions
   - Hole
   - MovingPlatform
@@ -38,7 +38,7 @@ TagManager:
   - Camera2
   - Camera3
   - Camera4
-  - 
+  - EnemyHitTarget
   - 
   - 
   - 
