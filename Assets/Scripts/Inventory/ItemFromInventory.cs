@@ -1,6 +1,3 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -21,7 +18,7 @@ public class ItemFromInventory : MonoBehaviour
 {
     [SerializeField]
     public string ItemDescription;
-    
+
     ItemData _itemdata;
 
     Rotation _rotation = Rotation.r0;
@@ -82,7 +79,7 @@ public class ItemFromInventory : MonoBehaviour
     {
         get { return _itemdata; }
         set
-        { 
+        {
             _itemdata = value;
 
             GetComponent<Image>().sprite = _itemdata.ItemIcon;
@@ -105,14 +102,14 @@ public class ItemFromInventory : MonoBehaviour
     internal void rotate()
     {
         SpaceFill = rotateFill();
-        
+
         if (_rotation == Rotation.r270) _rotation = Rotation.r0;
         else _rotation += 1;
 
         this.gameObject.transform.Rotate(0f, 0f, 90f);
 
         ChangePivot();
-        
+
     }
 
     private bool[,] rotateFill()
@@ -120,7 +117,7 @@ public class ItemFromInventory : MonoBehaviour
         bool[,] newFill = new bool[HEIGHT, WIDTH];
         for (int i = 0; i < WIDTH; i++)
         {
-            for(int j = 0; j < HEIGHT; j++)
+            for (int j = 0; j < HEIGHT; j++)
             {
                 Debug.Log($"for new[{j},{i}] value of old[{WIDTH - 1 - i},{ HEIGHT - (HEIGHT - j)}]");
                 newFill[j, i] = SpaceFill[WIDTH - 1 - i, HEIGHT - (HEIGHT - j)];
@@ -155,9 +152,9 @@ public class ItemFromInventory : MonoBehaviour
             case Rotation.r270:
                 {
                     newValue = new Vector2(0, 0);
-                    
+
                     break;
-                }         
+                }
 
         }
 

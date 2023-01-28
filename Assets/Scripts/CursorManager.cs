@@ -1,6 +1,4 @@
 using Assets.Scripts;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class CursorManager : MonoBehaviour
@@ -30,21 +28,21 @@ public class CursorManager : MonoBehaviour
     public CursorType CurrentCursor
     {
         get { return _currentCursor; }
-        set 
-        { 
+        set
+        {
             _currentCursor = value;
-            
+
         }
     }
 
     public void ChangeCursorTo(CursorType cursorType)
     {
-        int cursorInt = (int) cursorType;
-        if(cursorInt <= _cursors.Length - 1)
+        int cursorInt = (int)cursorType;
+        if (cursorInt <= _cursors.Length - 1)
         {
             Cursor.SetCursor(_cursors[cursorInt], Vector2.zero, CursorMode.ForceSoftware);
         }
-        
+
     }
 
 

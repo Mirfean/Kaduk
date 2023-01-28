@@ -1,5 +1,4 @@
 using Assets.Scripts.Enums;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -11,17 +10,19 @@ public class Gun : _Weapon
 
     [SerializeField]
     Transform _holdedItem;
-    
+
     [SerializeField, Range(0f, 1f)]
     float _recoil;
 
     [SerializeField]
     GameObject _bullet;
 
-    [SerializeField][Range(0.1f, 10f)]
+    [SerializeField]
+    [Range(0.1f, 10f)]
     float _bulletSpeed;
 
-    [SerializeField][Range(0.05f, 2)]
+    [SerializeField]
+    [Range(0.05f, 2)]
     float _fireRate = 0.5f;
 
     [SerializeField]
@@ -46,6 +47,11 @@ public class Gun : _Weapon
     [SerializeField]
     internal int remainingBullets;
 
+    private void Start()
+    {
+        if (Damage == 0) Damage = WeaponInfo.Damage;
+    }
+
     //TODO SHOTGUN AND RIFLE
     public override void Attack(Vector2 mousePos, Quaternion holdItemRot)
     {
@@ -65,20 +71,20 @@ public class Gun : _Weapon
                 hit = Physics2D.Raycast(
                     _shootingPoint.transform.position,
                     direction,
-                    _bulletRange, 
+                    _bulletRange,
                     ~layerEnemyToIgnore);
-                if(hit.collider == null) Debug.DrawLine(_shootingPoint.transform.position, direction * _bulletRange, Color.red, duration: 60f);
+                if (hit.collider == null) Debug.DrawLine(_shootingPoint.transform.position, direction * _bulletRange, Color.red, duration: 60f);
                 if (hit.collider != null)
                 {
-/*                    Debug.Log("Hitted " + hit.collider.name);
-                    Debug.DrawLine(_shootingPoint.transform.position, hit.collider.transform.position, Color.cyan, duration: 60f);
-                    
-                    if (hit.collider.gameObject.layer == 13) Debug.Log("Hit Enemy Core!");
-                    if (hit.collider.gameObject.layer == 23) Debug.Log("Hit Enemy Limb!");*/
+                    /*                    Debug.Log("Hitted " + hit.collider.name);
+                                        Debug.DrawLine(_shootingPoint.transform.position, hit.collider.transform.position, Color.cyan, duration: 60f);
+
+                                        if (hit.collider.gameObject.layer == 13) Debug.Log("Hit Enemy Core!");
+                                        if (hit.collider.gameObject.layer == 23) Debug.Log("Hit Enemy Limb!");*/
                     if (hit.collider.GetComponent<HitTarget>())
                     {
                         Debug.Log("Bullet hitted enemy!");
-                        hit.collider.GetComponent<HitTarget>().TakeHit(damage, weaponType);
+                        hit.collider.GetComponent<HitTarget>().TakeHit(Damage, weaponType);
                     }
                     Debug.Log("Bullet");
                 }
@@ -100,13 +106,13 @@ public class Gun : _Weapon
                         _bulletRange);
                     hits.Add(hit);
                 }
-                foreach(var bullet in hits) 
+                foreach (var bullet in hits)
                 {
                     if (bullet.collider != null)
                     {
                         if (bullet.collider.GetComponent<HitTarget>())
                         {
-                            bullet.collider.GetComponent<HitTarget>().TakeHit(damage, weaponType);
+                            bullet.collider.GetComponent<HitTarget>().TakeHit(Damage, weaponType);
                         }
                     }
                     else
@@ -128,7 +134,7 @@ public class Gun : _Weapon
 
         //var trailScript = trail.GetComponent<BulletTrail>();
 
-        
+
 
     }
 
@@ -143,7 +149,7 @@ public class Gun : _Weapon
 
     public Vector2 normalizeMousePos(Vector2 mousePos)
     {
-        Vector2 result = Mathf.Abs(mousePos.x) >= Mathf.Abs(mousePos.y) ? new Vector2(mousePos.x / Mathf.Abs(mousePos.x), mousePos.y/ Mathf.Abs(mousePos.x)) : new Vector2(mousePos.x / Mathf.Abs(mousePos.y), mousePos.y / Mathf.Abs(mousePos.y));
+        Vector2 result = Mathf.Abs(mousePos.x) >= Mathf.Abs(mousePos.y) ? new Vector2(mousePos.x / Mathf.Abs(mousePos.x), mousePos.y / Mathf.Abs(mousePos.x)) : new Vector2(mousePos.x / Mathf.Abs(mousePos.y), mousePos.y / Mathf.Abs(mousePos.y));
         Debug.Log("Normalized vector " + result.x + " " + result.y);
         return result;
     }

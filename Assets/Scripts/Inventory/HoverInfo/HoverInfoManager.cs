@@ -1,6 +1,4 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
@@ -13,7 +11,7 @@ public class HoverInfoManager : MonoBehaviour
     public RectTransform LookUpWindow;
 
     public static Action<string> OnMouseAboveItem;
-    public static Action <string, string> OnLookUpHover;
+    public static Action<string, string> OnLookUpHover;
     public static Action OnMouseLoseFocus;
 
 
@@ -33,8 +31,8 @@ public class HoverInfoManager : MonoBehaviour
 
     private void OnDisable()
     {
-        OnLookUpHover += ShowLookUpInfo;
-        OnMouseAboveItem += ShowInfo;
+        OnLookUpHover -= ShowLookUpInfo;
+        OnMouseAboveItem -= ShowInfo;
         OnMouseLoseFocus -= HideInfo;
     }
 
@@ -42,9 +40,9 @@ public class HoverInfoManager : MonoBehaviour
     {
         SoloNameText.text = name;
         HoverWindow.sizeDelta = new Vector2(SoloNameText.preferredWidth, SoloNameText.preferredHeight + 50);
-        
+
         HoverWindow.gameObject.SetActive(true);
-        
+
         Vector2 hoverNewPos = UserInput.Instance.GetUIMousePos();
         HoverWindow.transform.position = new Vector2(hoverNewPos.x + 50, hoverNewPos.y + 50);
     }
@@ -59,10 +57,10 @@ public class HoverInfoManager : MonoBehaviour
     {
         DescriptionText.text = description;
         NameText.text = name;
-        
+
         LookUpWindow.sizeDelta = new Vector2(DescriptionText.preferredWidth > 300 ? 300 : DescriptionText.preferredWidth * 2, DescriptionText.preferredHeight + 50);
         LookUpWindow.gameObject.SetActive(true);
-        
+
         Vector2 hoverNewPos = UserInput.Instance.GetUIMousePos();
         LookUpWindow.transform.position = new Vector2(hoverNewPos.x + 50, hoverNewPos.y + 50);
     }

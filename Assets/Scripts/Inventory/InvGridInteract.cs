@@ -1,10 +1,8 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
 [RequireComponent(typeof(InventoryGrid))]
-public class InvGridInteract : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler 
+public class InvGridInteract : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 {
     InventoryManager _inventoryManager;
     [SerializeField]
@@ -31,10 +29,10 @@ public class InvGridInteract : MonoBehaviour, IPointerEnterHandler, IPointerExit
         {
             _inventoryManager.SelectedItemGRID = null;
         }
-        
+
     }
 
-    
+
 
 
 }

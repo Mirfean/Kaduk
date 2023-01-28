@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ff8479ba467155649a986a2e2401194e, type: 3}
   m_Name: Handgun
   m_EditorClassIdentifier: 
-  Name: 
+  Name: Handgun
   Damage: 5
   AttackSpeed: 0.7
   IsGun: 1

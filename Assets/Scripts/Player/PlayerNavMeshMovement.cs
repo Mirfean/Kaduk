@@ -1,5 +1,4 @@
 using Assets.Scripts.Enums;
-using System;
 using UnityEngine;
 using UnityEngine.AI;
 #if ENABLE_INPUT_SYSTEM
@@ -64,7 +63,7 @@ public class PlayerNavMeshMovement : MonoBehaviour
     private void Update()
     {
         if (_movement.inProgress &&
-            _movementVector != Vector3.zero && 
+            _movementVector != Vector3.zero &&
             (_playerControl.STATE == InteractionState.DEFAULT || _playerControl.STATE == InteractionState.AIMING)) WsadMovement();
         else if (_movementVector == Vector3.zero && IsMoving)
         {
@@ -84,8 +83,8 @@ public class PlayerNavMeshMovement : MonoBehaviour
         _movementVector.Normalize();
 
         //Workaround on issue with moving UP/DOWN
-        _movementVector.x = _movementVector.x == 0.0f ? 0.001f : _movementVector.x; 
-        
+        _movementVector.x = _movementVector.x == 0.0f ? 0.001f : _movementVector.x;
+
         if (_movementVector != _lastDirection)
         {
             _lerpTime = 0;
@@ -98,7 +97,7 @@ public class PlayerNavMeshMovement : MonoBehaviour
         if (_playerControl.STATE == InteractionState.DEFAULT)
             _agent.Move(_targetDirection * _agent.speed * Time.deltaTime);
         else if (_playerControl.STATE == InteractionState.AIMING)
-            _agent.Move(_targetDirection * _agent.speed/3 * Time.deltaTime);
+            _agent.Move(_targetDirection * _agent.speed / 3 * Time.deltaTime);
 
         _lerpTime += Time.deltaTime;
     }

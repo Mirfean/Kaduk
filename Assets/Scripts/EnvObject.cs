@@ -1,7 +1,5 @@
 using Assets.Scripts;
 using Assets.Scripts.Enums;
-using System;
-using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
@@ -14,11 +12,11 @@ public class EnvObject : OutlineObject
     [SerializeField]
     public string Description;
 
-/*    [SerializeField]
-    Material _baseMaterial;
+    /*    [SerializeField]
+        Material _baseMaterial;
 
-    [SerializeField]
-    Material _outlineMaterial;*/
+        [SerializeField]
+        Material _outlineMaterial;*/
 
     [SerializeField]
     bool _isStash;
@@ -37,23 +35,32 @@ public class EnvObject : OutlineObject
 
     public List<ItemData> Items { get { return items; } set { items = value; } }
 
+    [SerializeField] Sprite _defaultSprite;
+
+    [SerializeField] Sprite _inUseSprite;
+
     new void Start()
     {
         base.Start();
         _cursorManager = FindObjectOfType<CursorManager>();
         _gameManager = FindObjectOfType<GameManager>();
+
+        if (_defaultSprite == null) _defaultSprite = GetComponent<Sprite>();
+
         if (_isStash)
         {
             _textMesh = transform.GetChild(0).transform.GetChild(0).GetComponent<TextMeshProUGUI>();
             _textMesh.gameObject.SetActive(false);
         }
+
+
         //if (items == null) items = new List<ItemData>();
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+
     }
 
     void OnUse(Transform player)
@@ -69,14 +76,14 @@ public class EnvObject : OutlineObject
             gameObject.GetComponent<SpriteRenderer>().material = _outlineMaterial;
             HandleCursorAndText(true);
         }
-        
-        
+
+
     }
 
     private void OnMouseOver()
     {
         //Show Interact sign
-        
+
     }
 
     private new void OnMouseExit()
@@ -96,10 +103,12 @@ public class EnvObject : OutlineObject
             Debug.Log($"{Description}");
             if (_isStash)
             {
+                if (_inUseSprite != null) gameObject.GetComponent<SpriteRenderer>().sprite = _inUseSprite;
                 _gameManager.ShowNormalStash(this);
             }
             if (_isPlayerStash)
             {
+                if (_inUseSprite != null) gameObject.GetComponent<SpriteRenderer>().sprite = _inUseSprite;
                 _gameManager.ShowPlayerStash();
             }
         }

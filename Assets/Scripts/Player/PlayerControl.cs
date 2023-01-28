@@ -1,10 +1,7 @@
 using Assets.Scripts.Enums;
-using PixelCrushers.DialogueSystem;
 using System;
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.AI;
 using UnityEngine.InputSystem;
 
 public class PlayerControl : MonoBehaviour
@@ -51,10 +48,10 @@ public class PlayerControl : MonoBehaviour
         _playerWeapon = GetComponent<PlayerWeapon>();
         _skeletalMove = GetComponent<SkeletalMove>();
         _playerMovement = GetComponent<PlayerNavMeshMovement>();
-        
+
         _inventoryManager = FindObjectOfType<InventoryManager>();
         _gameManager = FindObjectOfType<GameManager>();
-        
+
         AimModeChange += ChangeAimStatus;
         AimModeChange += _playerMovement.ModifySpeed;
 
@@ -64,8 +61,8 @@ public class PlayerControl : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-/*        Debug.Log("Basic " + PlayerInput.Basic.enabled);
-        Debug.Log("UI " + PlayerInput.UI.enabled);*/
+        /*        Debug.Log("Basic " + PlayerInput.Basic.enabled);
+                Debug.Log("UI " + PlayerInput.UI.enabled);*/
     }
 
     public void TurnOffInput()
@@ -98,7 +95,7 @@ public class PlayerControl : MonoBehaviour
                     return;
                 case InteractionState.INVENTORY:
                     Debug.Log("Inventory click");
-                    _inventoryManager.GrabAndDropItemIcon(UserInput.Instance.GetBasicMousePos());
+                    _inventoryManager.GrabAndDropItemIcon(UserInput.Instance.GetUIMousePos());
                     return;
             }
         }
@@ -124,11 +121,11 @@ public class PlayerControl : MonoBehaviour
             if (STATE == InteractionState.AIMING)
             {
                 Debug.Log("Aim");
-                if(_playerWeapon.CurrentWeapon.GetComponent<_Weapon>().weaponType == WeaponType.HANDGUN)
+                if (_playerWeapon.CurrentWeapon.GetComponent<_Weapon>().weaponType == WeaponType.HANDGUN)
                 {
                     PistolAiming(realPos);
                 }
-                
+
             }
         }
 
@@ -196,7 +193,7 @@ public class PlayerControl : MonoBehaviour
                         _playerWeapon.AttachKnife(arm: _skeletalMove.RightArm, hand: _skeletalMove.RightHand);
                         Debug.Log("Holding Knife!");
                         yield return null;
-                    } while (UserInput.Instance.Input.Basic.Aim.IsInProgress());   
+                    } while (UserInput.Instance.Input.Basic.Aim.IsInProgress());
                     break;
                 case WeaponType.HANDGUN:
                     _skeletalMove.HoldedItem.gameObject.SetActive(true);
@@ -209,7 +206,7 @@ public class PlayerControl : MonoBehaviour
                     _skeletalMove.HoldedItem.gameObject.SetActive(false);
                     break;
             }
-            
+
             Debug.Log("stop aiming");
             AimModeChange(false);
         }
@@ -351,7 +348,7 @@ public class PlayerControl : MonoBehaviour
             _characterSprite.rotation = Quaternion.Euler(0, 0, 0);
             _playerWeapon.Rotated = false;
         }
-        
+
     }
     #endregion
 

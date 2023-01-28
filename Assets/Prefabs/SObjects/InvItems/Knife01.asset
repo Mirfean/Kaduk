@@ -16,12 +16,19 @@ MonoBehaviour:
   ItemName: Kitchen Knife
   Description: Slightly dulled kitchen knife. The wooden handle has soaked up a lot
     of blood.
+  IsKeyItem: 0
   Width: 1
   Height: 3
-  itemType: 0
+  itemType: 1
   ItemIcon: {fileID: 21300000, guid: 24915939473a4dd4197053206d967aa2, type: 3}
   SecondItem: []
   Result: []
+  Effect: 0
+  EffectPower: 0
+  weaponType: 1
+  weaponData: {fileID: 11400000, guid: 52a287492dfd5e746b6bbdcda00027e2, type: 2}
+  StackMax: 0
+  AmmoType: 0
   serializable:
   - IndexX: 0
     IndexY: 0

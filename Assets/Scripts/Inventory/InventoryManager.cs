@@ -1,6 +1,5 @@
 using Assets.Scripts.Enums;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -43,16 +42,16 @@ public class InventoryManager : MonoBehaviour
     [SerializeField] public ItemFromInventory HoldedItem;
 
     [SerializeField] public ItemFromInventory ClickedItem;
-    
+
     [SerializeField] public ItemFromInventory OnMouseItem;
-    
+
     [SerializeField] ItemFromInventory _overlapItem;
-    
+
     [SerializeField] ItemFromInventory _itemToHighlight;
 
     [SerializeField]
     Vector2 _oldPositon;
-    
+
     [SerializeField]
     public RectTransform CurrentItemRectTransform;
 
@@ -66,6 +65,7 @@ public class InventoryManager : MonoBehaviour
     private void OnEnable()
     {
         OnMouseAboveItem += SetOnMouseItem;
+
     }
 
     private void OnDisable()
@@ -85,7 +85,7 @@ public class InventoryManager : MonoBehaviour
 
     public void SetOnMouseItem(ItemFromInventory item)
     {
-         OnMouseItem = item;
+        OnMouseItem = item;
     }
 
     public InventoryGrid GetSecondGrid(StashType stashType)
@@ -102,9 +102,9 @@ public class InventoryManager : MonoBehaviour
                 return _playerInventory;
         }
 
-        if(SelectedItemGRID == _playerInventory)
+        if (SelectedItemGRID == _playerInventory)
         {
-            
+
         }
         else if (SelectedItemGRID == _playerStash || SelectedItemGRID == _itemsStash)
         {
@@ -112,7 +112,7 @@ public class InventoryManager : MonoBehaviour
         }
         Debug.Log("There is only one grid");
         return SelectedItemGRID;
-     
+
     }
 
     public void ChangeGridForHoldedItem(StashType currentStashType)
@@ -137,7 +137,7 @@ public class InventoryManager : MonoBehaviour
     {
         if (ClickedItem.GetComponent<_Weapon>())
         {
-            if (ClickedItem.GetComponent<_Weapon>().weaponData.Name == _equipedWeapon.CurrentWeapon.weaponData.Name)
+            if (ClickedItem.GetComponent<_Weapon>().WeaponInfo.Name == _equipedWeapon.CurrentWeapon.WeaponInfo.Name)
             {
                 return true;
             }
@@ -149,12 +149,12 @@ public class InventoryManager : MonoBehaviour
     {
         Vector2Int positionOnGrid = GetInvGridPositon(mousePos);
         if (_oldPositon == positionOnGrid || positionOnGrid == new Vector2Int(-1, -1)) return;
-        
+
         _oldPositon = positionOnGrid;
         if (HoldedItem == null)
         {
             _itemToHighlight = SelectedItemGRID.GetItem(positionOnGrid);
-            if(_itemToHighlight != null)
+            if (_itemToHighlight != null)
             {
                 Debug.Log("Item to highlight " + _itemToHighlight + _itemToHighlight.ItemDescription);
 
@@ -169,7 +169,7 @@ public class InventoryManager : MonoBehaviour
                 {
                     _inventoryHighlight.Show(false);
                 }
-                
+
             }
 
         }
@@ -184,9 +184,9 @@ public class InventoryManager : MonoBehaviour
 
     public Vector2Int GetInvGridPositon(Vector2 mousePosition)
     {
-        if (HoldedItem == null || SelectedItemGRID == null) {  return new Vector2Int(-1, -1); }
+        if (HoldedItem == null || SelectedItemGRID == null) { return new Vector2Int(-1, -1); }
         SelectedItemGRID.PositionOnTheGrid = new Vector2(mousePosition.x - SelectedItemGRID.GridRectTransform.position.x, mousePosition.y - SelectedItemGRID.GridRectTransform.position.y);
-        SelectedItemGRID.TileGridPosition = new Vector2Int ((int) (SelectedItemGRID.PositionOnTheGrid.x / InventoryGrid.TileSizeWidth), (int)(SelectedItemGRID.PositionOnTheGrid.y / InventoryGrid.TileSizeHeight));
+        SelectedItemGRID.TileGridPosition = new Vector2Int((int)(SelectedItemGRID.PositionOnTheGrid.x / InventoryGrid.TileSizeWidth), (int)(SelectedItemGRID.PositionOnTheGrid.y / InventoryGrid.TileSizeHeight));
         return SelectedItemGRID.TileGridPosition;
     }
 
@@ -243,7 +243,7 @@ public class InventoryManager : MonoBehaviour
                 {
                     GrabItemIcon(tileGridPosition);
                 }
-                
+
                 //Show Highlighter
             }
             else
@@ -269,7 +269,7 @@ public class InventoryManager : MonoBehaviour
 
     public bool CheckMouseInInventory()
     {
-        Vector2 mousePos = GetInvGridPositon(UserInput.Instance.GetBasicMousePos());
+        Vector2 mousePos = GetInvGridPositon(UserInput.Instance.GetUIMousePos());
         if (mousePos == new Vector2(-1, -1)) return false;
         Vector2 gridsize = _selectedItemGrid.GridSize;
         //Debug.Log($"CheckMouseInInventory mousePos {mousePos} vs gridsize {gridsize}");
@@ -319,7 +319,7 @@ public class InventoryManager : MonoBehaviour
     {
         ItemFromInventory item = Instantiate(ItemPrefab).GetComponent<ItemFromInventory>();
         HoldedItem = item;
-        
+
         CurrentItemRectTransform = item.GetComponent<RectTransform>();
         CurrentItemRectTransform.SetParent(InventoryCanvasTransform);
 
@@ -344,7 +344,7 @@ public class InventoryManager : MonoBehaviour
 
         Debug.Log($"Spawn {HoldedItem}");
     }
-    
+
     public void InsertRandomItem(InputAction.CallbackContext context)
     {
         if (_selectedItemGrid == null) return;
@@ -365,11 +365,11 @@ public class InventoryManager : MonoBehaviour
     }
     #endregion
 
-/*  ??????
-    ??????
-    ??????
-    ?????????
-    ????????*/
+    /*  ??????
+        ??????
+        ??????
+        ?????????
+        ????????*/
 
 
     #region Item Spawner
@@ -406,7 +406,7 @@ public class InventoryManager : MonoBehaviour
         }
     }
 
-    
+
     #endregion
 
     #region Grids SHOW/HIDE
@@ -451,9 +451,9 @@ public class InventoryManager : MonoBehaviour
         ItemFromInventory[] ItemsInInventory = _itemsStash.GetComponentsInChildren<ItemFromInventory>();
         Debug.Log("ItemsInInventory " + ItemsInInventory.Length);
         List<ItemData> newItems = new List<ItemData>();
-        
+
         if (ItemsInInventory.Length == 0) return;
-        
+
         for (int i = 0; i < ItemsInInventory.Length; i++)
         {
             newItems.Add(ItemsInInventory[i].itemData);
@@ -465,8 +465,8 @@ public class InventoryManager : MonoBehaviour
     public void ChangeCurrentWeapon(GameObject weaponItem)
     {
         PlayerWeapon weapon = FindObjectOfType<PlayerWeapon>();
-        //GameObject newWeaponPrefab = weaponItem.GetComponent<ItemFromInventory>().itemData.Weapon.WeaponPrefab;
-        GameObject newWeaponPrefab = new GameObject();
+        GameObject newWeaponPrefab = weaponItem.GetComponent<ItemFromInventory>().itemData.weaponData.WeaponPrefab;
+        //GameObject newWeaponPrefab = new GameObject();
         weapon.ChangeWeapon(newWeaponPrefab);
         _equipedWeapon.ChangeWeapon(newWeaponPrefab.GetComponent<_Weapon>());
     }

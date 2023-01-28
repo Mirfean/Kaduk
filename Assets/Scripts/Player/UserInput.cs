@@ -1,6 +1,3 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class UserInput : MonoBehaviour
@@ -38,7 +35,7 @@ public class UserInput : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+
     }
 
     public Vector2 GetBasicMousePos()
@@ -48,7 +45,7 @@ public class UserInput : MonoBehaviour
             return Instance.Input.Basic.MouseMovement.ReadValue<Vector2>();
         Debug.Log("Basic Input not enabled!");
         return new Vector2();
-        
+
     }
 
     public Vector2 GetUIMousePos()

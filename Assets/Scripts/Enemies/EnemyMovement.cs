@@ -21,6 +21,11 @@ public class EnemyMovement : MonoBehaviour
     public List<GameObject> PathBalls;
     public GameObject Ballprefab;
 
+    [SerializeField] Transform _spot;
+
+
+    [SerializeField] float _attackReload;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -65,8 +70,8 @@ public class EnemyMovement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-/*        if (!debugFirstTime) debugFirstTime = true;
-        else DebugClearBalls();*/
+        /*        if (!debugFirstTime) debugFirstTime = true;
+                else DebugClearBalls();*/
 
         if (Active && !_agent.pathPending && _agent.remainingDistance < 0.3f)
         {
@@ -80,14 +85,14 @@ public class EnemyMovement : MonoBehaviour
                     Debug.Log("Corner" + corn);
                 }
             }
-            
-            
+
+
         }
 
         else if (hunt)
         {
             SetNewDestination(_player.transform.position);
-            
+
         }
 
         if (_agent.pathPending)
@@ -100,7 +105,7 @@ public class EnemyMovement : MonoBehaviour
     void SetNewDestination(Vector3 destination)
     {
         _agent.SetDestination(destination);
-        if(destination.x < transform.position.x)
+        if (destination.x < transform.position.x)
         {
             transform.rotation = Quaternion.Euler(0, 0, 0);
         }
@@ -114,6 +119,7 @@ public class EnemyMovement : MonoBehaviour
     {
         active = false;
         hunt = true;
+        StartCoroutine(AttackCoroutine());
     }
 
     public void SetPatrol()
@@ -127,20 +133,20 @@ public class EnemyMovement : MonoBehaviour
         //_agent.path.corners;
     }
 
-/*    void DebugBalls()
+    IEnumerator AttackCoroutine()
     {
-        PathBalls = new List<GameObject>();
-        GameObject x;
-        foreach(Vector3 corn in _agent.path.corners)
+        Debug.Log("Waiting for attack");
+        while (hunt)
         {
-            Instantiate(Ballprefab).transform.position = corn;
+            //Debug.Log("Distance from player " + Mathf.Abs(_spot.position.x - _player.transform.position.x) + " " + Mathf.Abs(_spot.position.y - _player.transform.position.y));
+            if (Mathf.Abs(_spot.position.x - _player.transform.position.x) < 0.75f &&
+                Mathf.Abs(_spot.position.y - _player.transform.position.y) < 0.75f)
+            {
+                Debug.Log("Attack!");
+                yield return new WaitForSecondsRealtime(_attackReload);
+            }
+            yield return null;
         }
+        yield return null;
     }
-    void DebugClearBalls()
-    {
-        foreach(GameObject gameO in PathBalls)
-        {
-            Destroy(gameO);
-        }
-    }*/
 }

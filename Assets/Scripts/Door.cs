@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class Door : OutlineObject
@@ -35,7 +33,7 @@ public class Door : OutlineObject
     // Update is called once per frame
     void Update()
     {
-        
+
     }
 
     private new void OnMouseEnter()
@@ -53,9 +51,9 @@ public class Door : OutlineObject
             {
                 RoomManager.ChangeRoom(Destination.ThisRoom);
             }
-            
+
         }
-        
+
     }
 
     private new void OnMouseExit()

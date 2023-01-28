@@ -1,6 +1,4 @@
 using Assets.Scripts.Enums;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class GameManager : MonoBehaviour
@@ -67,13 +65,13 @@ public class GameManager : MonoBehaviour
 
     public void HideInventory()
     {
-        if(_inventoryManager.HoldedItem == null)
+        if (_inventoryManager.HoldedItem == null)
         {
             _playerControl.SwitchInventory(false);
 
             if (currentItemStash_Item != null) _inventoryManager.HideItemStash(currentItemStash_Item);
             currentItemStash_Item = null;
-            
+
             _inventoryManager.HidePlayerStash();
 
             HideInventoryWindow();

@@ -99,10 +99,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   weaponType: 1
-  description: 
-  damage: 4
-  attackSpeed: 1
-  weaponData: {fileID: 11400000, guid: 52a287492dfd5e746b6bbdcda00027e2, type: 2}
+  Description: 
+  Damage: 3
+  AttackSpeed: 0.45
+  WeaponInfo: {fileID: 11400000, guid: 52a287492dfd5e746b6bbdcda00027e2, type: 2}
+  WeaponItemData: {fileID: 11400000, guid: fa6a9fdb57953a242a3268409e7fe46e, type: 2}
   Rotated: 0
 --- !u!70 &4428549600459000476
 CapsuleCollider2D:

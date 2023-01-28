@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -8,17 +7,24 @@ public class HoverInfo : MonoBehaviour, IPointerEnterHandler, IPointerExitHandle
     public string ItemDescription;
     public string ItemName;
     private float _timeToWait = 0.5f;
+    [SerializeField] private bool _isStatusInfo;
 
     public void Start()
     {
-        ItemName = GetComponent<ItemFromInventory>().itemData.ItemName;
-        ItemDescription = GetComponent<ItemFromInventory>().itemData.Description;
+        if (!_isStatusInfo)
+        {
+            ItemName = GetComponent<ItemFromInventory>().itemData.ItemName;
+            ItemDescription = GetComponent<ItemFromInventory>().itemData.Description;
+        }
     }
 
     public void OnPointerEnter(PointerEventData eventData)
     {
         StopAllCoroutines();
-        InventoryManager.OnMouseAboveItem(GetComponent<ItemFromInventory>());
+        if (!_isStatusInfo)
+        {
+            InventoryManager.OnMouseAboveItem(GetComponent<ItemFromInventory>());
+        }
         StartCoroutine(StartTimer());
     }
 
@@ -30,7 +36,15 @@ public class HoverInfo : MonoBehaviour, IPointerEnterHandler, IPointerExitHandle
 
     private void ShowMessage()
     {
-        HoverInfoManager.OnMouseAboveItem(ItemName);
+        if (_isStatusInfo)
+        {
+            HoverInfoManager.OnMouseAboveItem(ItemDescription);
+        }
+        else
+        {
+            HoverInfoManager.OnMouseAboveItem(ItemName);
+        }
+
     }
 
     private IEnumerator StartTimer()

@@ -1,7 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.InputSystem;
 
 [RequireComponent(typeof(PlayerControl))]
 public class PlayerControlsAssist
@@ -15,7 +12,7 @@ public class PlayerControlsAssist
     // Update is called once per frame
     void Update()
     {
-        
+
     }
 
     internal void MovingThroughInventory(ref Player PlayerInput, ref InventoryManager inventoryManager)
@@ -30,7 +27,7 @@ public class PlayerControlsAssist
             }
         }
     }
-    
+
 
 
 }

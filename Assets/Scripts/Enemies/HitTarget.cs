@@ -1,7 +1,5 @@
 using Assets.Scripts.Enums;
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(Collider2D))]
@@ -16,7 +14,7 @@ public class HitTarget : MonoBehaviour
     {
         _collider = GetComponent<Collider2D>();
         _parentEnemy = GetComponentInParent<Enemy>();
-        if(Enum.TryParse(gameObject.tag, out _limbHit))
+        if (Enum.TryParse(gameObject.tag, out _limbHit))
         {
             _limbHit = Enum.Parse<LimbHit>(gameObject.tag);
         }
@@ -25,7 +23,7 @@ public class HitTarget : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+
     }
 
     public void TakeHit(int damage, WeaponType weaponType)
@@ -44,7 +42,7 @@ public class HitTarget : MonoBehaviour
                 }
             case LimbHit.LessLimb:
                 {
-                    _parentEnemy.TakeDamage(damage/2, weaponType);
+                    _parentEnemy.TakeDamage(damage / 2, weaponType);
                     break;
                 }
 

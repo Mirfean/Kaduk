@@ -1,8 +1,6 @@
 using Assets.Scripts.Enums;
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using UnityEditor;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "Item Data", menuName = "Duck/ItemData"), Serializable]
@@ -11,6 +9,7 @@ public class ItemData : ScriptableObject
     [SerializeField] public string id;
     [SerializeField] public string ItemName;
     [SerializeField] public string Description;
+    [SerializeField] public bool IsKeyItem;
 
     [SerializeField] public int Width = 1;
     [SerializeField] public int Height = 1;
@@ -21,6 +20,18 @@ public class ItemData : ScriptableObject
 
     [SerializeField] public string[] SecondItem;
     [SerializeField] public string[] Result;
+
+    //Consumable Items
+    [SerializeField] public ConsumableEffect Effect;
+    [SerializeField] public int EffectPower;
+
+    //Weapon
+    [SerializeField] public WeaponType weaponType;
+    [SerializeField] public WeaponData weaponData;
+
+    //Ammo
+    [SerializeField] public int StackMax;
+    [SerializeField] public WeaponType AmmoType;
 
     public void CreateFill()
     {
@@ -70,30 +81,14 @@ public class ItemData : ScriptableObject
             }
         }
 
-/*        Keys = new string[Combinables.Count];
-        Results = new string[Combinables.Count];
-        for (int i = 0; i < Keys.Length; i++)
-        {
-            Combinables.Add(Keys[i], Results[i]);
-        }*/
-
     }
     public void OnAfterDeserialize()
     {
         // Convert the serializable list into our unserializable array
         Fill = new bool[Width, Height];
-        foreach(var package in serializable)
+        foreach (var package in serializable)
         {
             Fill[package.IndexX, package.IndexY] = package.Element;
         }
-        
-/*        Combinables = new Dictionary<string, string>();
-        int index = 0;
-        foreach (KeyValuePair<string, string> dict in Combinables)
-        {
-            Keys[index] = dict.Key;
-            Results[index] = dict.Value;
-            index++;
-        }*/
     }
 }

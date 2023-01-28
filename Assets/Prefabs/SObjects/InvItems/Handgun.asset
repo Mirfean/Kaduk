@@ -16,9 +16,10 @@ MonoBehaviour:
   ItemName: Handgun
   Description: Old and rusty handgun.  Rubbed handle suggests that it came in handy
     too many times. Always keep one bullet, in case things will go pretty bad.
+  IsKeyItem: 0
   Width: 4
   Height: 3
-  itemType: 0
+  itemType: 1
   ItemIcon: {fileID: 21300000, guid: 4406ddb0a84b3ea4c9b66bf601d8a7f7, type: 3}
   SecondItem:
   - ASD
@@ -26,6 +27,12 @@ MonoBehaviour:
   Result:
   - ksdkjdhf
   - erlighilsdhgdlkd
+  Effect: 0
+  EffectPower: 0
+  weaponType: 4
+  weaponData: {fileID: 11400000, guid: 8f222db36fcc14a4f8c08131cf1b312d, type: 2}
+  StackMax: 0
+  AmmoType: 0
   serializable:
   - IndexX: 0
     IndexY: 0

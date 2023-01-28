@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class InventoryHighlight : MonoBehaviour
@@ -25,7 +23,7 @@ public class InventoryHighlight : MonoBehaviour
         HighlighterRectTrans.SetParent(targetGrid.GetComponent<RectTransform>());
 
         Vector2 pos = targetGrid.GetItemPosition(targetItem, targetItem.OnGridPositionX, targetItem.OnGridPositionY);
-            
+
         HighlighterRectTrans.localPosition = pos;
     }
 
@@ -46,5 +44,5 @@ public class InventoryHighlight : MonoBehaviour
         HighlighterRectTrans.SetParent(targetGrid.GetComponent<RectTransform>());
     }
 
-   
+
 }

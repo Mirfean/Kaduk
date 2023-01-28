@@ -1,15 +1,14 @@
 using Assets.Scripts.Enums;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class _Weapon : MonoBehaviour
 {
     public WeaponType weaponType;
-    public string description;
-    public int damage;
-    public float attackSpeed;
-    public WeaponData weaponData;
+    public string Description;
+    public int Damage;
+    public float AttackSpeed;
+    public WeaponData WeaponInfo;
+    public ItemData WeaponItemData;
 
     public bool Rotated = false;
 
@@ -17,7 +16,7 @@ public class _Weapon : MonoBehaviour
 
     public virtual void Attack(Vector2 mousePos)
     {
-        Debug.Log("Attacking by " +name);
+        Debug.Log("Attacking by " + name);
     }
 
     public virtual void Attack(Vector2 mousePos, Quaternion quaternion)
@@ -28,13 +27,13 @@ public class _Weapon : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+
     }
 
     public virtual float GetRealRotationToMouse()

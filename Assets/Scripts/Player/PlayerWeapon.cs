@@ -1,9 +1,7 @@
-using Assets.Scripts.Enums;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Animations;
-using UnityEngine.InputSystem;
 
 [RequireComponent(typeof(PlayerControl))]
 public class PlayerWeapon : MonoBehaviour
@@ -33,7 +31,7 @@ public class PlayerWeapon : MonoBehaviour
                 {
                     RotateWeapon(value);
                 }
-                
+
             }
             _rotated = value;
 
@@ -73,7 +71,8 @@ public class PlayerWeapon : MonoBehaviour
         }
     }
 
-    public void UseWeapon(SkeletalMove skeletalMove) {
+    public void UseWeapon(SkeletalMove skeletalMove)
+    {
         if (CurrentWeapon != null)
         {
             if (CurrentWeapon.GetComponent<_Weapon>() is Gun)
@@ -99,7 +98,7 @@ public class PlayerWeapon : MonoBehaviour
 
             }
         }
-            
+
     }
 
     internal IEnumerator KnifeCoroutine(string animationName)
@@ -120,11 +119,11 @@ public class PlayerWeapon : MonoBehaviour
 
     void RotateWeapon(bool rotated)
     {
-        if(CurrentWeapon != null)
+        if (CurrentWeapon != null)
         {
             CurrentWeapon.GetComponent<_Weapon>().RotateWeapon(rotated);
         }
-        
+
     }
 
     public void AttachKnife(Transform arm, Transform hand)
@@ -147,11 +146,11 @@ public class PlayerWeapon : MonoBehaviour
 
     internal void ChangeWeapon(GameObject newWeapon)
     {
-        if(CurrentWeapon != null) Destroy(CurrentWeapon.gameObject);
+        if (CurrentWeapon != null) Destroy(CurrentWeapon.gameObject);
         CurrentWeapon = Instantiate(newWeapon);
         CurrentWeapon.transform.SetParent(_holdedItem);
         CurrentWeapon.SetActive(false);
-        if(CurrentWeapon.GetComponent<_Weapon>() is Gun)
+        if (CurrentWeapon.GetComponent<_Weapon>() is Gun)
         {
             Debug.Log("Siema");
             var source = new ConstraintSource();

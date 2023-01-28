@@ -1,6 +1,4 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class RoomManager : MonoBehaviour
@@ -20,7 +18,7 @@ public class RoomManager : MonoBehaviour
     void ChangeActiveRoom(Room newRoom)
     {
         SwitchActiveRoom(false);
-        
+
         ActiveRoom = newRoom;
 
         SwitchActiveRoom(true);

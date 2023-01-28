@@ -1,6 +1,5 @@
 using Assets.Scripts.Enums;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
@@ -16,7 +15,7 @@ public class ClickHoverManager : MonoBehaviour
 
 
     public static Action<StashType> OnHoverOpen;
-    public static Action <GameObject> OnButtonClick;
+    public static Action<GameObject> OnButtonClick;
     public static Action OnHoverClose;
 
 
@@ -43,7 +42,7 @@ public class ClickHoverManager : MonoBehaviour
         _playerControl = FindObjectOfType<PlayerControl>();
         ClickHoverWindow.gameObject.SetActive(false);
         ButtonList = new List<HoverButton>();
-        foreach(HoverButton HB in ClickHoverWindow.gameObject.GetComponentsInChildren<HoverButton>())
+        foreach (HoverButton HB in ClickHoverWindow.gameObject.GetComponentsInChildren<HoverButton>())
         {
             ButtonList.Add(HB);
         }
@@ -69,7 +68,7 @@ public class ClickHoverManager : MonoBehaviour
                 ClickHoverWindow.sizeDelta = new Vector2(cancelText.preferredWidth, 5 + (cancelText.preferredHeight * (x.Count + 2)));
                 ShowProperButtons(x);
                 break;
-            
+
             case StashType.ITEMSTASH:
                 x.Add(HoverButtonEnum.TAKE_ITEM);
                 x.Add(HoverButtonEnum.LOOK);
@@ -78,7 +77,7 @@ public class ClickHoverManager : MonoBehaviour
                 ClickHoverWindow.sizeDelta = new Vector2(cancelText.preferredWidth, 5 + (cancelText.preferredHeight * (x.Count + 2)));
                 ShowProperButtons(x);
                 break;
-            
+
             case StashType.PLAYER_STASH:
                 x.Add(HoverButtonEnum.TAKE_ITEM);
                 x.Add(HoverButtonEnum.USE);
@@ -95,7 +94,7 @@ public class ClickHoverManager : MonoBehaviour
 
     void ShowProperButtons(List<HoverButtonEnum> activeButtons)
     {
-        foreach(HoverButton HB in ButtonList)
+        foreach (HoverButton HB in ButtonList)
         {
             if (activeButtons.Contains(HB.ButtonType))
             {
@@ -124,13 +123,13 @@ public class ClickHoverManager : MonoBehaviour
                 //Healing, etc
                 break;
             case HoverButtonEnum.EQUIP:
-                if(_inventoryManager.ClickedItem.itemData.itemType == ItemType.WEAPON)
-                _inventoryManager.ChangeCurrentWeapon(_inventoryManager.ClickedItem.gameObject);
+                if (_inventoryManager.ClickedItem.itemData.itemType == ItemType.WEAPON)
+                    _inventoryManager.ChangeCurrentWeapon(_inventoryManager.ClickedItem.gameObject);
                 Debug.Log("EQUIP BUTTON");
                 break;
             case HoverButtonEnum.LOOK:
                 Debug.Log("LOOK BUTTON");
-                HoverInfoManager.OnLookUpHover(_inventoryManager.ClickedItem.itemData.ItemName, 
+                HoverInfoManager.OnLookUpHover(_inventoryManager.ClickedItem.itemData.ItemName,
                     _inventoryManager.ClickedItem.itemData.Description);
                 break;
             case HoverButtonEnum.SPLIT:
@@ -138,6 +137,7 @@ public class ClickHoverManager : MonoBehaviour
                 break;
             case HoverButtonEnum.COMBINE:
                 // If item is combinable, try to combine with next clicked item
+
                 break;
             case HoverButtonEnum.DESTROY:
                 //Add confirmation window

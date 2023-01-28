@@ -1,6 +1,3 @@
-using Assets.Scripts.Enums;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class MeleeWeapon : _Weapon
@@ -17,14 +14,14 @@ public class MeleeWeapon : _Weapon
     // Update is called once per frame
     void Update()
     {
-        
+
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.gameObject.GetComponent<HitTarget>())
         {
-            collision.gameObject.GetComponent<HitTarget>().TakeHit(damage, weaponType);
+            collision.gameObject.GetComponent<HitTarget>().TakeHit(Damage, weaponType);
         }
     }
 }

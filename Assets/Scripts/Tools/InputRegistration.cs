@@ -1,7 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using PixelCrushers;
 
 /// <summary>
 /// Class necessary for Dialogue System with new Input
@@ -17,36 +14,36 @@ public class InputRegistration : MonoBehaviour
 
     private void Awake()
     {
-        
+
     }
 
-/*    void OnEnable()
-    {
-        if (!isRegistered)
+    /*    void OnEnable()
         {
-            isRegistered = true;
-            _didIRegister = true;
-            //UserInput.Instance.Input.Enable();
-            InputDeviceManager.RegisterInputAction("WSAD", UserInput.Instance.Input.Basic.WSAD);
-            InputDeviceManager.RegisterInputAction("MouseMovement", UserInput.Instance.Input.Basic.MouseMovement);
-            InputDeviceManager.RegisterInputAction("MouseLClick", UserInput.Instance.Input.Basic.MouseLClick);
-            InputDeviceManager.RegisterInputAction("Aim", UserInput.Instance.Input.Basic.Aim);
+            if (!isRegistered)
+            {
+                isRegistered = true;
+                _didIRegister = true;
+                //UserInput.Instance.Input.Enable();
+                InputDeviceManager.RegisterInputAction("WSAD", UserInput.Instance.Input.Basic.WSAD);
+                InputDeviceManager.RegisterInputAction("MouseMovement", UserInput.Instance.Input.Basic.MouseMovement);
+                InputDeviceManager.RegisterInputAction("MouseLClick", UserInput.Instance.Input.Basic.MouseLClick);
+                InputDeviceManager.RegisterInputAction("Aim", UserInput.Instance.Input.Basic.Aim);
+            }
         }
-    }
 
-    void OnDisable()
-    {
-        if (_didIRegister)
+        void OnDisable()
         {
-            isRegistered = false;
-            _didIRegister = false;
-            //UserInput.Instance.Input.Disable();
-            InputDeviceManager.UnregisterInputAction("WSAD");
-            InputDeviceManager.UnregisterInputAction("MouseMovement");
-            InputDeviceManager.UnregisterInputAction("MouseLClick");
-            InputDeviceManager.UnregisterInputAction("Aim");
-        }
-    }*/
+            if (_didIRegister)
+            {
+                isRegistered = false;
+                _didIRegister = false;
+                //UserInput.Instance.Input.Disable();
+                InputDeviceManager.UnregisterInputAction("WSAD");
+                InputDeviceManager.UnregisterInputAction("MouseMovement");
+                InputDeviceManager.UnregisterInputAction("MouseLClick");
+                InputDeviceManager.UnregisterInputAction("Aim");
+            }
+        }*/
 
 #endif
 

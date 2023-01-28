@@ -119,10 +119,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   weaponType: 4
-  description: 
-  damage: 5
-  attackSpeed: 0
-  weaponData: {fileID: 11400000, guid: 8f222db36fcc14a4f8c08131cf1b312d, type: 2}
+  Description: 
+  Damage: 0
+  AttackSpeed: 0
+  WeaponInfo: {fileID: 11400000, guid: 8f222db36fcc14a4f8c08131cf1b312d, type: 2}
+  WeaponItemData: {fileID: 11400000, guid: 778e0c97dac2fa84fa29ed7866f9213f, type: 2}
   Rotated: 0
   _shootingPoint: {fileID: 1868292467014128437}
   _holdedItem: {fileID: 0}
@@ -134,9 +135,9 @@ MonoBehaviour:
   _bulletTrail: {fileID: 8330340890964394386, guid: e7bd0963f0b077243bf57784db5727d9,
     type: 3}
   _muzzleFlashAnimator: {fileID: 0}
-  _bulletRange: 162.91
-  maxBullets: 12
-  remainingBullets: 10
+  _bulletRange: 10
+  maxBullets: 6
+  remainingBullets: 3
 --- !u!1 &1868292467014128437
 GameObject:
   m_ObjectHideFlags: 0

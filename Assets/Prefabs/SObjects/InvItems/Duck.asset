@@ -12,17 +12,28 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cd7d82a74ca7e094e821785a8e030f0c, type: 3}
   m_Name: Duck
   m_EditorClassIdentifier: 
-  id: 
+  id: C001
   ItemName: DUCK
   Description: cute duck
+  IsKeyItem: 0
   Width: 2
   Height: 2
-  itemType: 0
+  itemType: 3
   ItemIcon: {fileID: 21300000, guid: f2615eca79819874a8d665684b91b532, type: 3}
   SecondItem:
-  - asd
+  - C002
   Result:
-  - dddd
+  - C003
+  Effect: 4
+  EffectPower: 1
+  weaponType: 0
+  Damage: 0
+  IsGun: 0
+  AttackRate: 0
+  AttackRecoil: 0
+  MagazineMax: 0
+  StackMax: 0
+  AmmoType: 0
   serializable:
   - IndexX: 0
     IndexY: 0

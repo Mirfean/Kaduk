@@ -1,6 +1,3 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.U2D.Animation;
 
@@ -30,8 +27,8 @@ public class SkeletalMove : MonoBehaviour
     [SerializeField]
     public Transform HoldedItem;
 
-/*    [SerializeField]
-    float _holdItemRotationIdle = -68f;*/
+    /*    [SerializeField]
+        float _holdItemRotationIdle = -68f;*/
 
     [SerializeField]
     GameObject _flashlight;
@@ -41,13 +38,13 @@ public class SkeletalMove : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+
     }
 
     /// <summary>
@@ -75,7 +72,7 @@ public class SkeletalMove : MonoBehaviour
 
     private void RotateArm(Transform hand, Vector2 mousePos)
     {
-        
+
     }
 
     public void RotateFlashlight(Vector2 mousePos)

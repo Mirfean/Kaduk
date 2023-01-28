@@ -12,25 +12,39 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cd7d82a74ca7e094e821785a8e030f0c, type: 3}
   m_Name: Musherbs
   m_EditorClassIdentifier: 
+  id: C002
+  ItemName: Musherb
   Description: Odd herbs with a soothing smell that seem to have mushroom caps at
     the ends of the stems.
-  ItemName: Musherb
+  IsKeyItem: 0
   Width: 2
   Height: 2
-  IsStackable: 1
-  MaxInStack: 4
-  IsCombinable: 0
+  itemType: 3
   ItemIcon: {fileID: 21300000, guid: 357891ce6f8b2744787f03ff7af9189c, type: 3}
+  SecondItem:
+  - C001
+  Result:
+  - C003
+  Effect: 1
+  EffectPower: 10
+  weaponType: 0
+  Damage: 0
+  IsGun: 0
+  AttackRate: 0
+  AttackRecoil: 0
+  MagazineMax: 0
+  StackMax: 0
+  AmmoType: 0
   serializable:
-  - Index0: 0
-    Index1: 0
+  - IndexX: 0
+    IndexY: 0
     Element: 1
-  - Index0: 0
-    Index1: 1
+  - IndexX: 0
+    IndexY: 1
     Element: 1
-  - Index0: 1
-    Index1: 0
+  - IndexX: 1
+    IndexY: 0
     Element: 1
-  - Index0: 1
-    Index1: 1
+  - IndexX: 1
+    IndexY: 1
     Element: 1

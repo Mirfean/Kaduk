@@ -1,6 +1,4 @@
 using Assets.Scripts.Enums;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -25,7 +23,7 @@ public class HealthSanityStatus : MonoBehaviour
     private void Start()
     {
         stats = FindObjectOfType<PlayerStats>();
-        
+
         UpdateHpStatus();
         UpdateSanityStatus();
 
@@ -121,7 +119,7 @@ public class HealthSanityStatus : MonoBehaviour
             case HpSanityEnum.P0:
                 break;
         }
-            
+
     }
 
 

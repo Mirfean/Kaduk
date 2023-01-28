@@ -1,6 +1,5 @@
 using Assets.Scripts.Enums;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -31,7 +30,7 @@ public class InventoryGrid : MonoBehaviour
     public Vector2Int GridSize { get => _gridSize; set => _gridSize = value; }
     public ItemFromInventory[,] InventoryItemsSlot { get => _inventoryItemsSlot; set => _inventoryItemsSlot = value; }
     public RectTransform GridRectTransform { get => _rectTransform; set => _rectTransform = value; }
-    
+
     public List<ItemFromInventory> ItemsOnGrid;
 
     // Start is called before the first frame update
@@ -64,8 +63,8 @@ public class InventoryGrid : MonoBehaviour
         _positionOnTheGrid.x = mousePosition.x - _rectTransform.position.x;
         _positionOnTheGrid.y = mousePosition.y - _rectTransform.position.y;
 
-        _tileGridPosition.x = (int) (_positionOnTheGrid.x / TileSizeWidth);
-        _tileGridPosition.y = (int) (_positionOnTheGrid.y / TileSizeHeight);
+        _tileGridPosition.x = (int)(_positionOnTheGrid.x / TileSizeWidth);
+        _tileGridPosition.y = (int)(_positionOnTheGrid.y / TileSizeHeight);
 
         return _tileGridPosition;
     }
@@ -88,7 +87,7 @@ public class InventoryGrid : MonoBehaviour
             CleanGridReference(overlapItem);
         }
 
-        
+
         return true;
     }
 
@@ -106,7 +105,7 @@ public class InventoryGrid : MonoBehaviour
 
             }
         }
-        Debug.Log("Adding item "+ itemToPlace.itemData.name +" to list");
+        Debug.Log("Adding item " + itemToPlace.itemData.name + " to list");
         itemToPlace.OnGridPositionX = posX;
         itemToPlace.OnGridPositionY = posY;
 
@@ -144,15 +143,15 @@ public class InventoryGrid : MonoBehaviour
     /// <returns></returns>
     private bool OverlapCheck(int posX, int posY, ItemFromInventory holdedItem, ref ItemFromInventory overlapItem)
     {
-        for(int x = 0; x < holdedItem.WIDTH; x++)
+        for (int x = 0; x < holdedItem.WIDTH; x++)
         {
-            for(var y = 0; y < holdedItem.HEIGHT; y++)
+            for (var y = 0; y < holdedItem.HEIGHT; y++)
             {
                 if (holdedItem.SpaceFill[x, y])
                 {
                     try
-                    {   
-                    
+                    {
+
                         if (InventoryItemsSlot[posX + x, posY + y] != null)
                         {
                             if (overlapItem == null)
@@ -176,8 +175,8 @@ public class InventoryGrid : MonoBehaviour
                         return false;
                     }
                 }
-                
-                
+
+
             }
         }
 
@@ -245,15 +244,15 @@ public class InventoryGrid : MonoBehaviour
         ItemsOnGrid.Remove(item);
     }
 
-/*
-      ,~~.
-     (  9 )-_,
-(\___ )=='-'
- \ .   ) )
-  \ `-' /
-   `~j-'   
-     "=:
-*/
+    /*
+          ,~~.
+         (  9 )-_,
+    (\___ )=='-'
+     \ .   ) )
+      \ `-' /
+       `~j-'   
+         "=:
+    */
     /// <summary>
     /// Clear grid spaces from certain item
     /// </summary>
@@ -290,12 +289,12 @@ public class InventoryGrid : MonoBehaviour
     {
         for (int j = 0; j < _gridSize.y; j++)
         {
-            for(int i = 0; i < _gridSize.x; i++)
+            for (int i = 0; i < _gridSize.x; i++)
             {
                 if (CheckAvailableSpace(i, j, itemToInsert))
                 {
                     Debug.Log("Place founded");
-                    return new Vector2Int(i,j);
+                    return new Vector2Int(i, j);
                 }
             }
         }
@@ -334,15 +333,15 @@ public class InventoryGrid : MonoBehaviour
     internal bool BoundryCheck(int posX, int posY, int width, int height)
     {
         posY = -posY;
-        if(!PositionCheck(posX, posY)) return false;
+        if (!PositionCheck(posX, posY)) return false;
 
-        posX += width-1;
-        posY -= height-1;
+        posX += width - 1;
+        posY -= height - 1;
 
         if (!PositionCheck(posX, posY)) return false;
 
         return true;
     }
 
-    
+
 }
