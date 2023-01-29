@@ -19,6 +19,8 @@ public class ItemFromInventory : MonoBehaviour
     [SerializeField]
     public string ItemDescription;
 
+    public string ItemName;
+
     ItemData _itemdata;
 
     Rotation _rotation = Rotation.r0;
@@ -83,6 +85,8 @@ public class ItemFromInventory : MonoBehaviour
             _itemdata = value;
 
             GetComponent<Image>().sprite = _itemdata.ItemIcon;
+
+            ItemName = _itemdata.ItemName;
 
             ItemDescription = _itemdata.Description;
 

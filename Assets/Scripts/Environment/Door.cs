@@ -20,6 +20,8 @@ public class Door : OutlineObject
 
     public bool Closed;
 
+    public string KeyID;
+
 
     // Start is called before the first frame update
     new void Start()
@@ -53,6 +55,11 @@ public class Door : OutlineObject
             }
 
         }
+        else
+        {
+            Debug.Log("It's locked!");
+            _gameManager.CheckForKey(this);
+        }
 
     }
 
@@ -60,4 +67,6 @@ public class Door : OutlineObject
     {
         base.OnMouseExit();
     }
+
+
 }

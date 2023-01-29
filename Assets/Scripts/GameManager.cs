@@ -1,4 +1,5 @@
 using Assets.Scripts.Enums;
+using System;
 using UnityEngine;
 
 public class GameManager : MonoBehaviour
@@ -19,7 +20,7 @@ public class GameManager : MonoBehaviour
     InventoryGrid _itemsGrid;
 
     [SerializeField]
-    EnvObject currentItemStash_Item;
+    EnvObject currentItemStash_Env;
 
     [SerializeField]
     Door[] _doors;
@@ -46,10 +47,11 @@ public class GameManager : MonoBehaviour
     }
 
     //Player's Stash with items moving along all game
-    public void ShowPlayerStash()
+    public void ShowPlayerStash(EnvObject currentItemStash)
     {
         _playerControl.SwitchInventory(true);
         _playerStash.SetActive(true);
+        currentItemStash_Env = currentItemStash;
     }
 
     public void ShowNormalStash(EnvObject currentItemStash)
@@ -58,9 +60,21 @@ public class GameManager : MonoBehaviour
             _playerControl.SwitchInventory(true);
 
         _inventoryManager.ShowItemStash();
-        currentItemStash_Item = currentItemStash;
-        //_inventoryManager.ClearItemsFromStash();
-        _inventoryManager.FillItemsStash(currentItemStash_Item.Items);
+        currentItemStash_Env = currentItemStash;
+        _inventoryManager.FillItemsStash(currentItemStash_Env.Items);
+    }
+
+    internal void CheckForKey(Door door)
+    {
+        Debug.Log("Items in EQ " + _inventoryManager.PlayerInventory.ItemsOnGrid.Count);
+        foreach(ItemFromInventory item in _inventoryManager.PlayerInventory.ItemsOnGrid)
+        {
+            if (item.itemData.id == door.KeyID)
+            {
+                Debug.Log("Using key " + item.ItemName);
+                door.Closed = false;
+            }
+        }
     }
 
     public void HideInventory()
@@ -69,10 +83,11 @@ public class GameManager : MonoBehaviour
         {
             _playerControl.SwitchInventory(false);
 
-            if (currentItemStash_Item != null) _inventoryManager.HideItemStash(currentItemStash_Item);
-            currentItemStash_Item = null;
+            if (currentItemStash_Env.IsStash) _inventoryManager.HideItemStash(currentItemStash_Env);
+            if (currentItemStash_Env.IsPlayerStash) _inventoryManager.HidePlayerStash();
 
-            _inventoryManager.HidePlayerStash();
+            currentItemStash_Env.CloseSprite();
+            currentItemStash_Env = null;
 
             HideInventoryWindow();
         }

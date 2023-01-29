@@ -1,4 +1,5 @@
 using Assets.Scripts.Enums;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.AI;
 #if ENABLE_INPUT_SYSTEM
@@ -119,5 +120,29 @@ public class PlayerNavMeshMovement : MonoBehaviour
         {
             _speed = _defaultSpeed;
         }
+    }
+
+    public void StopWhenClose(Transform ObjectOfInterest)
+    {
+        StopClose(ObjectOfInterest);
+    }
+
+    IEnumerator StopClose(Transform ObjectOfInterest)
+    {
+        _agent.stoppingDistance = 0.5f;
+        while (_agent.remainingDistance < 0.5f)
+        {
+            Debug.Log("Closing... " + _agent.remainingDistance);
+            
+            yield return null;
+        }
+        _agent.ResetPath();
+        _agent.stoppingDistance = 0f;
+        yield return null;
+    }
+
+    bool CheckIfClose(Vector3 OOI, float howClose)
+    {
+        return Mathf.Abs(_agent.transform.position.x - OOI.x) <= howClose && Mathf.Abs(_agent.transform.position.y - OOI.y) <= howClose;
     }
 }

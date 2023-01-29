@@ -359,18 +359,17 @@ public class PlayerControl : MonoBehaviour
         if (Physics.Raycast(ray, out hit))
         {
             Debug.Log("clicked something");
-
-            //Debug.DrawLine(Camera.main.transform.position, Camera.main.ScreenToWorldPoint(_playerInput.Basic.MouseMovement.ReadValue<Vector2>()), Color.cyan, 10.0f);
-            if (Physics.Raycast(ray, out hit))
+            Transform objectHit = hit.transform;
+            Debug.Log("I clicked " + objectHit.gameObject.name);
+            if (objectHit != null && objectHit.gameObject.GetComponent<Door>() != null)
             {
-                Transform objectHit = hit.transform;
-                Debug.Log("I clicked " + objectHit.gameObject.name);
-                if (objectHit != null && objectHit.gameObject.GetComponent<Door>() != null)
-                {
-                    Debug.Log("Door clicked");
-                    _gameManager.TransferPlayer(objectHit.gameObject.GetComponent<Door>());
-                }
-
+                Debug.Log("Door clicked");
+                //_gameManager.TransferPlayer(objectHit.gameObject.GetComponent<Door>());
+            }
+            if (objectHit != null)
+            {
+                Debug.Log("StopWhenClose");
+                _playerMovement.StopWhenClose(objectHit.transform);
             }
         }
 
@@ -381,6 +380,7 @@ public class PlayerControl : MonoBehaviour
             _playerMovement.MouseMovement(target);
         }
     }
+
     public void FlashlightONOFF(InputAction.CallbackContext context)
     {
         _skeletalMove.ChangeFlashlightMode();

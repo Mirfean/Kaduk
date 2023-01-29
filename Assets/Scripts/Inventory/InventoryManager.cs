@@ -26,7 +26,7 @@ public class InventoryManager : MonoBehaviour
     }
 
     [SerializeField]
-    InventoryGrid _playerInventory;
+    public InventoryGrid PlayerInventory;
 
     [SerializeField]
     InventoryGrid _playerStash;
@@ -97,18 +97,18 @@ public class InventoryManager : MonoBehaviour
                 else if (_itemsStash.gameObject.activeSelf) return _itemsStash;
                 break;
             case StashType.PLAYER_STASH:
-                return _playerInventory;
+                return PlayerInventory;
             case StashType.ITEMSTASH:
-                return _playerInventory;
+                return PlayerInventory;
         }
 
-        if (SelectedItemGRID == _playerInventory)
+        if (SelectedItemGRID == PlayerInventory)
         {
 
         }
         else if (SelectedItemGRID == _playerStash || SelectedItemGRID == _itemsStash)
         {
-            return _playerInventory;
+            return PlayerInventory;
         }
         Debug.Log("There is only one grid");
         return SelectedItemGRID;
@@ -264,7 +264,7 @@ public class InventoryManager : MonoBehaviour
     /// <param name="mousePos"></param>
     public void MoveItemIcon(Vector2 mousePos)
     {
-        if (CurrentItemRectTransform != null) CurrentItemRectTransform.position = mousePos + new Vector2(1, -1);
+        if (CurrentItemRectTransform != null) CurrentItemRectTransform.position = mousePos + new Vector2(20, -20);
     }
 
     public bool CheckMouseInInventory()
@@ -412,12 +412,12 @@ public class InventoryManager : MonoBehaviour
     #region Grids SHOW/HIDE
     public void ShowInventory()
     {
-        _playerInventory.gameObject.SetActive(true);
+        PlayerInventory.gameObject.SetActive(true);
     }
 
     public void HideInventory()
     {
-        _playerInventory.gameObject.SetActive(false);
+        PlayerInventory.gameObject.SetActive(false);
     }
 
     public void ShowPlayerStash()
@@ -441,6 +441,7 @@ public class InventoryManager : MonoBehaviour
     {
         Debug.Log("Hide Item Stash");
         SaveChangesInItemStash(currentItemStash);
+        
         ClearItemsFromStash();
         _itemsStash.gameObject.SetActive(false);
     }
