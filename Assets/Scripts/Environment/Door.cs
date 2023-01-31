@@ -58,6 +58,7 @@ public class Door : OutlineObject
         else
         {
             Debug.Log("It's locked!");
+            PlayerHover.ShowMessage("It's locked");
             _gameManager.CheckForKey(this);
         }
 

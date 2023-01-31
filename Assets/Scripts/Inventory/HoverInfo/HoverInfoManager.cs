@@ -39,7 +39,7 @@ public class HoverInfoManager : MonoBehaviour
     private void ShowInfo(string name)
     {
         SoloNameText.text = name;
-        HoverWindow.sizeDelta = new Vector2(SoloNameText.preferredWidth, SoloNameText.preferredHeight + 50);
+        HoverWindow.sizeDelta = new Vector2(SoloNameText.preferredWidth * 1.5f, SoloNameText.preferredHeight + 50);
 
         HoverWindow.gameObject.SetActive(true);
 
@@ -58,11 +58,11 @@ public class HoverInfoManager : MonoBehaviour
         DescriptionText.text = description;
         NameText.text = name;
 
-        LookUpWindow.sizeDelta = new Vector2(DescriptionText.preferredWidth > 300 ? 300 : DescriptionText.preferredWidth * 2, DescriptionText.preferredHeight + 50);
+        LookUpWindow.sizeDelta = new Vector2(DescriptionText.preferredWidth > 300 ? 300 : DescriptionText.preferredWidth * 2.5f, DescriptionText.preferredHeight + 10);
         LookUpWindow.gameObject.SetActive(true);
 
         Vector2 hoverNewPos = UserInput.Instance.GetUIMousePos();
-        LookUpWindow.transform.position = new Vector2(hoverNewPos.x + 50, hoverNewPos.y + 50);
+        LookUpWindow.transform.position = new Vector2(hoverNewPos.x + 30, hoverNewPos.y + 30);
     }
 
     private void HideLookUpInfo()

@@ -354,8 +354,10 @@ public class PlayerControl : MonoBehaviour
 
     private void ClickOnDefault()
     {
+        Debug.Log("default click");
         RaycastHit hit;
-        Ray ray = Camera.main.ScreenPointToRay(UserInput.Instance.GetBasicMousePos());
+        //Ray ray = Camera.main.ScreenPointToRay(UserInput.Instance.GetBasicMousePos());
+        Ray ray = Camera.main.ScreenPointToRay(UserInput.Instance.GetUIMousePos());
         if (Physics.Raycast(ray, out hit))
         {
             Debug.Log("clicked something");
