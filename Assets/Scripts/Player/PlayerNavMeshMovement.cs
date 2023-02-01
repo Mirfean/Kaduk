@@ -130,7 +130,7 @@ public class PlayerNavMeshMovement : MonoBehaviour
     IEnumerator StopClose(Transform ObjectOfInterest)
     {
         Debug.Log("Remains " + _agent.remainingDistance);
-        _agent.stoppingDistance = 0.5f;
+        _agent.stoppingDistance = 1f;
         while (_agent.remainingDistance <= 0.05f)
         {
             Debug.Log("Closing... " + _agent.remainingDistance);
