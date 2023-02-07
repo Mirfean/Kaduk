@@ -98,7 +98,7 @@ public class ItemEditor : EditorWindow
 
         GUILayout.Label("Combinables", EditorStyles.miniBoldLabel);
         EditorGUI.BeginChangeCheck();
-        _hasCombinables = EditorGUILayout.Toggle("Do it has a COMBINE items?", _hasCombinables);
+        _hasCombinables = EditorGUILayout.Toggle("Does it has a COMBINE items?", _hasCombinables);
         if (EditorGUI.EndChangeCheck()) SetArrays();
         if (_hasCombinables)
         {
@@ -243,7 +243,7 @@ public class ItemEditor : EditorWindow
             EditorUtility.SetDirty(_itemData);
             this.SaveChanges();
 
-
+            Debug.Log("Saved!");
         }
     }
 

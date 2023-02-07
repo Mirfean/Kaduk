@@ -10,7 +10,10 @@ public class PlayerControl : MonoBehaviour
     public InteractionState STATE
     {
         get { return _state; }
-        set { _state = value; }
+        set {
+            if (_state != value) UserInput.Instance.HandleNewState(value); 
+            _state = value; 
+        }
     }
 
     [SerializeField] PlayerWeapon _playerWeapon;
@@ -130,6 +133,19 @@ public class PlayerControl : MonoBehaviour
         }
 
 
+    }
+
+    public void OnReload(InputAction.CallbackContext context)
+    {
+        if (STATE is InteractionState.DEFAULT or InteractionState.AIMING)
+        {
+            if (_playerWeapon.CurrentWeapon.GetComponent<Gun>())
+            {
+                _playerWeapon.CurrentWeapon.GetComponent<Gun>().remainingBullets += _inventoryManager.GetAmmoOnReload(
+                    _playerWeapon.CurrentWeapon.GetComponent<Gun>().weaponType ,_playerWeapon.GetNeededAmmo());
+            }
+            else Debug.Log("This weapon does not require reload");
+        }   
     }
 
     #endregion
@@ -355,31 +371,40 @@ public class PlayerControl : MonoBehaviour
     private void ClickOnDefault()
     {
         Debug.Log("default click");
+
         RaycastHit hit;
-        //Ray ray = Camera.main.ScreenPointToRay(UserInput.Instance.GetBasicMousePos());
-        Ray ray = Camera.main.ScreenPointToRay(UserInput.Instance.GetUIMousePos());
+        Ray ray;
+
+        if (UserInput.Instance.Input.Basic.enabled)
+        {
+            ray = Camera.main.ScreenPointToRay(UserInput.Instance.GetBasicMousePos());
+        }
+        else
+        {
+            ray = Camera.main.ScreenPointToRay(UserInput.Instance.GetUIMousePos());
+        }
+
+        if (!UserInput.Instance.Input.Basic.MouseLClick.inProgress && STATE == InteractionState.DEFAULT)
+        {
+            Vector2 target = UserInput.Instance.GetBasicScreenToWorld();
+            if (Physics.Raycast(ray, out hit)) _playerMovement.Agent.stoppingDistance = 0.5f; 
+            else _playerMovement.Agent.stoppingDistance = 0;
+                
+            _playerMovement.MouseMovement(target);
+            Debug.Log("Path od razu? " + _playerMovement.Agent.pathStatus);
+            Debug.Log("Destination " + _playerMovement.Agent.destination);
+        }
+
         if (Physics.Raycast(ray, out hit))
         {
-            Debug.Log("clicked something");
             Transform objectHit = hit.transform;
             Debug.Log("I clicked " + objectHit.gameObject.name);
-            if (objectHit != null && objectHit.gameObject.GetComponent<Door>() != null)
-            {
-                Debug.Log("Door clicked");
-                //_gameManager.TransferPlayer(objectHit.gameObject.GetComponent<Door>());
-            }
             if (objectHit != null)
             {
                 Debug.Log("StopWhenClose");
+                Debug.Log("Path " + _playerMovement.Agent.hasPath);
                 _playerMovement.StopWhenClose(objectHit.transform);
             }
-        }
-
-        if (!UserInput.Instance.Input.Basic.MouseLClick.inProgress)
-        {
-            Vector2 target = UserInput.Instance.GetBasicScreenToWorld();
-            Debug.Log(target);
-            _playerMovement.MouseMovement(target);
         }
     }
 
@@ -393,7 +418,7 @@ public class PlayerControl : MonoBehaviour
         _animator.SetBool(AnimVariable.Walk, status);
     }
 
-
+   
 
 }
 

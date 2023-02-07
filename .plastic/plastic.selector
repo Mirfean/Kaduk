@@ -1,0 +1,4 @@
+repository "Kaduk@Mirfean@cloud"
+  path "/"
+    smartbranch "/main"       
+     

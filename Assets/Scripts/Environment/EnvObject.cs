@@ -27,13 +27,17 @@ public class EnvObject : OutlineObject
     GameManager _gameManager;
 
     [SerializeField]
-    List<ItemData> items;
+    List<ItemData> _defaultItems;
 
-    public List<ItemData> Items { get { return items; } set { items = value; } }
+    public ItemData[] StackItems;
 
-    [SerializeField] Sprite _defaultSprite;
+    public int[] StackAmounts;
 
-    [SerializeField] Sprite _inUseSprite;
+    public List<ItemData> Items { get { return _defaultItems; } set { _defaultItems = value; } }
+
+    public Sprite DefaultSprite;
+
+    public Sprite InUseSprite;
 
     new void Start()
     {
@@ -41,7 +45,7 @@ public class EnvObject : OutlineObject
         _cursorManager = FindObjectOfType<CursorManager>();
         _gameManager = FindObjectOfType<GameManager>();
 
-        if (_defaultSprite == null) _defaultSprite = GetComponent<SpriteRenderer>().sprite;
+        if (DefaultSprite == null) DefaultSprite = GetComponent<SpriteRenderer>().sprite;
 
         if (IsStash)
         {
@@ -91,21 +95,7 @@ public class EnvObject : OutlineObject
 
     private void OnMouseUpAsButton()
     {
-        if (_gameManager.GetPlayerSTATE() == InteractionState.DEFAULT)
-        {
-            if (_gameManager == null && (IsStash || IsPlayerStash)) _gameManager = FindObjectOfType<GameManager>();
-            Debug.Log($"{Description}");
-            if (IsStash)
-            {
-                if (_inUseSprite != null) gameObject.GetComponent<SpriteRenderer>().sprite = _inUseSprite;
-                _gameManager.ShowNormalStash(this);
-            }
-            if (IsPlayerStash)
-            {
-                if (_inUseSprite != null) gameObject.GetComponent<SpriteRenderer>().sprite = _inUseSprite;
-                _gameManager.ShowPlayerStash(this);
-            }
-        }
+        GameManager.HandleEnvAction(this);
     }
 
     void HandleCursorAndText(bool status)
@@ -122,6 +112,6 @@ public class EnvObject : OutlineObject
 
     internal void CloseSprite()
     {
-        GetComponent<SpriteRenderer>().sprite = _defaultSprite;
+        GetComponent<SpriteRenderer>().sprite = DefaultSprite;
     }
 }

@@ -89,6 +89,15 @@ public partial class @Player : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Reload"",
+                    ""type"": ""Button"",
+                    ""id"": ""933a44c0-28ea-4216-a925-8ef213b67338"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -210,6 +219,17 @@ public partial class @Player : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": """",
                     ""action"": ""Interact"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""659cedee-e4fd-4c30-92ed-fbb3f778b940"",
+                    ""path"": ""<Keyboard>/r"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Reload"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -375,6 +395,7 @@ public partial class @Player : IInputActionCollection2, IDisposable
         m_Basic_Inventory = m_Basic.FindAction("Inventory", throwIfNotFound: true);
         m_Basic_Flashlight = m_Basic.FindAction("Flashlight", throwIfNotFound: true);
         m_Basic_Interact = m_Basic.FindAction("Interact", throwIfNotFound: true);
+        m_Basic_Reload = m_Basic.FindAction("Reload", throwIfNotFound: true);
         // UI
         m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
         m_UI_MouseLClick = m_UI.FindAction("MouseLClick", throwIfNotFound: true);
@@ -450,6 +471,7 @@ public partial class @Player : IInputActionCollection2, IDisposable
     private readonly InputAction m_Basic_Inventory;
     private readonly InputAction m_Basic_Flashlight;
     private readonly InputAction m_Basic_Interact;
+    private readonly InputAction m_Basic_Reload;
     public struct BasicActions
     {
         private @Player m_Wrapper;
@@ -461,6 +483,7 @@ public partial class @Player : IInputActionCollection2, IDisposable
         public InputAction @Inventory => m_Wrapper.m_Basic_Inventory;
         public InputAction @Flashlight => m_Wrapper.m_Basic_Flashlight;
         public InputAction @Interact => m_Wrapper.m_Basic_Interact;
+        public InputAction @Reload => m_Wrapper.m_Basic_Reload;
         public InputActionMap Get() { return m_Wrapper.m_Basic; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -491,6 +514,9 @@ public partial class @Player : IInputActionCollection2, IDisposable
                 @Interact.started -= m_Wrapper.m_BasicActionsCallbackInterface.OnInteract;
                 @Interact.performed -= m_Wrapper.m_BasicActionsCallbackInterface.OnInteract;
                 @Interact.canceled -= m_Wrapper.m_BasicActionsCallbackInterface.OnInteract;
+                @Reload.started -= m_Wrapper.m_BasicActionsCallbackInterface.OnReload;
+                @Reload.performed -= m_Wrapper.m_BasicActionsCallbackInterface.OnReload;
+                @Reload.canceled -= m_Wrapper.m_BasicActionsCallbackInterface.OnReload;
             }
             m_Wrapper.m_BasicActionsCallbackInterface = instance;
             if (instance != null)
@@ -516,6 +542,9 @@ public partial class @Player : IInputActionCollection2, IDisposable
                 @Interact.started += instance.OnInteract;
                 @Interact.performed += instance.OnInteract;
                 @Interact.canceled += instance.OnInteract;
+                @Reload.started += instance.OnReload;
+                @Reload.performed += instance.OnReload;
+                @Reload.canceled += instance.OnReload;
             }
         }
     }
@@ -610,6 +639,7 @@ public partial class @Player : IInputActionCollection2, IDisposable
         void OnInventory(InputAction.CallbackContext context);
         void OnFlashlight(InputAction.CallbackContext context);
         void OnInteract(InputAction.CallbackContext context);
+        void OnReload(InputAction.CallbackContext context);
     }
     public interface IUIActions
     {

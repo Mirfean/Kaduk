@@ -1,0 +1,37 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cd7d82a74ca7e094e821785a8e030f0c, type: 3}
+  m_Name: HandgunAmmo
+  m_EditorClassIdentifier: 
+  id: A001
+  ItemName: Handgun ammo
+  Description: packaging of ammunition for a handgun. Pre-packed in 32 pieces.
+  IsKeyItem: 0
+  Width: 2
+  Height: 1
+  itemType: 2
+  ItemIcon: {fileID: 21300000, guid: 3e08840789c740742ad1eac2b28b044c, type: 3}
+  SecondItem: []
+  Result: []
+  Effect: 0
+  EffectPower: 0
+  weaponType: 0
+  weaponData: {fileID: 0}
+  StackMax: 32
+  AmmoType: 4
+  serializable:
+  - IndexX: 0
+    IndexY: 0
+    Element: 1
+  - IndexX: 1
+    IndexY: 0
+    Element: 1

@@ -21,7 +21,6 @@ public class PlayerNavMeshMovement : MonoBehaviour
     public NavMeshAgent Agent { get { return _agent; } }
 
     public bool IsMoving { get => _isMoving; set { _isMoving = value; PlayerControl.WalkModeChange(value); } }
-    public bool IsPath { get => _isPath; set { _isPath = value; PlayerControl.WalkModeChange(value); } }
 
     [SerializeField]
     private float _targetLerpSpeed = 1;
@@ -32,7 +31,6 @@ public class PlayerNavMeshMovement : MonoBehaviour
     private Vector3 _movementVector;
 
     private bool _isMoving;
-    private bool _isPath;
 
     [SerializeField] float _defaultSpeed = 3f;
     [SerializeField] float _speed = 3f;
@@ -72,10 +70,6 @@ public class PlayerNavMeshMovement : MonoBehaviour
             //Add action to change IsMoving
             IsMoving = false;
         }
-        if (!_agent.hasPath && IsPath)
-        {
-            IsPath = false;
-        }
 
     }
     private void WsadMovement()
@@ -105,9 +99,9 @@ public class PlayerNavMeshMovement : MonoBehaviour
 
     internal void MouseMovement(Vector2 target)
     {
+        Debug.Log("new Path!");
         _agent.ResetPath();
         _agent.SetDestination(target);
-        IsPath = true;
     }
 
     public void ModifySpeed(bool v)
@@ -124,21 +118,24 @@ public class PlayerNavMeshMovement : MonoBehaviour
 
     public void StopWhenClose(Transform ObjectOfInterest)
     {
-        StopClose(ObjectOfInterest);
+        StartCoroutine(StopClose(ObjectOfInterest));
     }
 
     IEnumerator StopClose(Transform ObjectOfInterest)
     {
-        Debug.Log("Remains " + _agent.remainingDistance);
-        _agent.stoppingDistance = 1f;
-        while (_agent.remainingDistance <= 0.05f)
+        while (Agent.pathPending)
         {
-            Debug.Log("Closing... " + _agent.remainingDistance);
-            
+            Debug.Log("Pending path");
+            yield return null;
+        }
+
+        Debug.Log("Remains " + _agent.remainingDistance);
+        while (_agent.remainingDistance > 0.5f)
+        {
+            //Debug.Log("Closing... " + _agent.remainingDistance);
             yield return null;
         }
         _agent.ResetPath();
-        _agent.stoppingDistance = 0f;
         yield return null;
     }
 

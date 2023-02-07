@@ -45,29 +45,14 @@ public class Door : OutlineObject
 
     private void OnMouseUpAsButton()
     {
-        if (_gameManager == null) FindObjectOfType<GameManager>();
-
-        if (!Closed)
-        {
-            if (_gameManager.TransferPlayer(this))
-            {
-                RoomManager.ChangeRoom(Destination.ThisRoom);
-            }
-
-        }
-        else
-        {
-            Debug.Log("It's locked!");
-            PlayerHover.ShowMessage("It's locked");
-            _gameManager.CheckForKey(this);
-        }
-
+        GameManager.HandleDoorAction(this);
     }
 
     private new void OnMouseExit()
     {
         base.OnMouseExit();
     }
+
 
 
 }

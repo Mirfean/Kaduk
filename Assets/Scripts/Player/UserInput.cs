@@ -1,3 +1,4 @@
+using Assets.Scripts.Enums;
 using UnityEngine;
 
 public class UserInput : MonoBehaviour
@@ -36,6 +37,22 @@ public class UserInput : MonoBehaviour
     void Update()
     {
 
+    }
+
+    public void HandleNewState(InteractionState state)
+    {
+        switch (state)
+        {
+            case InteractionState.DEFAULT:
+                Instance.Input.UI.Disable();
+                Instance.Input.Basic.Enable();
+                break;
+
+            case InteractionState.INVENTORY:
+                Instance.Input.Basic.Disable();
+                Instance.Input.UI.Enable();
+                break;
+        }
     }
 
     public Vector2 GetBasicMousePos()

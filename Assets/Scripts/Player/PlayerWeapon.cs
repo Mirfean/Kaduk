@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -78,9 +79,12 @@ public class PlayerWeapon : MonoBehaviour
             if (CurrentWeapon.GetComponent<_Weapon>() is Gun)
             {
                 if (CurrentWeapon.GetComponent<Gun>().remainingBullets > 0)
+                {
                     CurrentWeapon.GetComponent<_Weapon>().Attack(
                         UserInput.Instance.GetBasicScreenToWorld(),
                         skeletalMove.HoldedItem.rotation);
+                    CurrentWeapon.GetComponent<Gun>().remainingBullets -= 1;
+                }
                 else
                 {
                     Debug.Log("Reload required!");
@@ -148,7 +152,14 @@ public class PlayerWeapon : MonoBehaviour
     {
         if (CurrentWeapon != null) Destroy(CurrentWeapon.gameObject);
         CurrentWeapon = Instantiate(newWeapon);
-        CurrentWeapon.transform.SetParent(_holdedItem);
+        if (CurrentWeapon.GetComponent<_Weapon>().WeaponInfo.IsGun)
+        {
+            CurrentWeapon.transform.SetParent(_holdedItem);
+        }
+        else
+        {
+            CurrentWeapon.transform.SetParent(_attachments);
+        }
         CurrentWeapon.SetActive(false);
         if (CurrentWeapon.GetComponent<_Weapon>() is Gun)
         {
@@ -171,4 +182,28 @@ public class PlayerWeapon : MonoBehaviour
                 }*/
     }
 
+    internal bool ReloadGun()
+    {
+
+        return true;
+/*        if ()
+        {
+
+
+            Debug.Log("Reload completed");
+            return true;
+        }
+        else
+        {
+
+
+            Debug.Log("Reload unsuccessful");
+            return false;
+        }*/
+    }
+
+    internal int GetNeededAmmo()
+    {
+        return CurrentWeapon.GetComponent<Gun>().maxBullets - CurrentWeapon.GetComponent<Gun>().remainingBullets;
+    }
 }

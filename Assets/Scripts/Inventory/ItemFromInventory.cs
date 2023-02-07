@@ -21,7 +21,7 @@ public class ItemFromInventory : MonoBehaviour
 
     public string ItemName;
 
-    ItemData _itemdata;
+    public ItemData ItemInvData;
 
     Rotation _rotation = Rotation.r0;
 
@@ -32,14 +32,14 @@ public class ItemFromInventory : MonoBehaviour
     public int OnGridPositionY;
 
     [SerializeField]
-    internal InventoryGrid _inventorygrid;
+    internal InventoryGrid _grid;
 
     public int HEIGHT
     {
         get
         {
-            if (_rotation == Rotation.r0 || _rotation == Rotation.r180) return _itemdata.Height;
-            else return _itemdata.Width;
+            if (_rotation == Rotation.r0 || _rotation == Rotation.r180) return ItemInvData.Height;
+            else return ItemInvData.Width;
         }
 
     }
@@ -48,14 +48,18 @@ public class ItemFromInventory : MonoBehaviour
     {
         get
         {
-            if (_rotation == Rotation.r0 || _rotation == Rotation.r180) return _itemdata.Width;
-            else return _itemdata.Height;
+            if (_rotation == Rotation.r0 || _rotation == Rotation.r180) return ItemInvData.Width;
+            else return ItemInvData.Height;
         }
     }
 
     public bool IsWeapon;
 
-    public TextMeshProUGUI Amount;
+    public TextMeshProUGUI AmountText;
+
+    public bool IsStackable;
+
+    public int Amount;
 
     public void Awake()
     {
@@ -79,22 +83,22 @@ public class ItemFromInventory : MonoBehaviour
 
     public ItemData itemData
     {
-        get { return _itemdata; }
+        get { return ItemInvData; }
         set
         {
-            _itemdata = value;
+            ItemInvData = value;
 
-            GetComponent<Image>().sprite = _itemdata.ItemIcon;
+            GetComponent<Image>().sprite = ItemInvData.ItemIcon;
 
-            ItemName = _itemdata.ItemName;
+            ItemName = ItemInvData.ItemName;
 
-            ItemDescription = _itemdata.Description;
+            ItemDescription = ItemInvData.Description;
 
             Vector2 size = new Vector2(WIDTH * InventoryGrid.TileSizeWidth, HEIGHT * InventoryGrid.TileSizeHeight);
 
             GetComponent<RectTransform>().sizeDelta = size;
 
-            SpaceFill = _itemdata.Fill;
+            SpaceFill = ItemInvData.Fill;
         }
     }
 
@@ -166,5 +170,19 @@ public class ItemFromInventory : MonoBehaviour
         gameObject.GetComponent<RectTransform>().anchorMin = newValue;
         gameObject.GetComponent<RectTransform>().anchorMax = newValue;
         gameObject.GetComponent<RectTransform>().anchoredPosition = newValue;
+    }
+
+    public int ReloadAmount(int needed)
+    {
+        if (Amount > needed)
+            {
+                Amount =- needed;
+                return needed;
+            }
+        else
+            {
+                Debug.Log("Not enought ammo!");
+                return Amount;
+            }
     }
 }

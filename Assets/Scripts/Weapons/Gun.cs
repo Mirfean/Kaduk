@@ -76,11 +76,6 @@ public class Gun : _Weapon
                 if (hit.collider == null) Debug.DrawLine(_shootingPoint.transform.position, direction * _bulletRange, Color.red, duration: 60f);
                 if (hit.collider != null)
                 {
-                    /*                    Debug.Log("Hitted " + hit.collider.name);
-                                        Debug.DrawLine(_shootingPoint.transform.position, hit.collider.transform.position, Color.cyan, duration: 60f);
-
-                                        if (hit.collider.gameObject.layer == 13) Debug.Log("Hit Enemy Core!");
-                                        if (hit.collider.gameObject.layer == 23) Debug.Log("Hit Enemy Limb!");*/
                     if (hit.collider.GetComponent<HitTarget>())
                     {
                         Debug.Log("Bullet hitted enemy!");

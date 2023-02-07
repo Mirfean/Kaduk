@@ -113,7 +113,7 @@ public class InventoryGrid : MonoBehaviour
 
         itemToPlace.GetComponent<RectTransform>().localPosition = position;
 
-        itemToPlace._inventorygrid = this;
+        itemToPlace._grid = this;
         ItemsOnGrid.Add(itemToPlace);
     }
 

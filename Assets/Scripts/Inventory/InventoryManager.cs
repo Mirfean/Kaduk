@@ -83,6 +83,7 @@ public class InventoryManager : MonoBehaviour
         _inventoryHighlight = GetComponent<InventoryHighlight>();
     }
 
+
     public void SetOnMouseItem(ItemFromInventory item)
     {
         OnMouseItem = item;
@@ -118,7 +119,8 @@ public class InventoryManager : MonoBehaviour
     public void ChangeGridForHoldedItem(StashType currentStashType)
     {
         if (IsChangingCurrentWeapon()) return;
-        CreateAndInsertCertainItem(HoldedItem.itemData, GetSecondGrid(currentStashType));
+        if(HoldedItem.itemData.AmmoType == WeaponType.NONE) CreateAndInsertCertainItem(HoldedItem.itemData, GetSecondGrid(currentStashType));
+        else CreateAndInsertCertainItem(HoldedItem.itemData, HoldedItem.Amount, GetSecondGrid(currentStashType));
         Destroy(HoldedItem.gameObject);
         HoldedItem = null;
     }
@@ -126,8 +128,14 @@ public class InventoryManager : MonoBehaviour
     public void ChangeGridForItem(StashType currentStashType)
     {
         if (IsChangingCurrentWeapon()) return;
-        CreateAndInsertCertainItem(ClickedItem.itemData, GetSecondGrid(currentStashType));
+        
+        if (ClickedItem.itemData.AmmoType == WeaponType.NONE) 
+            CreateAndInsertCertainItem(ClickedItem.itemData, GetSecondGrid(currentStashType));
+        else 
+            CreateAndInsertCertainItem(ClickedItem.itemData, ClickedItem.Amount, GetSecondGrid(currentStashType));
+        
         Destroy(ClickedItem.gameObject);
+        
         ClickedItem = null;
         OnMouseItem = null;
         HoldedItem = null;
@@ -182,6 +190,8 @@ public class InventoryManager : MonoBehaviour
         }
     }
 
+
+
     public Vector2Int GetInvGridPositon(Vector2 mousePosition)
     {
         if (HoldedItem == null || SelectedItemGRID == null) { return new Vector2Int(-1, -1); }
@@ -209,7 +219,7 @@ public class InventoryManager : MonoBehaviour
         void DropItemIcon(Vector2Int tileGridPosition)
         {
             bool dropComplete = _selectedItemGrid.IsThisPlaceForItem(HoldedItem, tileGridPosition.x, Mathf.Abs(tileGridPosition.y), ref _overlapItem);
-            if (HoldedItem._inventorygrid != _selectedItemGrid)
+            if (HoldedItem._grid != _selectedItemGrid)
             {
                 HoldedItem.transform.SetParent(_selectedItemGrid.transform, false);
             }
@@ -255,7 +265,7 @@ public class InventoryManager : MonoBehaviour
 
     bool CheckIfItemsFromSameGrid(ItemFromInventory holded, ItemFromInventory overlaped)
     {
-        return holded._inventorygrid == overlaped._inventorygrid;
+        return holded._grid == overlaped._grid;
     }
 
     /// <summary>
@@ -299,6 +309,15 @@ public class InventoryManager : MonoBehaviour
             CreateAndInsertCertainItem(item, _itemsStash);
         }
         Debug.Log($"Size {_itemsStash.InventoryItemsSlot.Length}");
+    }
+
+    internal void FillStackItemsStash(ItemData[] stackItems, int[] stackAmounts)
+    {
+        Debug.Log("Stack Items in list " + stackItems.Length);
+        for (int i = 0; i < stackItems.Length; i++)
+        {
+            CreateAndInsertCertainItem(stackItems[i], stackAmounts[i], _itemsStash);
+        }
     }
 
     public void ClearItemsFromStash()
@@ -365,13 +384,6 @@ public class InventoryManager : MonoBehaviour
     }
     #endregion
 
-    /*  ??????
-        ??????
-        ??????
-        ?????????
-        ????????*/
-
-
     #region Item Spawner
     public void CreateAndInsertCertainItem(ItemData itemData, InventoryGrid grid)
     {
@@ -393,6 +405,40 @@ public class InventoryManager : MonoBehaviour
             Debug.Log("Created item " + HoldedItem.gameObject.transform.position);
 
             HoldedItem.itemData = itemData;
+            HoldedItem.AmountText.gameObject.SetActive(true);
+            Debug.Log($"Spawn {item.name}");
+            return HoldedItem;
+        }
+
+        void InsertCreatedItem(ItemFromInventory itemToInsert, InventoryGrid grid)
+        {
+            Vector2Int? posOnGrid = grid.FindSpaceForObject(itemToInsert);
+            if (posOnGrid == null) { return; }
+            grid.PlaceItemToGrid(itemToInsert, posOnGrid.Value.x, posOnGrid.Value.y);
+            HoldedItem = null;
+        }
+    }
+
+    public void CreateAndInsertCertainItem(ItemData itemData, int amount, InventoryGrid grid)
+    {
+        SelectedItemGRID = grid;
+        ItemFromInventory itemFrom = SpawnItem(itemData);
+        InsertCreatedItem(itemFrom, grid);
+
+        ItemFromInventory SpawnItem(ItemData itemData)
+        {
+            GameObject newItem = Instantiate(ItemPrefab);
+            ItemFromInventory item = newItem.GetComponent<ItemFromInventory>();
+            HoldedItem = item;
+            CurrentItemRectTransform = HoldedItem.GetComponent<RectTransform>();
+            CurrentItemRectTransform.SetParent(grid.GetComponent<RectTransform>());
+
+            Debug.Log("Created item " + HoldedItem.gameObject.transform.position);
+
+            HoldedItem.itemData = itemData;
+            HoldedItem.Amount = amount;
+            HoldedItem.IsStackable = true;
+            HoldedItem.AmountText.text = HoldedItem.Amount.ToString();
             Debug.Log($"Spawn {item.name}");
             return HoldedItem;
         }
@@ -408,6 +454,7 @@ public class InventoryManager : MonoBehaviour
 
 
     #endregion
+
 
     #region Grids SHOW/HIDE
     public void ShowInventory()
@@ -450,17 +497,41 @@ public class InventoryManager : MonoBehaviour
     private void SaveChangesInItemStash(EnvObject currentItemStash)
     {
         ItemFromInventory[] ItemsInInventory = _itemsStash.GetComponentsInChildren<ItemFromInventory>();
+        
+        List<ItemFromInventory> Items = new List<ItemFromInventory>();
+        List<ItemFromInventory> StackableItems = new List<ItemFromInventory>();
+
+        foreach (ItemFromInventory item in ItemsInInventory)
+        {
+            if (item.itemData.AmmoType != 0) StackableItems.Add(item);
+            else Items.Add(item);
+        }
+
         Debug.Log("ItemsInInventory " + ItemsInInventory.Length);
         List<ItemData> newItems = new List<ItemData>();
 
         if (ItemsInInventory.Length == 0) return;
 
-        for (int i = 0; i < ItemsInInventory.Length; i++)
+
+        //NORMAL ITEMS
+        foreach(ItemFromInventory item in Items)
         {
-            newItems.Add(ItemsInInventory[i].itemData);
+            newItems.Add(item.itemData);
+        }
+        currentItemStash.Items = newItems;
+
+        //STACKABLE(AMMO)
+        currentItemStash.StackItems = new ItemData[StackableItems.Count];
+        currentItemStash.StackAmounts = new int[StackableItems.Count];
+        int x = 0;
+        foreach(ItemFromInventory item in StackableItems)
+        {
+            currentItemStash.StackItems[x] = item.itemData;
+            currentItemStash.StackAmounts[x] = item.Amount;
+            x++;
         }
 
-        currentItemStash.Items = newItems;
+        
     }
 
     public void ChangeCurrentWeapon(GameObject weaponItem)
@@ -470,5 +541,28 @@ public class InventoryManager : MonoBehaviour
         //GameObject newWeaponPrefab = new GameObject();
         weapon.ChangeWeapon(newWeaponPrefab);
         _equipedWeapon.ChangeWeapon(newWeaponPrefab.GetComponent<_Weapon>());
+    }
+
+    internal int GetAmmoOnReload(WeaponType currentWeaponType, int neededAmmo)
+    {
+        if(PlayerInventory.ItemsOnGrid.Exists(x => x.itemData.AmmoType == currentWeaponType))
+        {
+            ItemFromInventory ammoItem = PlayerInventory.ItemsOnGrid.Find(x => x.itemData.AmmoType == currentWeaponType);
+            if(ammoItem.Amount > neededAmmo) 
+            { 
+                ammoItem.Amount -= neededAmmo;
+                ammoItem.AmountText.text = ammoItem.Amount.ToString();
+                return neededAmmo; 
+            }
+            else
+            {
+                int ammo = ammoItem.Amount;
+                PlayerInventory.ClearItem(ammoItem);
+                Destroy(ammoItem.gameObject);
+                return ammo;
+            }
+        }
+        Debug.Log("Ammo not found!");
+        return 0;
     }
 }
