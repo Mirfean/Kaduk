@@ -22,6 +22,8 @@ public class PlayerNavMeshMovement : MonoBehaviour
 
     public bool IsMoving { get => _isMoving; set { _isMoving = value; PlayerControl.WalkModeChange(value); } }
 
+    public bool MovingToObject { get; internal set; }
+
     [SerializeField]
     private float _targetLerpSpeed = 1;
 
@@ -87,7 +89,9 @@ public class PlayerNavMeshMovement : MonoBehaviour
         _lastDirection = _movementVector;
 
         _targetDirection = Vector3.Lerp(_targetDirection, _movementVector, Mathf.Clamp01(_lerpTime * _targetLerpSpeed));
+        
         _agent.ResetPath();
+        MovingToObject = false;
 
         if (_playerControl.STATE == InteractionState.DEFAULT)
             _agent.Move(_targetDirection * _agent.speed * Time.deltaTime);

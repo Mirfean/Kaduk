@@ -159,12 +159,14 @@ public class GameManager : MonoBehaviour
     {
         if(GetPlayerSTATE() == InteractionState.DEFAULT)
             StartCoroutine(CloseToDoor(clickedDoor));
+        _playerControl.PlayerMove.MovingToObject = false;
     }
 
     void HandleCloseToEnvObject(EnvObject clickedObject)
     {
         if (GetPlayerSTATE() == InteractionState.DEFAULT)
             StartCoroutine(CloseToEnvObject(clickedObject));
+        _playerControl.PlayerMove.MovingToObject = false;
     }
 
     void HandleDoor(Door clickedDoor)
@@ -204,9 +206,16 @@ public class GameManager : MonoBehaviour
     IEnumerator CloseToEnvObject(EnvObject clickedDoor)
     {
         Debug.Log("Getting closer to Object");
+        Vector3 EnvDestination = _playerControl.PlayerMove.Agent.destination;
+        _playerControl.PlayerMove.MovingToObject = true;
         while (_playerControl.PlayerMove.Agent.remainingDistance > 0.5f)
         {
-/*            Debug.Log("Closing... " + Vector3.Distance(_playerControl.transform.position, clickedDoor.transform.position)); */
+            if (EnvDestination != _playerControl.PlayerMove.Agent.destination || !_playerControl.PlayerMove.MovingToObject)
+            {
+                Debug.Log("Break going to object!");
+                yield break;
+            }
+
             yield return null;
         }
         HandleEnvObject(clickedDoor);
@@ -216,8 +225,10 @@ public class GameManager : MonoBehaviour
     IEnumerator CloseToDoor(Door clickedDoor)
     {
         Debug.Log("Getting closer to Door");
+        Vector3 EnvDestination = _playerControl.PlayerMove.Agent.destination;
         while (_playerControl.PlayerMove.Agent.remainingDistance > 0.5f)
         {
+            if (EnvDestination != _playerControl.PlayerMove.Agent.destination) yield break;
 /*            Debug.Log("Closing... " + Vector3.Distance(_playerControl.transform.position, clickedDoor.transform.position));*/
             yield return null;
         }

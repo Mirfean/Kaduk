@@ -12,7 +12,7 @@ public class _Weapon : MonoBehaviour
 
     public bool Rotated = false;
 
-    internal LayerMask layerEnemyToIgnore = 1 << 13 | 1 << 10;
+    internal LayerMask layerEnemyToIgnore = 1 << 13 | 1 << 24;
 
     public virtual void Attack(Vector2 mousePos)
     {

@@ -24,6 +24,6 @@ public class EquippedWeapon : MonoBehaviour
             _weaponImage.transform.Rotate(0, 0, 270f);
         }
         _weaponImage.GetComponent<RectTransform>().sizeDelta =
-            new Vector2(_weaponImage.preferredWidth, _weaponImage.preferredHeight);
+            new Vector2(_weaponImage.preferredWidth * 4, _weaponImage.preferredHeight * 4);
     }
 }

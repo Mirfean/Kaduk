@@ -7,7 +7,6 @@ using UnityEngine.Animations;
 [RequireComponent(typeof(PlayerControl))]
 public class PlayerWeapon : MonoBehaviour
 {
-    //[SerializeField] public _Weapon CurrentWeapon;
 
     [SerializeField] public GameObject CurrentWeapon;
 
@@ -170,36 +169,6 @@ public class PlayerWeapon : MonoBehaviour
             CurrentWeapon.GetComponent<RotationConstraint>().SetSource(0, source);
             CurrentWeapon.GetComponent<RotationConstraint>().constraintActive = true;
         }
-
-        /*        foreach(GameObject weapon in WeaponPrefabs)
-                {
-                    if (weapon.GetComponent<_Weapon>() == newWeapon)
-                    {
-                        CurrentWeapon = weapon;
-                        Instantiate(weapon).transform.SetParent(_attachments);
-
-                    }
-                }*/
-    }
-
-    internal bool ReloadGun()
-    {
-
-        return true;
-/*        if ()
-        {
-
-
-            Debug.Log("Reload completed");
-            return true;
-        }
-        else
-        {
-
-
-            Debug.Log("Reload unsuccessful");
-            return false;
-        }*/
     }
 
     internal int GetNeededAmmo()

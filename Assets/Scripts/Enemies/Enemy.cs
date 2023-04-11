@@ -1,6 +1,7 @@
 using Assets.Scripts.Enums;
 using System.Collections;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class Enemy : MonoBehaviour
 {
@@ -14,7 +15,7 @@ public class Enemy : MonoBehaviour
 
     [SerializeField] float _attackDistance;
 
-    public SpriteRenderer SpriteRenderer;
+    public SpriteRenderer EnemySprite;
     public int CurrentHp
     {
         get { return _currentHp; }
@@ -29,7 +30,7 @@ public class Enemy : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        this.SpriteRenderer = GetComponentInChildren<SpriteRenderer>();
+        if(EnemySprite == null) EnemySprite = GetComponentInChildren<SpriteRenderer>();
         _maxHp = EnemyData._maxHp;
         CurrentHp = _maxHp;
     }
@@ -44,10 +45,14 @@ public class Enemy : MonoBehaviour
     {
         if (!immune)
         {
+            GetComponent<Animator>().Play("GetHit");
+
             CurrentHp -= (damage - EnemyData._defence);
+            StartCoroutine(HitFlash());
+
             if (weaponType is WeaponType.KNIFE or WeaponType.AXE or WeaponType.PIPE)
             {
-                ImmuneCoroutine();
+                StartCoroutine(ImmuneCoroutine());
             }
             if (CurrentHp <= 0)
             {
@@ -61,15 +66,27 @@ public class Enemy : MonoBehaviour
     {
         immune = true;
         yield return new WaitForSecondsRealtime(0.5f);
-
         immune = false;
-        yield return null;
+    }
+
+    IEnumerator HitFlash()
+    {
+        EnemySprite.color = new Color(0.9f, 0.5f, 0.5f);
+        yield return new WaitForSeconds(0.5f);
+        EnemySprite.color = new Color(255f, 255f, 255f);
     }
 
     private void DeathSequence()
     {
-        //TODO
-        Destroy(gameObject);
+        foreach(Collider2D collider in GetComponentsInChildren<Collider2D>())
+        {
+            collider.enabled = false;
+        }
+        //GetComponent<AudioSource>().loop = false;
+        GetComponent<EnemyMovement>().Death();
+        
+        //Destroy(gameObject);
+        
     }
 
 

@@ -20,6 +20,7 @@ public class EnemyAlarmer : MonoBehaviour
         if (collision.gameObject.layer == 13)
         {
             collision.gameObject.transform.parent.GetComponent<EnemyMovement>().SetHunt();
+            _alarmer.enabled = false;
         }
     }
 }

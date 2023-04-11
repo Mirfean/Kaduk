@@ -81,7 +81,7 @@ public class Gun : _Weapon
                         Debug.Log("Bullet hitted enemy!");
                         hit.collider.GetComponent<HitTarget>().TakeHit(Damage, weaponType);
                     }
-                    Debug.Log("Bullet");
+                    Debug.Log("Bullet hitted" + hit.collider.name);
                 }
                 else
                 {

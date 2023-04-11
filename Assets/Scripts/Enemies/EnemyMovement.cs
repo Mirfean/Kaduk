@@ -8,14 +8,46 @@ public class EnemyMovement : MonoBehaviour
     [SerializeField] Transform[] _patrolPoints;
     [SerializeField] int destPoint = 0;
 
-    [SerializeField] bool active;
-    [SerializeField] bool hunt;
+    bool _active;
+    bool _patrol;
+    bool _hunt;
+    bool _dead;
+
+    public bool Active
+    {
+        get { return _active; }
+        set
+        {
+            Animator.SetBool("active", value);
+            _active = value;
+        }
+    }
+    
+    public bool Patrol
+    {
+        get { return _patrol; }
+        set
+        {
+            Animator.SetBool("patrol", value);
+            _patrol = value;
+        }
+    }
+    
+    public bool Hunt
+    {
+        get { return _hunt; }
+        set
+        {
+            Animator.SetBool("hunt", value);
+            _hunt = value;
+        }
+    }
+
+    [SerializeField] bool _waitingForAttack;
 
     private NavMeshAgent _agent;
 
     [SerializeField] private NavMeshAgent _player;
-
-    public bool Active { get => active; set => active = value; }
 
     public bool debugFirstTime;
     public List<GameObject> PathBalls;
@@ -26,6 +58,10 @@ public class EnemyMovement : MonoBehaviour
 
     [SerializeField] float _attackReload;
 
+    public Animator Animator;
+
+    [SerializeField] Transform AttackCenter;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -34,6 +70,11 @@ public class EnemyMovement : MonoBehaviour
         _agent.updatePosition = true;
         _agent.updateRotation = false;
         _agent.updateUpAxis = false;
+
+        //For testing
+        Active = true;
+        SetPatrol();
+
     }
 
     private void FixedUpdate()
@@ -62,6 +103,17 @@ public class EnemyMovement : MonoBehaviour
         }
     }
 
+    internal void Death()
+    {
+        Animator.SetBool("dead", true);
+        _agent.ResetPath();
+        Active = false;
+        Hunt = false;
+        Patrol = false;
+        _dead = true;
+        Animator.SetBool("attack", false);
+    }
+
     public void TeleportToRandomPoint()
     {
         TeleportToPoint(Random.Range(0, _patrolPoints.Length - 1));
@@ -70,34 +122,29 @@ public class EnemyMovement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        /*        if (!debugFirstTime) debugFirstTime = true;
-                else DebugClearBalls();*/
-
-        if (Active && !_agent.pathPending && _agent.remainingDistance < 0.3f)
+        if (!_dead)
         {
-            GoToNextPoint();
-            if (_agent.pathPending)
+            if (Active && Patrol && !_agent.pathPending && _agent.remainingDistance < 0.25f)
             {
-                Debug.Log("Next pos " + _agent.nextPosition);
-                Debug.Log("Corners " + _agent.path.GetCornersNonAlloc(_agent.path.corners));
-                foreach (Vector3 corn in _agent.path.corners)
+                GoToNextPoint();
+                /*if (_agent.pathPending)
                 {
-                    Debug.Log("Corner" + corn);
-                }
+                    Debug.Log("Next pos " + _agent.nextPosition);
+                    Debug.Log("Corners " + _agent.path.GetCornersNonAlloc(_agent.path.corners));
+                    foreach (Vector3 corn in _agent.path.corners)
+                    {
+                        Debug.Log("Corner" + corn);
+                    }
+                }*/
+
+
             }
 
-
-        }
-
-        else if (hunt)
-        {
-            SetNewDestination(_player.transform.position);
-
-        }
-
-        if (_agent.pathPending)
-        {
-            Debug.Log(_agent.nextPosition);
+            else if (Hunt)
+            {
+                SetNewDestination(_player.transform.position);
+                if (!_waitingForAttack) StartCoroutine(AttackCoroutine());
+            }
         }
 
     }
@@ -117,36 +164,52 @@ public class EnemyMovement : MonoBehaviour
 
     public void SetHunt()
     {
-        active = false;
-        hunt = true;
-        StartCoroutine(AttackCoroutine());
+        Patrol = false;
+        Hunt = true;
+
     }
 
     public void SetPatrol()
     {
-        hunt = false;
-        Active = true;
-    }
-
-    void GetDirection()
-    {
-        //_agent.path.corners;
+        Hunt = false;
+        Patrol = true;
     }
 
     IEnumerator AttackCoroutine()
     {
         Debug.Log("Waiting for attack");
-        while (hunt)
+        _waitingForAttack = true;
+        while (Hunt)
         {
-            //Debug.Log("Distance from player " + Mathf.Abs(_spot.position.x - _player.transform.position.x) + " " + Mathf.Abs(_spot.position.y - _player.transform.position.y));
-            if (Mathf.Abs(_spot.position.x - _player.transform.position.x) < 0.75f &&
-                Mathf.Abs(_spot.position.y - _player.transform.position.y) < 0.75f)
+            //Debug.Log("Distance " + _agent.remainingDistance);
+            if (_agent.remainingDistance < 1 && !Animator.GetBool("attack"))
             {
                 Debug.Log("Attack!");
-                yield return new WaitForSecondsRealtime(_attackReload);
+                Animator.SetBool("attack", true);
+                _agent.ResetPath();
+                
+                StartCoroutine(Attack());
             }
             yield return null;
         }
-        yield return null;
+        Debug.Log("Stop waiting for attack");
+        _waitingForAttack=false;
+    }
+
+    IEnumerator Attack()
+    {
+        while (Animator.GetBool("attack"))
+        {
+            Debug.Log("Attack in progress");
+            Collider2D hitPlayer = Physics2D.OverlapCapsule(
+                    AttackCenter.position + new Vector3(0, -0.35f), new Vector2(0.7f, 1.9f), CapsuleDirection2D.Vertical, 0f, LayerMask.GetMask("Player"));
+            if (hitPlayer != null)
+            {
+                Debug.Log("Player Hitted!" + hitPlayer.name);
+                hitPlayer.gameObject.GetComponent<PlayerStats>().Hp = - GetComponent<Enemy>().EnemyData._dmg;
+                yield break;
+            }
+            yield return null;
+        }
     }
 }

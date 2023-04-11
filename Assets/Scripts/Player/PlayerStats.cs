@@ -19,9 +19,11 @@ public class PlayerStats : MonoBehaviour
     }
     public int Hp
     {
-        get => _hpCurrent; set
+        get => _hpCurrent; 
+        set
         {
-            _hpCurrent = Mathf.Clamp(value, 0, HpMax);
+            Debug.Log($"Changing hp from {_hpCurrent} by {value}");
+            _hpCurrent = Mathf.Clamp(_hpCurrent + value, 0, HpMax);
         }
     }
 
